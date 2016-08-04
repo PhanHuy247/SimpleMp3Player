@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">SimpleMp3Player</string>
+    <string name="hello_blank_fragment">hello_blank_fragment</string>
+    <string name="setting">setting</string>
+    <string name="chiasenhac">Share Music</string>
+    <string-array name="nav_drawer_items">
+        <item>PlayBack</item>
+        <item>Album</item>
+        <item>Chart Artist</item>
+        <item>Category</item>
+        <item>Chart Song</item>
+        <item>Video-Clip</item>
+        <item>About</item>
+        <item>Favorite</item>
+    </string-array>
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_action_headphones</item>
+        <item>@drawable/ic_action_collection</item>
+        <item>@drawable/ic_action_person</item>
+        <item>@drawable/ic_action_half_important</item>
+        <item>@drawable/ic_action_go_to_today</item>
+        <item>@drawable/ic_action_video</item>
+        <item>@drawable/ic_action_about</item>
+        <item>@drawable/ic_action_favorite</item>
+    </array>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>

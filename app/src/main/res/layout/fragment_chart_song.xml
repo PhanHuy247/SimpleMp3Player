@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="vn.techkid.simplemp3player.Fragment.FragmentChartSong">
+
+    <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:id="@+id/txtBaiHat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24dp"
+            android:text="Bài Hát"
+            android:layout_marginTop="4dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:layout_centerHorizontal="true"/>
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_below="@id/txtBaiHat"
+            android:orientation="horizontal"
+            android:weightSum="2">
+            <ImageButton
+                android:id="@+id/imgVietNam"
+                android:layout_marginTop="6dp"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+               />
+            <ImageButton
+                android:id="@+id/imgEurope"
+                android:layout_marginTop="6dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+            <ImageButton
+                android:id="@+id/imgKorea"
+                android:layout_below="@+id/linear"
+                android:layout_marginTop="6dp"
+                android:layout_height="160dp"
+                android:scaleType="fitXY"
+                android:layout_width="160dp"
+                />
+        <View
+            android:layout_below="@id/imgKorea"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/purple"
+            />
+
+
+</RelativeLayout>
