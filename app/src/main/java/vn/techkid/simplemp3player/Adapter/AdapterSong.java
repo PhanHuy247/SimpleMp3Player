@@ -44,12 +44,14 @@ public class AdapterSong extends BaseAdapter {
             CommentViewHolder holder = new CommentViewHolder();
             holder.txtNameSong = (TextView)convertView.findViewById(R.id.tv_title);
             holder.txtNameArtist = (TextView)convertView.findViewById(R.id.tv_artist);
+            holder.txtRank = (TextView)convertView.findViewById(R.id.txtRank);
             convertView.setTag(holder);
         }
 
         CommentViewHolder holder = (CommentViewHolder) convertView.getTag();
         holder.txtNameSong.setText(getItem(position).getTitle());
         holder.txtNameArtist.setText(getItem(position).getArtist());
+        holder.txtRank.setText(getItem(position).getPosition()+"");
 
         return convertView;
     }
@@ -57,5 +59,6 @@ public class AdapterSong extends BaseAdapter {
     public static class CommentViewHolder{
         public TextView txtNameSong;
         public TextView txtNameArtist;
+        public TextView txtRank;
     }
 }

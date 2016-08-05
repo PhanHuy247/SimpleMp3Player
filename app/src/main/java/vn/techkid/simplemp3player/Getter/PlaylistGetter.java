@@ -1,4 +1,4 @@
-package vn.techkid.simplemp3player.Getter;
+package vn.techkid.simplemp3player;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -45,7 +45,7 @@ public class PlaylistGetter extends AsyncTask<Void, Void, Void> {
                 String artist = elements2.text();
                 String linkSong = elements1.attr("href");
                 Log.d("link", linkSong);
-                Song song = new Song(title, artist, linkSong);
+                Song song = new Song(title, artist, linkSong, i+1);
                 songs.add(song);
                 Log.d("tag", songs.size()+"");
             }

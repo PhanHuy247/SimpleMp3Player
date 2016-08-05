@@ -55,7 +55,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button_random"
+            android:id="@+id/button_shuffle"
             android:layout_weight="1"
             android:src="@drawable/ic_shuffle_red_300_18dp"/>
         <ImageButton

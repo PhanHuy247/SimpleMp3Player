@@ -14,14 +14,24 @@ public class Song {
     private String accessLink;
     private String downloadLink;
     private String detailDownloadLink;
+    private int position;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
     public Song(){
 
     }
-    public Song(String title, String artist, String linkSong) {
+    public Song(String title, String artist, String linkSong, int position) {
         this.title = title;
         this.artist = artist;
         this.accessLink = linkSong;
+        this.position = position;
     }
     public String getImageSrc() {
         return imageSrc;
