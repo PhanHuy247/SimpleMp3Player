@@ -2,7 +2,6 @@ package vn.techkid.simplemp3player.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import vn.techkid.simplemp3player.Model.NavDrawerItem;
 import vn.techkid.simplemp3player.R;
@@ -51,7 +48,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater)
                     context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+            convertView = mInflater.inflate(R.layout.list_item_navi, null);
         }
 
         ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);

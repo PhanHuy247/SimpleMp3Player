@@ -5,10 +5,6 @@ import android.app.FragmentManager;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-
-import android.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +38,6 @@ public class FragmentNavi extends Fragment {
     private NavDrawerListAdapter adapter;
     private DrawerLayout mDrawerLayout;
     private View containerView;
-    private FragmentManager fragmentManager;
     public FragmentNavi() {
         // Required empty public constructor
     }
@@ -71,7 +66,7 @@ public class FragmentNavi extends Fragment {
         // Home
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
         // Find People
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+       navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
         // Photos
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
         // Communities, Will add a counter here
@@ -108,16 +103,35 @@ public class FragmentNavi extends Fragment {
             mDrawerLayout.closeDrawer(containerView);
         }
     }
-    public void setUp(View fragmentId,DrawerLayout drawerLayout,FragmentManager fragmentManager){
+    public void setUp(View fragmentId,DrawerLayout drawerLayout){
         containerView = fragmentId;
         mDrawerLayout = drawerLayout;
-        this.fragmentManager = fragmentManager;
     }
 
     private void displayView(int position) {
         switch (position){
+            case 0:
+                getFragmentManager().beginTransaction().replace(R.id.frame_container, new FragmentPlayBack())
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            case 1:
+                getFragmentManager().beginTransaction().replace(R.id.frame_container, new FragmentAlbum())
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            case 2:
+                getFragmentManager().beginTransaction().replace(R.id.frame_container, new FragmentArtist())
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            case 3:
+                getFragmentManager().beginTransaction().replace(R.id.frame_container, new CategoryFragment())
+                        .addToBackStack(null)
+                        .commit();
+                break;
             case 4:
-                fragmentManager.beginTransaction().replace(R.id.frame_container, new FragmentChartSong())
+                getFragmentManager().beginTransaction().replace(R.id.frame_container, new FragmentChartSong())
                 .addToBackStack(null)
                 .commit();
                 break;

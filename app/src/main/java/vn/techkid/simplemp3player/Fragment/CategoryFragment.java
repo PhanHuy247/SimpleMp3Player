@@ -2,7 +2,9 @@ package vn.techkid.simplemp3player.Fragment;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +14,11 @@ import vn.techkid.simplemp3player.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentPlayList extends Fragment {
+public class CategoryFragment extends Fragment {
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
-    public FragmentPlayList() {
+    public CategoryFragment() {
         // Required empty public constructor
     }
 
@@ -23,14 +27,12 @@ public class FragmentPlayList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_play_list, container, false);
-        initView(view);
+        View view =  inflater.inflate(R.layout.fragment_category, container, false);
+        setUpView(view);
         return view;
-
     }
 
-    private void initView(View view) {
-
+    private void setUpView(View view) {
     }
 
 }

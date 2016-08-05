@@ -21,33 +21,48 @@
             android:layout_height="160dp"
             android:layout_below="@id/txtBaiHat"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="2"
+            >
             <ImageButton
+                android:background="@color/colorWhite"
                 android:id="@+id/imgVietNam"
                 android:layout_marginTop="6dp"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:scaleType="fitXY"
+                android:padding="6dp"
                />
             <ImageButton
+                android:background="@color/colorWhite"
                 android:id="@+id/imgEurope"
                 android:layout_marginTop="6dp"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
                 android:layout_width="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:padding="6dp"/>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linear2"
+            android:layout_below="@+id/linear"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
             <ImageButton
-                android:id="@+id/imgKorea"
-                android:layout_below="@+id/linear"
-                android:layout_marginTop="6dp"
-                android:layout_height="160dp"
-                android:scaleType="fitXY"
-                android:layout_width="160dp"
-                />
+                    android:background="@color/colorWhite"
+                    android:id="@+id/imgKorea"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:layout_width="0dp"
+                    android:padding="6dp"
+                    />
+    </LinearLayout>
+
         <View
-            android:layout_below="@id/imgKorea"
+            android:layout_below="@id/linear2"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/purple"

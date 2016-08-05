@@ -17,4 +17,5 @@
     <color name="textChartSong">#DD2C00</color>
     <color name="backgroundDisplay">#EFEBE9</color>
     <color name="Greylitte">#EEEEEE</color>
+    <color name="backgroundArtist">#7986CB</color>
 </resources>

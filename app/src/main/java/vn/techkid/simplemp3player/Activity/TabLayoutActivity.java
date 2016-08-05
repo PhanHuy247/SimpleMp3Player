@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,17 +21,16 @@ import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.techkid.simplemp3player.Fragment.FragmentAlbum;
-import vn.techkid.simplemp3player.Fragment.FragmentArtist;
-import vn.techkid.simplemp3player.Fragment.FragmentPlayList;
-import vn.techkid.simplemp3player.Fragment.FragmentSong;
+import vn.techkid.simplemp3player.Fragment.OfflineAlbumFragment;
+import vn.techkid.simplemp3player.Fragment.OfflineArtistFragment;
+import vn.techkid.simplemp3player.Fragment.OfflinePlayListFragment;
+import vn.techkid.simplemp3player.Fragment.OfflineSongFragment;
 import vn.techkid.simplemp3player.R;
 
 public class TabLayoutActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private int position;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,10 +99,10 @@ public class TabLayoutActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(this.getSupportFragmentManager());
-        adapter.addFrag(new FragmentPlayList(),"PLAYLIST");
-        adapter.addFrag(new FragmentSong(),"SONG");
-        adapter.addFrag(new FragmentAlbum(),"ALBUM");
-        adapter.addFrag(new FragmentArtist(),"ARTIST");
+        adapter.addFrag(new OfflinePlayListFragment(),"PLAYLIST");
+        adapter.addFrag(new OfflineSongFragment(),"SONG");
+        adapter.addFrag(new OfflineAlbumFragment(),"ALBUM");
+        adapter.addFrag(new OfflineArtistFragment(),"ARTIST");
         viewPager.setAdapter(adapter);
 
     }

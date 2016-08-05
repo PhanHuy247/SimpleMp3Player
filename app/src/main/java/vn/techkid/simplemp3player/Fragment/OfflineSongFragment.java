@@ -23,13 +23,13 @@ import vn.techkid.simplemp3player.Manager.SongManager;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentSong extends Fragment {
+public class OfflineSongFragment extends Fragment {
     final String secStore = System.getenv("SECONDARY_STORAGE");
     final File secExtDir = new File(secStore);
     final File priExtDir = Environment.getExternalStorageDirectory();
     ListView songsView;
     ArrayList<Song> songList = new ArrayList<>();
-    public FragmentSong() {
+    public OfflineSongFragment() {
         // Required empty public constructor
     }
 

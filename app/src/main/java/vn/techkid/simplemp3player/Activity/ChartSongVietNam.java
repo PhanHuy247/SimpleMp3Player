@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import vn.techkid.simplemp3player.Adapter.AdapterSong;
+import vn.techkid.simplemp3player.Getter.PlaylistGetter;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
-import vn.techkid.simplemp3player.PlaylistGetter;
 
 public class ChartSongVietNam extends AppCompatActivity{
     private Toolbar toolbar;

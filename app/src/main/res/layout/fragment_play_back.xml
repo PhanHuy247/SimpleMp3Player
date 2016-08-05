@@ -1,0 +1,57 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.FragmentArtist">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="6dp">
+        <Button
+            android:id="@+id/btnplaybackvietnam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PlayBack VietNam"
+            android:textColor="@color/black"
+            android:background="@drawable/button_playback"
+            android:layout_marginTop="8dp"
+            />
+        <Button
+            android:id="@+id/btnplaybackusuk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PlayBack US-UK"
+            android:textColor="@color/black"
+            android:background="@drawable/button_playback"
+            android:layout_marginTop="8dp"
+            />
+        <Button
+            android:id="@+id/btnplaybackchina"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PlayBack ChiNa"
+            android:textColor="@color/black"
+            android:background="@drawable/button_playback"
+            android:layout_marginTop="8dp"
+            />
+        <Button
+            android:id="@+id/btnplaybackKorea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PlayBack Korea"
+            android:textColor="@color/black"
+            android:background="@drawable/button_playback"
+            android:layout_marginTop="8dp"
+            />
+        <Button
+            android:id="@+id/btnplaybackjapan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PlayBack Japan"
+            android:textColor="@color/black"
+            android:background="@drawable/button_playback"
+            android:layout_marginTop="8dp"
+            />
+    </LinearLayout>
+</FrameLayout>

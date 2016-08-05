@@ -1,4 +1,4 @@
-package vn.techkid.simplemp3player;
+package vn.techkid.simplemp3player.Getter;
 
 import android.content.Intent;
 import android.os.AsyncTask;
