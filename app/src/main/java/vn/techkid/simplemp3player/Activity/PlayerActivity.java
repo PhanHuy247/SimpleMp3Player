@@ -31,10 +31,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private SeekBar sb_timeProgress;
     private ImageButton ibt_shuffle, ibt_previous, ibt_play, ibt_next, ibt_repeat;
     private String eslapedTime, remainingTime;
-    private float progressTime;
+    private int progressTime, fullTime;
     String url;
     boolean isBound;
-    PlayingMusicService pService = null;
+    static PlayingMusicService pService = null;
 
 
     @Override
@@ -42,8 +42,21 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         initView();
+        get320kDownloadLink();
+        if (pService!=null){
+            pService.stopSelf();
+            pService.getMediaPlayer().release();
+            pService.setMediaPlayer(null);
+        }
+        setUpService();
+
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
 
     private void initView() {
         tv_songName = (TextView)findViewById(R.id.text_songName);
@@ -56,12 +69,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         ibt_play = (ImageButton)findViewById(R.id.button_play);
         ibt_next = (ImageButton)findViewById(R.id.button_next);
         ibt_repeat = (ImageButton)findViewById(R.id.button_repeat);
-
         tv_songName.setText(getIntent().getStringExtra("title"));
         tv_artistName.setText(getIntent().getStringExtra("artist"));
         setOnButtonClick();
-        get320kDownloadLink();
-        setUpService();
+
 
     }
 
@@ -75,6 +86,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser){
+                    Log.d("pro", progress+"");
                     pService.getMediaPlayer().seekTo(progress);
                 }
 
@@ -90,6 +102,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     private void setUpService() {
@@ -115,7 +133,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent(this, PlayingMusicService.class);
         intent.putExtra("url", url);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
-        sb_timeProgress.setMax(1000);
         PlayingMusicReceiver receiver = new PlayingMusicReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("updateSeekBar");
@@ -177,10 +194,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("updateSeekBar")){
+                fullTime = intent.getIntExtra("fullTime", 0);
+                sb_timeProgress.setMax(fullTime);
                 eslapedTime = intent.getStringExtra("eslapsedTime");
                 remainingTime = intent.getStringExtra("timeRemaining");
-                progressTime = intent.getFloatExtra("progress", 0.0f);
-                sb_timeProgress.setProgress((int)(progressTime));
+                progressTime = intent.getIntExtra("progress", 0);
+                sb_timeProgress.setProgress(progressTime);
                 tv_eslapedTime.setText(eslapedTime);
                 tv_timeLeft.setText(remainingTime);
             }

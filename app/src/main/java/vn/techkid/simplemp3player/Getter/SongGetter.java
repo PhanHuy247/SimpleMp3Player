@@ -28,13 +28,14 @@ public class SongGetter extends AsyncTask<Void, Void, Void>{
         url = url.substring (0, url.length()-5) + "_download.html";
         try {
             Document document = Jsoup.connect(url).get();
-            Elements elements = document.select("div[id=downloadlink]").select("b").select("a");
-            for (int i = 0; i < elements.size(); i++) {
-                String link = elements.get(i).attr("href");
-                Log.d("aaa", link);
-                if (link.contains("320kbps")){
-                    url = link;
-                    break;
+            Elements elements = document.select("div[id=downloadlink]").select("b").select("script");
+            String text = elements.get(1).data();
+            String temp[] = text.split("a href=\"", 6);
+            for (String s:temp){
+                if (s.startsWith("http") && s.contains("320kbps")){
+                    int i = s.indexOf(".mp3");
+                    url = s.substring(0, i+4);
+
                 }
             }
         } catch (IOException e) {
