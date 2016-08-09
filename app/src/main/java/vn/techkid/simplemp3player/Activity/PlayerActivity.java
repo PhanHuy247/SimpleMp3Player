@@ -42,8 +42,9 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     ArrayList<Song> songs = new ArrayList<>();
     ServiceConnection connection;
     PlayingMusicReceiver receiver;
-    static boolean isCompleted;
+    public static boolean isCompleted;
     static int currentPos;
+    private boolean fromUser;
 
 
     @Override
@@ -62,6 +63,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void refreshService() {
+        fromUser = false;
+        isCompleted = false;
         if (pService.getMediaPlayer()!=null){
             pService.getMediaPlayer().stop();
             pService.getMediaPlayer().release();
@@ -123,7 +126,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                pService.getMediaPlayer().seekTo(seekBar.getProgress());
+                if (seekBar.getProgress()!=fullTime){
+                    pService.getMediaPlayer().seekTo(seekBar.getProgress());
+
+                }
+                else {
+                    fromUser = true;
+                }
 
 
 
@@ -164,7 +173,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         receiver = new PlayingMusicReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("updateSeekBar");
-        filter.addAction("completed");
+//        filter.addAction("completed");
         registerReceiver(receiver, filter);
         Log.d("check2","startNewMusicService");
     }
@@ -234,26 +243,26 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 sb_timeProgress.setProgress(progressTime);
                 tv_eslapedTime.setText(eslapedTime);
                 tv_timeLeft.setText(remainingTime);
-            }
-            else if (intent.getAction().equals("completed")){
-                nextAction();
+                if (isCompleted || fromUser){
+                    nextAction();
+                }
             }
         }
     }
 
     private void nextAction() {
-        Log.d("check00", "nextAction");
         refreshService();
+        unbindService(connection);
+        Log.d("check00", "nextAction");
         if (isShuffle){
 
         }
         else {
-            currentPos= (currentPos++)%20;
+            currentPos= (++currentPos)%20;
             Log.d("currentPos", currentPos+"");
 
         }
         get320kDownloadLink(currentPos);
-        unbindService(connection);
         startNewMusicService();
         tv_songName.setText(songs.get(currentPos).getTitle());
         tv_artistName.setText(songs.get(currentPos).getArtist());

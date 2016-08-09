@@ -33,7 +33,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         return mediaPlayer;
     }
 
-    private static MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -101,7 +101,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     public void play() {
         mediaPlayer.start();
-
         fullTime = mediaPlayer.getDuration();
         durationHandler.postDelayed(updateSeekBarTime, 100);
 
@@ -111,38 +110,38 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         public void run() {
             if (mediaPlayer==null){
                 durationHandler.removeCallbacks(this);
+                return;
             }
-            else {
-                eslapedTime = mediaPlayer.getCurrentPosition();
-                Intent updateProgressIntent = new Intent();
-                updateProgressIntent.putExtra("progress", eslapedTime);
-                updateProgressIntent.putExtra("fullTime", fullTime);
-                int timeRemaining = fullTime - eslapedTime;
-                int minutesEslaped = (int) TimeUnit.MILLISECONDS.toMinutes((long)eslapedTime);
-                int secondsEslaped = (int) (TimeUnit.MILLISECONDS.toSeconds((long) eslapedTime)-TimeUnit.MINUTES.toSeconds((long)minutesEslaped));
-                updateProgressIntent.putExtra("eslapsedTime", String.format("%d:%d", minutesEslaped, secondsEslaped));
-                int minutesRemaining = (int) TimeUnit.MILLISECONDS.toMinutes((long)timeRemaining);
-                int secondsRemaining = (int) (TimeUnit.MILLISECONDS.toSeconds((long) timeRemaining)-TimeUnit.MINUTES.toSeconds((long)minutesRemaining));
-                updateProgressIntent.putExtra("timeRemaining", String.format("%d:%d", minutesRemaining, secondsRemaining));
-                updateProgressIntent.setAction("updateSeekBar");
-                sendBroadcast(updateProgressIntent);
-                durationHandler.postDelayed(this, 100);
-            }
-
+            eslapedTime = mediaPlayer.getCurrentPosition();
+            Intent updateProgressIntent = new Intent();
+            updateProgressIntent.putExtra("progress", eslapedTime);
+            updateProgressIntent.putExtra("fullTime", fullTime);
+            int timeRemaining = fullTime - eslapedTime;
+            int minutesEslaped = (int) TimeUnit.MILLISECONDS.toMinutes((long)eslapedTime);
+            int secondsEslaped = (int) (TimeUnit.MILLISECONDS.toSeconds((long) eslapedTime)-TimeUnit.MINUTES.toSeconds((long)minutesEslaped));
+            updateProgressIntent.putExtra("eslapsedTime", String.format("%d:%d", minutesEslaped, secondsEslaped));
+            int minutesRemaining = (int) TimeUnit.MILLISECONDS.toMinutes((long)timeRemaining);
+            int secondsRemaining = (int) (TimeUnit.MILLISECONDS.toSeconds((long) timeRemaining)-TimeUnit.MINUTES.toSeconds((long)minutesRemaining));
+            updateProgressIntent.putExtra("timeRemaining", String.format("%d:%d", minutesRemaining, secondsRemaining));
+            updateProgressIntent.setAction("updateSeekBar");
+            sendBroadcast(updateProgressIntent);
+            durationHandler.postDelayed(this, 100);
         }
     };
+
+    public  void setMediaPlayer(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
+    }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         return false;
+
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        Log.d("check", "onCompletion");
-        Intent intent = new Intent();
-        intent.setAction("completed");
-        sendBroadcast(intent);
+        PlayerActivity.isCompleted = true;
     }
 
     public class MyBinder extends Binder {
