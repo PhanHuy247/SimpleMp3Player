@@ -1,5 +1,7 @@
 package vn.techkid.simplemp3player.Service;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -15,24 +17,35 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import vn.techkid.simplemp3player.Activity.PlayerActivity;
+import vn.techkid.simplemp3player.R;
+
 /**
  * Created by Laptop88 on 8/4/2016.
  */
-public class PlayingMusicService extends Service implements MediaPlayer.OnPreparedListener{
-    String url;
+public class PlayingMusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener{
+    private String url;
     private int fullTime, eslapedTime;
-    private Handler durationHandler = new Handler();
+    public Handler durationHandler = new Handler();
+    private static final int NOTIFY_ID=1;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
     }
 
-    private MediaPlayer mediaPlayer;
+    private static MediaPlayer mediaPlayer;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         url = intent.getStringExtra("url");
-        Log.d("url", url);
         setMediaPlayer();
         return new MyBinder();
     }
@@ -58,6 +71,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             mediaPlayer.setDataSource(url);
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.prepareAsync();
+            mediaPlayer.setOnCompletionListener(this);
+            mediaPlayer.setOnErrorListener(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,6 +82,20 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public void onPrepared(MediaPlayer mp) {
 
         play();
+//        Intent notIntent = new Intent(this, PlayerActivity.class);
+//        notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        PendingIntent pendInt = PendingIntent.getActivity(this, 0,
+//                notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        Notification.Builder mBuilder = new Notification.Builder(this);
+//
+//        mBuilder.setContentIntent(pendInt)
+//                .setSmallIcon(R.drawable.image_music)
+//                .setContentTitle("New Message")
+//                .setContentText("You've received new message.")
+//                .setTicker("New Message Alert!");
+//        Notification not = mBuilder.build();
+//        startForeground(NOTIFY_ID, not);
     }
 
     public void setMediaPlayer(MediaPlayer mediaPlayer) {
@@ -77,7 +106,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public void onDestroy() {
         Log.d("destroy", "Yes");
         super.onDestroy();
-        durationHandler.removeCallbacks(updateSeekBarTime);
+
 
     }
 
@@ -89,9 +118,12 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     }
 
-    private Runnable updateSeekBarTime = new Runnable() {
+    public Runnable updateSeekBarTime = new Runnable() {
         public void run() {
-
+            if (mediaPlayer==null){
+                durationHandler.removeCallbacks(this);
+                return;
+            }
             eslapedTime = mediaPlayer.getCurrentPosition();
             Intent updateProgressIntent = new Intent();
             updateProgressIntent.putExtra("progress", eslapedTime);
@@ -108,6 +140,21 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             durationHandler.postDelayed(this, 100);
         }
     };
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        return false;
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        durationHandler.removeCallbacks(updateSeekBarTime);
+        Intent notCompletionIntent = new Intent();
+        notCompletionIntent.setAction("completed");
+        sendBroadcast(notCompletionIntent);
+
+    }
+
     public class MyBinder extends Binder {
         public PlayingMusicService getService(){
             return PlayingMusicService.this;

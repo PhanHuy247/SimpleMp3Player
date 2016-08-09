@@ -18,9 +18,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 import vn.techkid.simplemp3player.Getter.SongGetter;
 import vn.techkid.simplemp3player.Service.PlayingMusicService;
@@ -34,29 +36,51 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private int progressTime, fullTime;
     String url;
     boolean isBound;
+    boolean isShuffle, isLooping, isRepeat;
+    int startPos;
     static PlayingMusicService pService = null;
+    ArrayList<Song> songs = new ArrayList<>();
+    ServiceConnection connection;
+    PlayingMusicReceiver receiver;
+    static boolean isCompleted;
+    static int currentPos;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+        getSongListInfo();
         initView();
-        get320kDownloadLink();
+        get320kDownloadLink(currentPos);
         if (pService!=null){
-            pService.stopSelf();
-            pService.getMediaPlayer().release();
-            pService.setMediaPlayer(null);
+            refreshService();
         }
+
         setUpService();
 
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
+    private void refreshService() {
+        pService.getMediaPlayer().release();
+        pService.setMediaPlayer(null);
     }
+
+    private void getSongListInfo() {
+        if (getIntent().getBooleanExtra("playlist", false)){
+            ArrayList<CharSequence> titles = getIntent().getCharSequenceArrayListExtra("titles");
+            ArrayList<CharSequence> artists = getIntent().getCharSequenceArrayListExtra("artists");
+            ArrayList<CharSequence> urls = getIntent().getCharSequenceArrayListExtra("urls");
+            for (int i = 0; i < 20; i++) {
+                Song song = new Song((String)titles.get(i), (String)artists.get(i), (String)urls.get(i), i);
+                songs.add(song);
+            }
+            currentPos = getIntent().getIntExtra("pos", 0);
+            Log.d("pos", currentPos+"");
+
+        }
+    }
+
 
     private void initView() {
         tv_songName = (TextView)findViewById(R.id.text_songName);
@@ -69,8 +93,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         ibt_play = (ImageButton)findViewById(R.id.button_play);
         ibt_next = (ImageButton)findViewById(R.id.button_next);
         ibt_repeat = (ImageButton)findViewById(R.id.button_repeat);
-        tv_songName.setText(getIntent().getStringExtra("title"));
-        tv_artistName.setText(getIntent().getStringExtra("artist"));
+        tv_songName.setText(songs.get(currentPos).getTitle());
+        tv_artistName.setText(songs.get(currentPos).getArtist());
         setOnButtonClick();
 
 
@@ -85,10 +109,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         sb_timeProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser){
-                    Log.d("pro", progress+"");
-                    pService.getMediaPlayer().seekTo(progress);
-                }
 
             }
 
@@ -99,7 +119,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                pService.getMediaPlayer().seekTo(seekBar.getProgress());
             }
         });
     }
@@ -113,35 +133,42 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private void setUpService() {
 
         // Khởi tạo ServiceConnection
-        ServiceConnection connection = new ServiceConnection() {
+         connection = new ServiceConnection() {
 
-            // Phương thức này được hệ thống gọi khi kết nối tới service bị lỗi
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                isBound = false;
-            }
+             // Phương thức này được hệ thống gọi khi kết nối tới service bị lỗi
+             @Override
+             public void onServiceDisconnected(ComponentName name) {
+                 isBound = false;
+             }
 
-            // Phương thức này được hệ thống gọi khi kết nối tới service thành công
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                PlayingMusicService.MyBinder binder = (PlayingMusicService.MyBinder) service;
-                pService = binder.getService(); // lấy đối tượng MyService
-                isBound = true;
-            }
-        };
+             // Phương thức này được hệ thống gọi khi kết nối tới service thành công
+             @Override
+             public void onServiceConnected(ComponentName name, IBinder service) {
+                 PlayingMusicService.MyBinder binder = (PlayingMusicService.MyBinder) service;
+                 pService = binder.getService(); // lấy đối tượng MyService
+                 isBound = true;
+             }
+         };
 
+        startNewMusicService();
+
+    }
+
+    private void startNewMusicService (){
         Intent intent = new Intent(this, PlayingMusicService.class);
         intent.putExtra("url", url);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
-        PlayingMusicReceiver receiver = new PlayingMusicReceiver();
+        receiver = new PlayingMusicReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("updateSeekBar");
+        filter.addAction("completed");
         registerReceiver(receiver, filter);
     }
 
 
-    private void get320kDownloadLink() {
-        SongGetter getter = new SongGetter(getIntent().getStringExtra("url"));
+    private void get320kDownloadLink(int pos) {
+        Log.d("input", songs.get(pos).getAccessLink());
+        SongGetter getter = new SongGetter(songs.get(pos).getAccessLink());
         try {
             getter.execute().get();
         } catch (InterruptedException e) {
@@ -150,6 +177,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
         url = getter.getUrl();
+        Log.d("final", url);
 
 
     }
@@ -163,13 +191,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.button_previous:
                 break;
             case R.id.button_next:
+                nextAction(false);
                 break;
             case R.id.button_shuffle:
                 break;
             case R.id.button_repeat:
                 repeatAction();
                 break;
-
         }
     }
 
@@ -179,11 +207,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     private void playAction() {
         if (pService.getMediaPlayer().isPlaying()){
-            ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
+            ibt_play.setImageResource(R.drawable.ic_play_circle_outline_red_300_18dp);
             pService.getMediaPlayer().pause();
         }
         else {
-            ibt_play.setImageResource(R.drawable.ic_play_circle_outline_red_300_18dp);
+            ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
             pService.getMediaPlayer().start();
         }
     }
@@ -203,6 +231,28 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 tv_eslapedTime.setText(eslapedTime);
                 tv_timeLeft.setText(remainingTime);
             }
+            else if (intent.getAction().equals("completed")){
+                nextAction(true);
+            }
+        }
+    }
+
+    private void nextAction(boolean isCompleted) {
+        if (!isCompleted){
+            refreshService();
+        }
+
+
+        if (isShuffle){
+
+        }
+        else {
+            currentPos++;
+            get320kDownloadLink(currentPos);
+            unbindService(connection);
+            startNewMusicService();
+            tv_songName.setText(songs.get(currentPos).getTitle());
+            tv_artistName.setText(songs.get(currentPos).getArtist());
         }
     }
 }

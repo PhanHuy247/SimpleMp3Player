@@ -11,20 +11,26 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import vn.techkid.simplemp3player.Adapter.AdapterSong;
+import vn.techkid.simplemp3player.Getter.PlaylistGetter;
 import vn.techkid.simplemp3player.Model.Song;
-import vn.techkid.simplemp3player.PlaylistGetter;
+
 import vn.techkid.simplemp3player.R;
 
 
-public class ChartSong extends AppCompatActivity{
+public abstract class ChartSong extends AppCompatActivity{
     private Toolbar toolbar;
     public ListView lv_songs;
     ArrayList<Song> songs;
+    ArrayList<CharSequence> titles = new ArrayList<>();
+    ArrayList<CharSequence> artists = new ArrayList<>();
+    ArrayList<CharSequence> urls = new ArrayList<>();
+
+
+
     String URL;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +47,19 @@ public class ChartSong extends AppCompatActivity{
         PlaylistGetter getter = new PlaylistGetter(URL);
         try {
             getter.execute().get();
-            songs = getter.songs;
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        songs = getter.songs;
+        for (Song song:songs){
+            titles.add(song.getTitle());
+            artists.add(song.getArtist());
+            urls.add(song.getAccessLink());
 
+        }
         AdapterSong adaper = new AdapterSong(songs);
         lv_songs.setAdapter(adaper);
         lv_songs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -55,10 +67,11 @@ public class ChartSong extends AppCompatActivity{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
-                Song song = songs.get(position);
-                intent.putExtra("url", song.getAccessLink());
-                intent.putExtra("title", song.getTitle());
-                intent.putExtra("artist", song.getArtist());
+                intent.putCharSequenceArrayListExtra("titles", titles);
+                intent.putCharSequenceArrayListExtra("artists", artists);
+                intent.putCharSequenceArrayListExtra("urls", urls);
+                intent.putExtra("pos", position);
+                intent.putExtra("playlist", true);
                 startActivity(intent);
             }
         });
