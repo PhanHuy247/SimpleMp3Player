@@ -1,0 +1,42 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="vn.techkid.simplemp3player.Fragment.CategoryUSUK">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="6dp">
+        <Button
+            android:id="@+id/btncategoryusukpoprock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="music pop,rock...."
+            android:textColor="@color/black"
+            android:background="@drawable/button_playback"
+            android:layout_marginTop="8dp"
+            />
+        <Button
+            android:id="@+id/btncategoryusukraphiphop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="music rap,hiphop"
+            android:textColor="@color/black"
+            android:background="@drawable/button_playback"
+            android:layout_marginTop="8dp"
+            />
+        <Button
+            android:id="@+id/btncategoryusukdanceremix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="music dance,remix"
+            android:textColor="@color/black"
+            android:background="@drawable/button_playback"
+            android:layout_marginTop="8dp"
+            />
+
+    </LinearLayout>
+
+</FrameLayout>

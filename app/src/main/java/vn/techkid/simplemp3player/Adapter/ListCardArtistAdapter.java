@@ -38,7 +38,7 @@ public class ListCardArtistAdapter extends RecyclerView.Adapter<ListCardArtistAd
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         CardViewHolder viewHolder = null;
                 View itemView
-                        = layoutInflater.inflate(R.layout.item_card, parent, false);
+                        = layoutInflater.inflate(R.layout.item_artist, parent, false);
                 viewHolder = new CardViewHolder(itemView);
                 viewHolder.onItemClickListener = onItemClickListener;
         return viewHolder;

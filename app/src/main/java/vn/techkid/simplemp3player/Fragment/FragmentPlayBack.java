@@ -37,6 +37,7 @@ public class FragmentPlayBack extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_play_back, container, false);
         setupView(view);
+        getActivity().setTitle("PlayBack");
         btnUsUk.setOnClickListener(this);
         btnVietNam.setOnClickListener(this);
         btnChiNa.setOnClickListener(this);

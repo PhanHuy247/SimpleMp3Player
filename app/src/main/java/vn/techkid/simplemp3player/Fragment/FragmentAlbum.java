@@ -105,18 +105,6 @@ public class FragmentAlbum extends Fragment {
         }
     }
 
-//    private void createDataForListAlbum() {
-//        listAlbum[0].add(new Album("http://www.audiosparx.com/sa/zdbpath/catpix/eastern-european-music-licensing.jpg","chac ai do se ve","lossless","Son Tung"));
-//        listAlbum[0].add(new Album("http://www.audiosparx.com/sa/zdbpath/catpix/eastern-european-music-licensing.jpg","chac ai do se ve","lossless","Son Tung"));
-//        listAlbum[0].add(new Album("http://www.audiosparx.com/sa/zdbpath/catpix/eastern-european-music-licensing.jpg","chac ai do se ve","lossless","Son Tung"));
-//        listAlbum[0].add(new Album("http://www.audiosparx.com/sa/zdbpath/catpix/eastern-european-music-licensing.jpg","chac ai do se ve","lossless","Son Tung"));
-//        listAlbum[0].add(new Album("http://www.audiosparx.com/sa/zdbpath/catpix/eastern-european-music-licensing.jpg","chac ai do se ve","lossless","Son Tung"));
-//        listAlbum[0].add(new Album("http://www.audiosparx.com/sa/zdbpath/catpix/eastern-european-music-licensing.jpg","chac ai do se ve","lossless","Son Tung"));
-//        listAlbum[0].add(new Album("http://www.audiosparx.com/sa/zdbpath/catpix/eastern-european-music-licensing.jpg","chac ai do se ve","lossless","Son Tung"));
-//        listAlbum[0].add(new Album("http://www.audiosparx.com/sa/zdbpath/catpix/eastern-european-music-licensing.jpg","chac ai do se ve","lossless","Son Tung"));
-//        listAlbum[0].add(new Album("http://www.audiosparx.com/sa/zdbpath/catpix/eastern-european-music-licensing.jpg","chac ai do se ve","lossless","Son Tung"));
-//    }
-
     private void setupView(View view) {
         recyclerView[0] = (RecyclerView) view.findViewById(R.id.listAlbum);
         recyclerView[1] = (RecyclerView) view.findViewById(R.id.listAlbumUSUK);
