@@ -62,8 +62,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void refreshService() {
-        pService.getMediaPlayer().release();
-        pService.setMediaPlayer(null);
+        if (pService.getMediaPlayer()!=null){
+            pService.getMediaPlayer().stop();
+            pService.getMediaPlayer().release();
+            pService.setMediaPlayer(null);
+            Log.d("check1", "refreshService");
+        }
     }
 
     private void getSongListInfo() {
@@ -120,15 +124,14 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 pService.getMediaPlayer().seekTo(seekBar.getProgress());
+
+
+
             }
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-    }
 
     private void setUpService() {
 
@@ -163,11 +166,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         filter.addAction("updateSeekBar");
         filter.addAction("completed");
         registerReceiver(receiver, filter);
+        Log.d("check2","startNewMusicService");
     }
 
 
     private void get320kDownloadLink(int pos) {
-        Log.d("input", songs.get(pos).getAccessLink());
+        Log.d("check3", "get320kDownloadLink");
         SongGetter getter = new SongGetter(songs.get(pos).getAccessLink());
         try {
             getter.execute().get();
@@ -191,7 +195,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.button_previous:
                 break;
             case R.id.button_next:
-                nextAction(false);
+                nextAction();
                 break;
             case R.id.button_shuffle:
                 break;
@@ -232,27 +236,27 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 tv_timeLeft.setText(remainingTime);
             }
             else if (intent.getAction().equals("completed")){
-                nextAction(true);
+                nextAction();
             }
         }
     }
 
-    private void nextAction(boolean isCompleted) {
-        if (!isCompleted){
-            refreshService();
-        }
-
-
+    private void nextAction() {
+        Log.d("check00", "nextAction");
+        refreshService();
         if (isShuffle){
 
         }
         else {
-            currentPos++;
-            get320kDownloadLink(currentPos);
-            unbindService(connection);
-            startNewMusicService();
-            tv_songName.setText(songs.get(currentPos).getTitle());
-            tv_artistName.setText(songs.get(currentPos).getArtist());
+            currentPos= (currentPos++)%20;
+            Log.d("currentPos", currentPos+"");
+
         }
+        get320kDownloadLink(currentPos);
+        unbindService(connection);
+        startNewMusicService();
+        tv_songName.setText(songs.get(currentPos).getTitle());
+        tv_artistName.setText(songs.get(currentPos).getArtist());
+
     }
 }

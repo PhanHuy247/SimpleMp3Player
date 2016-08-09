@@ -27,15 +27,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private String url;
     private int fullTime, eslapedTime;
     public Handler durationHandler = new Handler();
-    private static final int NOTIFY_ID=1;
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
@@ -98,9 +90,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 //        startForeground(NOTIFY_ID, not);
     }
 
-    public void setMediaPlayer(MediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
-    }
 
     @Override
     public void onDestroy() {
@@ -122,22 +111,24 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         public void run() {
             if (mediaPlayer==null){
                 durationHandler.removeCallbacks(this);
-                return;
             }
-            eslapedTime = mediaPlayer.getCurrentPosition();
-            Intent updateProgressIntent = new Intent();
-            updateProgressIntent.putExtra("progress", eslapedTime);
-            updateProgressIntent.putExtra("fullTime", fullTime);
-            int timeRemaining = fullTime - eslapedTime;
-            int minutesEslaped = (int) TimeUnit.MILLISECONDS.toMinutes((long)eslapedTime);
-            int secondsEslaped = (int) (TimeUnit.MILLISECONDS.toSeconds((long) eslapedTime)-TimeUnit.MINUTES.toSeconds((long)minutesEslaped));
-            updateProgressIntent.putExtra("eslapsedTime", String.format("%d:%d", minutesEslaped, secondsEslaped));
-            int minutesRemaining = (int) TimeUnit.MILLISECONDS.toMinutes((long)timeRemaining);
-            int secondsRemaining = (int) (TimeUnit.MILLISECONDS.toSeconds((long) timeRemaining)-TimeUnit.MINUTES.toSeconds((long)minutesRemaining));
-            updateProgressIntent.putExtra("timeRemaining", String.format("%d:%d", minutesRemaining, secondsRemaining));
-            updateProgressIntent.setAction("updateSeekBar");
-            sendBroadcast(updateProgressIntent);
-            durationHandler.postDelayed(this, 100);
+            else {
+                eslapedTime = mediaPlayer.getCurrentPosition();
+                Intent updateProgressIntent = new Intent();
+                updateProgressIntent.putExtra("progress", eslapedTime);
+                updateProgressIntent.putExtra("fullTime", fullTime);
+                int timeRemaining = fullTime - eslapedTime;
+                int minutesEslaped = (int) TimeUnit.MILLISECONDS.toMinutes((long)eslapedTime);
+                int secondsEslaped = (int) (TimeUnit.MILLISECONDS.toSeconds((long) eslapedTime)-TimeUnit.MINUTES.toSeconds((long)minutesEslaped));
+                updateProgressIntent.putExtra("eslapsedTime", String.format("%d:%d", minutesEslaped, secondsEslaped));
+                int minutesRemaining = (int) TimeUnit.MILLISECONDS.toMinutes((long)timeRemaining);
+                int secondsRemaining = (int) (TimeUnit.MILLISECONDS.toSeconds((long) timeRemaining)-TimeUnit.MINUTES.toSeconds((long)minutesRemaining));
+                updateProgressIntent.putExtra("timeRemaining", String.format("%d:%d", minutesRemaining, secondsRemaining));
+                updateProgressIntent.setAction("updateSeekBar");
+                sendBroadcast(updateProgressIntent);
+                durationHandler.postDelayed(this, 100);
+            }
+
         }
     };
 
@@ -148,11 +139,10 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        durationHandler.removeCallbacks(updateSeekBarTime);
-        Intent notCompletionIntent = new Intent();
-        notCompletionIntent.setAction("completed");
-        sendBroadcast(notCompletionIntent);
-
+        Log.d("check", "onCompletion");
+        Intent intent = new Intent();
+        intent.setAction("completed");
+        sendBroadcast(intent);
     }
 
     public class MyBinder extends Binder {
@@ -161,4 +151,9 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         }
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
+
+    }
 }
