@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/button_play"
             android:layout_weight="1"
-            android:src="@drawable/ic_play_circle_outline_red_300_18dp"/>
+            android:src="@drawable/ic_pause_circle_outline_red_300_18dp"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -52,7 +52,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        Log.d("dmHuy", "onStartCommand");
         return START_NOT_STICKY;
     }
     private void setMediaPlayer() {

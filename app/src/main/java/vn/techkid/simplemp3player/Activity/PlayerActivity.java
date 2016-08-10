@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 import vn.techkid.simplemp3player.Getter.SongGetter;
+import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 import vn.techkid.simplemp3player.Service.PlayingMusicService;
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener{
@@ -34,7 +36,9 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private ImageButton ibt_shuffle, ibt_previous, ibt_play, ibt_next, ibt_repeat;
     private String eslapedTime, remainingTime;
     private int progressTime, fullTime;
-    String url;
+    private String url;
+    private String title;
+    private String artist;
     boolean isBound;
     boolean isShuffle, isLooping, isRepeat;
     int startPos;
@@ -47,19 +51,41 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private boolean fromUser;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        if (getIntent().getStringExtra("resume").equals("yes")){
+//
+//        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-        getSongListInfo();
+
+        getSongInfo();
         initView();
-        get320kDownloadLink(currentPos);
+
         if (pService!=null){
             refreshService();
+            pService.stopSelf();
         }
-
         setUpService();
+//        if (FloatingControlWindow.windowManager!=null){
+//            FloatingControlWindow.windowManager.removeView();
+//        }
+        setBroadcastReceiver();
+    }
+    private void getSongInfo() {
+        title = getIntent().getStringExtra("title");
+        artist = getIntent().getStringExtra("artist");
+        url = getIntent().getStringExtra("url");
+    }
 
+    private void setBroadcastReceiver() {
+        receiver = new PlayingMusicReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("updateSeekBar");
+        filter.addAction("updateSong");
+//        filter.addAction("completed");
+        registerReceiver(receiver, filter);
     }
 
     private void refreshService() {
@@ -73,21 +99,20 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void getSongListInfo() {
-        if (getIntent().getBooleanExtra("playlist", false)){
-            ArrayList<CharSequence> titles = getIntent().getCharSequenceArrayListExtra("titles");
-            ArrayList<CharSequence> artists = getIntent().getCharSequenceArrayListExtra("artists");
-            ArrayList<CharSequence> urls = getIntent().getCharSequenceArrayListExtra("urls");
-            for (int i = 0; i < 20; i++) {
-                Song song = new Song((String)titles.get(i), (String)artists.get(i), (String)urls.get(i), i);
-                songs.add(song);
-            }
-            currentPos = getIntent().getIntExtra("pos", 0);
-            Log.d("pos", currentPos+"");
 
-        }
-    }
 
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if (getIntent().getStringExtra("resume")!=null){
+//            Log.d("khuong", "1");
+//            if (getIntent().getStringExtra("resume").equals("yes")){
+//                Toast.makeText(this, "Resume", Toast.LENGTH_LONG).show();
+//                Log.d("khuong", "2");
+//            }
+//        }
+//
+//    }
 
     private void initView() {
         tv_songName = (TextView)findViewById(R.id.text_songName);
@@ -100,8 +125,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         ibt_play = (ImageButton)findViewById(R.id.button_play);
         ibt_next = (ImageButton)findViewById(R.id.button_next);
         ibt_repeat = (ImageButton)findViewById(R.id.button_repeat);
-        tv_songName.setText(songs.get(currentPos).getTitle());
-        tv_artistName.setText(songs.get(currentPos).getArtist());
+        tv_songName.setText(title);
+        tv_artistName.setText(artist);
         setOnButtonClick();
 
 
@@ -140,7 +165,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        startService(new Intent(PlayerActivity.this, FloatingControlWindow.class));
+//    }
 
     private void setUpService() {
 
@@ -150,7 +179,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
              // Phương thức này được hệ thống gọi khi kết nối tới service bị lỗi
              @Override
              public void onServiceDisconnected(ComponentName name) {
-                 isBound = false;
+
              }
 
              // Phương thức này được hệ thống gọi khi kết nối tới service thành công
@@ -158,7 +187,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
              public void onServiceConnected(ComponentName name, IBinder service) {
                  PlayingMusicService.MyBinder binder = (PlayingMusicService.MyBinder) service;
                  pService = binder.getService(); // lấy đối tượng MyService
-                 isBound = true;
              }
          };
 
@@ -169,31 +197,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private void startNewMusicService (){
         Intent intent = new Intent(this, PlayingMusicService.class);
         intent.putExtra("url", url);
+        startService(intent);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
-        receiver = new PlayingMusicReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("updateSeekBar");
-//        filter.addAction("completed");
-        registerReceiver(receiver, filter);
         Log.d("check2","startNewMusicService");
     }
 
 
-    private void get320kDownloadLink(int pos) {
-        Log.d("check3", "get320kDownloadLink");
-        SongGetter getter = new SongGetter(songs.get(pos).getAccessLink());
-        try {
-            getter.execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        url = getter.getUrl();
-        Log.d("final", url);
-
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -246,26 +255,29 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 if (isCompleted || fromUser){
                     nextAction();
                 }
+                Log.d("music", "isplaying");
+            }
+            else if (intent.getAction().equals("updateSong")){
+                tv_songName.setText(intent.getStringExtra("title"));
+                tv_artistName.setText(intent.getStringExtra("artist"));
+                url = intent.getStringExtra("url");
+                startNewMusicService();
             }
         }
     }
 
     private void nextAction() {
         refreshService();
+        pService.stopSelf();
         unbindService(connection);
         Log.d("check00", "nextAction");
+        Intent requestNextSong = new Intent();
         if (isShuffle){
-
+            requestNextSong.setAction("nextRand");
         }
         else {
-            currentPos= (++currentPos)%20;
-            Log.d("currentPos", currentPos+"");
-
+            requestNextSong.setAction("next");
         }
-        get320kDownloadLink(currentPos);
-        startNewMusicService();
-        tv_songName.setText(songs.get(currentPos).getTitle());
-        tv_artistName.setText(songs.get(currentPos).getArtist());
-
+        sendBroadcast(requestNextSong);
     }
 }

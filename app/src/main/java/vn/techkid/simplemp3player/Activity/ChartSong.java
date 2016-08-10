@@ -19,6 +19,7 @@ import vn.techkid.simplemp3player.Getter.PlaylistGetter;
 import vn.techkid.simplemp3player.Model.Song;
 
 import vn.techkid.simplemp3player.R;
+import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 
 
 public abstract class ChartSong extends AppCompatActivity{
@@ -66,13 +67,13 @@ public abstract class ChartSong extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
+                Intent intent = new Intent(getApplicationContext(), FloatingControlWindow.class);
                 intent.putCharSequenceArrayListExtra("titles", titles);
                 intent.putCharSequenceArrayListExtra("artists", artists);
                 intent.putCharSequenceArrayListExtra("urls", urls);
                 intent.putExtra("pos", position);
                 intent.putExtra("playlist", true);
-                startActivity(intent);
+                startService(intent);
             }
         });
 
