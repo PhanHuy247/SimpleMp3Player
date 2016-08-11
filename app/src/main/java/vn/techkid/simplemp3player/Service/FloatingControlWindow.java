@@ -3,9 +3,11 @@ package vn.techkid.simplemp3player.Service;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
@@ -41,34 +43,43 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
     ArrayList<Song> songs = new ArrayList<>();
     private String url;
     private MusicControlReceiver receiver;
+    ServiceConnection connection;
+    public static PlayingMusicService pService = null;
+    boolean isBound;
+
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initView();
+
+
+
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         getSongListInfo(intent);
         get320kDownloadLink(currentPos);
+        if (pService!=null){
+            refreshService();
+            pService.stopSelf();
+        }
+        setUpService();
+        setBroadcastReceiver();
         Intent i = new Intent(this, PlayerActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra("title", songs.get(currentPos).getTitle());
         i.putExtra("artist", songs.get(currentPos).getArtist());
-        i.putExtra("url", url);
         startActivity(i);
         return START_NOT_STICKY;
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        initView();
-        setBroadcastReceiver();
-
-
-    }
 
     private void setBroadcastReceiver() {
         receiver = new MusicControlReceiver();
@@ -114,18 +125,6 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
                 break;
 
         }
-//        if (intent.getBooleanExtra("playlist", false)){
-//            ArrayList<CharSequence> titles = intent.getCharSequenceArrayListExtra("titles");
-//            ArrayList<CharSequence> artists = intent.getCharSequenceArrayListExtra("artists");
-//            ArrayList<CharSequence> urls = intent.getCharSequenceArrayListExtra("urls");
-//            for (int i = 0; i < 20; i++) {
-//                Song song = new Song((String)titles.get(i), (String)artists.get(i), (String)urls.get(i), i);
-//                songs.add(song);
-//            }
-//            currentPos = intent.getIntExtra("pos", 0);
-//            Log.d("pos", currentPos+"");
-//
-//        }
     }
     private void get320kDownloadLink(int pos) {
         Log.d("check3", "get320kDownloadLink");
@@ -147,6 +146,7 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 
 
     }
+
     private class MusicControlReceiver extends BroadcastReceiver {
 
         @Override
@@ -155,15 +155,64 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 
             }
             else if (intent.getAction().equals("next")){
-                currentPos++;
+                currentPos = (++currentPos)%20;
+                if (PlayerActivity.isDestroyed==false){
+                    Intent updateSongIntent = new Intent();
+                    updateSongIntent.setAction("updateSong");
+                    updateSongIntent.putExtra("title", songs.get(currentPos).getTitle());
+                    updateSongIntent.putExtra("artist", songs.get(currentPos).getArtist());
+                    sendBroadcast(updateSongIntent);
+
+                }
+                refreshService();
+                pService.stopSelf();
                 get320kDownloadLink(currentPos);
-                Intent updateSongIntent = new Intent();
-                updateSongIntent.setAction("updateSong");
+                Intent updateSongIntent = new Intent(getApplicationContext(), PlayingMusicService.class);
                 updateSongIntent.putExtra("title", songs.get(currentPos).getTitle());
                 updateSongIntent.putExtra("artist", songs.get(currentPos).getArtist());
                 updateSongIntent.putExtra("url", url);
-                sendBroadcast(updateSongIntent);
+                startService(updateSongIntent);
             }
         }
+    }
+    private void refreshService() {
+        if (pService.getMediaPlayer()!=null){
+            pService.getMediaPlayer().stop();
+            pService.getMediaPlayer().release();
+            pService.setMediaPlayer(null);
+            Log.d("check1", "refreshService");
+        }
+    }
+    private void setUpService() {
+
+        // Khởi tạo ServiceConnection
+        connection = new ServiceConnection() {
+
+            // Phương thức này được hệ thống gọi khi kết nối tới service bị lỗi
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+            }
+
+            // Phương thức này được hệ thống gọi khi kết nối tới service thành công
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                PlayingMusicService.MyBinder binder = (PlayingMusicService.MyBinder) service;
+                pService = binder.getService(); // lấy đối tượng MyService
+            }
+        };
+
+        startNewMusicService();
+
+    }
+
+    private void startNewMusicService (){
+        Intent intent = new Intent(this, PlayingMusicService.class);
+        intent.putExtra("url", url);
+        startService(intent);
+        if (isBound==false){
+            bindService(intent, connection, Context.BIND_AUTO_CREATE);
+            isBound = true;
+        }
+        Log.d("check2","startNewMusicService");
     }
 }

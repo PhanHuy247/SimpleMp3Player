@@ -39,16 +39,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private String url;
     private String title;
     private String artist;
-    boolean isBound;
-    boolean isShuffle, isLooping, isRepeat;
-    int startPos;
-    static PlayingMusicService pService = null;
-    ArrayList<Song> songs = new ArrayList<>();
-    ServiceConnection connection;
+
+    public static boolean isShuffle, isLooping, isRepeat;
     PlayingMusicReceiver receiver;
     public static boolean isCompleted;
-    static int currentPos;
-    private boolean fromUser;
+//    static int currentPos;
+//    private boolean fromUser;
+    public static boolean isDestroyed;
 
 
 
@@ -59,15 +56,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 //        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-
+        isDestroyed = false;
         getSongInfo();
         initView();
 
-        if (pService!=null){
-            refreshService();
-            pService.stopSelf();
-        }
-        setUpService();
+
 //        if (FloatingControlWindow.windowManager!=null){
 //            FloatingControlWindow.windowManager.removeView();
 //        }
@@ -76,7 +69,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private void getSongInfo() {
         title = getIntent().getStringExtra("title");
         artist = getIntent().getStringExtra("artist");
-        url = getIntent().getStringExtra("url");
     }
 
     private void setBroadcastReceiver() {
@@ -88,31 +80,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         registerReceiver(receiver, filter);
     }
 
-    private void refreshService() {
-        fromUser = false;
-        isCompleted = false;
-        if (pService.getMediaPlayer()!=null){
-            pService.getMediaPlayer().stop();
-            pService.getMediaPlayer().release();
-            pService.setMediaPlayer(null);
-            Log.d("check1", "refreshService");
-        }
-    }
 
-
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if (getIntent().getStringExtra("resume")!=null){
-//            Log.d("khuong", "1");
-//            if (getIntent().getStringExtra("resume").equals("yes")){
-//                Toast.makeText(this, "Resume", Toast.LENGTH_LONG).show();
-//                Log.d("khuong", "2");
-//            }
-//        }
-//
-//    }
 
     private void initView() {
         tv_songName = (TextView)findViewById(R.id.text_songName);
@@ -151,56 +119,14 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (seekBar.getProgress()!=fullTime){
-                    pService.getMediaPlayer().seekTo(seekBar.getProgress());
-
-                }
-                else {
-                    fromUser = true;
-                }
-
-
-
+                int pgr = (seekBar.getProgress()<fullTime-1000)?seekBar.getProgress():(fullTime-1000);
+                FloatingControlWindow.pService.getMediaPlayer().seekTo(pgr);
             }
         });
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        startService(new Intent(PlayerActivity.this, FloatingControlWindow.class));
-//    }
 
-    private void setUpService() {
 
-        // Khởi tạo ServiceConnection
-         connection = new ServiceConnection() {
-
-             // Phương thức này được hệ thống gọi khi kết nối tới service bị lỗi
-             @Override
-             public void onServiceDisconnected(ComponentName name) {
-
-             }
-
-             // Phương thức này được hệ thống gọi khi kết nối tới service thành công
-             @Override
-             public void onServiceConnected(ComponentName name, IBinder service) {
-                 PlayingMusicService.MyBinder binder = (PlayingMusicService.MyBinder) service;
-                 pService = binder.getService(); // lấy đối tượng MyService
-             }
-         };
-
-        startNewMusicService();
-
-    }
-
-    private void startNewMusicService (){
-        Intent intent = new Intent(this, PlayingMusicService.class);
-        intent.putExtra("url", url);
-        startService(intent);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
-        Log.d("check2","startNewMusicService");
-    }
 
 
 
@@ -228,13 +154,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void playAction() {
-        if (pService.getMediaPlayer().isPlaying()){
+        if (FloatingControlWindow.pService.getMediaPlayer().isPlaying()){
             ibt_play.setImageResource(R.drawable.ic_play_circle_outline_red_300_18dp);
-            pService.getMediaPlayer().pause();
+            FloatingControlWindow.pService.getMediaPlayer().pause();
         }
         else {
             ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
-            pService.getMediaPlayer().start();
+            FloatingControlWindow.pService.getMediaPlayer().start();
         }
     }
 
@@ -252,32 +178,29 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 sb_timeProgress.setProgress(progressTime);
                 tv_eslapedTime.setText(eslapedTime);
                 tv_timeLeft.setText(remainingTime);
-                if (isCompleted || fromUser){
-                    nextAction();
-                }
                 Log.d("music", "isplaying");
             }
             else if (intent.getAction().equals("updateSong")){
                 tv_songName.setText(intent.getStringExtra("title"));
                 tv_artistName.setText(intent.getStringExtra("artist"));
-                url = intent.getStringExtra("url");
-                startNewMusicService();
             }
         }
     }
 
     private void nextAction() {
-        refreshService();
-        pService.stopSelf();
-        unbindService(connection);
-        Log.d("check00", "nextAction");
-        Intent requestNextSong = new Intent();
+        Intent nextSongIntent = new Intent();
         if (isShuffle){
-            requestNextSong.setAction("nextRand");
+            nextSongIntent.setAction("nextRand");
         }
         else {
-            requestNextSong.setAction("next");
+            nextSongIntent.setAction("next");
         }
-        sendBroadcast(requestNextSong);
+        sendBroadcast(nextSongIntent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isDestroyed = true;
     }
 }

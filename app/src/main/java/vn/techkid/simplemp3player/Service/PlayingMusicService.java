@@ -37,8 +37,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        url = intent.getStringExtra("url");
-        setMediaPlayer();
         return new MyBinder();
     }
 
@@ -53,6 +51,9 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("dmHuy", "onStartCommand");
+        url = intent.getStringExtra("url");
+        setMediaPlayer();
+//        setBroadcastReceiver();
         return START_NOT_STICKY;
     }
     private void setMediaPlayer() {
@@ -82,19 +83,19 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 //
 //        String songName;
 // assign the song name to songName
-        PendingIntent pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
-                new Intent(getApplicationContext(), PlayerActivity.class),
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification.Builder mBuilder = new Notification.Builder(this);
-
-        mBuilder.setContentIntent(pendInt)
-                .setSmallIcon(R.drawable.image_music)
-                .setContentTitle("New Message")
-                .setContentText("You've received new message.")
-                .setTicker("New Message Alert!")
-                .setContentIntent(pendInt);
-        Notification not = mBuilder.build();
-        startForeground(NOTIFY_ID, not);
+//        PendingIntent pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
+//                new Intent(getApplicationContext(), PlayerActivity.class),
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+//        Notification.Builder mBuilder = new Notification.Builder(this);
+//
+//        mBuilder.setContentIntent(pendInt)
+//                .setSmallIcon(R.drawable.image_music)
+//                .setContentTitle("New Message")
+//                .setContentText("You've received new message.")
+//                .setTicker("New Message Alert!")
+//                .setContentIntent(pendInt);
+//        Notification not = mBuilder.build();
+//        startForeground(NOTIFY_ID, not);
     }
 
 
@@ -148,7 +149,14 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        PlayerActivity.isCompleted = true;
+        Intent requestNextSong = new Intent();
+        if (PlayerActivity.isShuffle) {
+            requestNextSong.setAction("nextRand");
+        }
+        else {
+            requestNextSong.setAction("next");
+        }
+        sendBroadcast(requestNextSong);
     }
 
     public class MyBinder extends Binder {
@@ -157,9 +165,5 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         }
     }
 
-    @Override
-    public boolean onUnbind(Intent intent) {
-        return super.onUnbind(intent);
 
-    }
 }
