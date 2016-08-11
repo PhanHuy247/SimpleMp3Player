@@ -79,6 +79,12 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 //        PendingIntent pendInt = PendingIntent.getActivity(this, 0,
 //                notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 //
+//
+//        String songName;
+// assign the song name to songName
+//        PendingIntent pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
+//                new Intent(getApplicationContext(), PlayerActivity.class),
+//                PendingIntent.FLAG_UPDATE_CURRENT);
 //        Notification.Builder mBuilder = new Notification.Builder(this);
 //
 //        mBuilder.setContentIntent(pendInt)

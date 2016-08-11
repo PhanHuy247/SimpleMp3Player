@@ -11,13 +11,15 @@ import android.widget.ImageButton;
 
 import com.squareup.picasso.Picasso;
 
+import vn.techkid.simplemp3player.Activity.ChartSongKorea;
+import vn.techkid.simplemp3player.Activity.ChartSongUSUK;
 import vn.techkid.simplemp3player.Activity.ChartSongVietNam;
 import vn.techkid.simplemp3player.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentChartSong extends Fragment {
+public class FragmentChartSong extends Fragment implements View.OnClickListener{
     ImageButton imgVietnam;
     ImageButton imgEurope;
     ImageButton imgKorea;
@@ -57,13 +59,26 @@ public class FragmentChartSong extends Fragment {
         imgVietnam = (ImageButton) view.findViewById(R.id.imgVietNam);
         imgEurope = (ImageButton) view.findViewById(R.id.imgEurope);
         imgKorea = (ImageButton) view.findViewById(R.id.imgKorea);
-        imgVietnam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ChartSongVietNam.class);
-                startActivity(intent);
-            }
-        });
+        imgVietnam.setOnClickListener(this);
+        imgEurope.setOnClickListener(this);
+        imgKorea.setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.imgVietNam:
+                Intent vnIntent = new Intent(getActivity(), ChartSongVietNam.class);
+                startActivity(vnIntent);
+                break;
+            case R.id.imgEurope:
+                Intent euIntent = new Intent(getActivity(), ChartSongUSUK.class);
+                startActivity(euIntent);
+                break;
+            case R.id.imgKorea:
+                Intent kIntent = new Intent(getActivity(), ChartSongKorea.class);
+                startActivity(kIntent);
+                break;
+        }
+    }
 }
