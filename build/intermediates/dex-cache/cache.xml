@@ -1,3 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
 
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-23.4.0_2b2ca54abf0d8436809e975dbbd819caca67be26\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="ec75036c3c52e451d0cde50a5aedaf5fd32354a0">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-recyclerview-v7-23.4.0_2140235fa88d4b2c24b6ade0f03af54c8b462006\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="d9ecde39b460470e655de6e47c05573d2d5a8bfb">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-cardview-v7-23.4.0_7fb6fa1c3677f35a236bcf543cf37c206d008d13\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="662ac7faa30dd98c9728172c2d63118f7f73a643">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_1ac9ab8acf99638e6b6f32a109f71ecdf09a6416\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.4.0\support-annotations-23.4.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-23.4.0_f8a5169d4e55abb5d5f60eb0f222cd9662196eae\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\exploded-aar\com.android.support\design\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="5326d9a850d491714fef8cbfaa9ea3416f0bf0d2">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-23.4.0_99cf7e25f1f14d112a64b378efaf3f5a2170bc2b\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="de4db3785756bfb0915a9f59a9b3f2fea7407be4">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-23.4.0_03a054d2475f03d48ca7ea901e931b379d984b6f\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.4.0\jars\libs\internal_impl-23.4.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.4.0_cfa03759dbea15faf40a4cad63f90f559546ff0a\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="67bd36ee9340ec7c254108936ad16b24bed160cc">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-23.4.0_fcb2da4e68427ad53ef6f638b0db1e7262723387\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="548f06de403a9409f00554b3ee12a9fdea0e236c">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-23.4.0_ab44a813fdc40c4eaf47dacbed92cb1d1570e21f\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="7a0ad2199895fa3acf243ed5815fd46bcb243243">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_5d320c6d0d3a7bc911ec627a761fea25cd4074c0\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.5.2\7446d06ec8d4f7ffcc53f1da37c95f200dcb9387\picasso-2.5.2.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\picasso-2.5.2_b33bf8661b2829a620bfdb25b480693dc689b842\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\libs\jsoup-1.9.2.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="edb0ddf3bd59dec0947f6eda75b6cf2264fc5e4b">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\2\jsoup-1.9.2_bc12c51263b5695ef3608f753265b9f68b9801d1\classes.dex" />
+    </item>
+
+</items>
