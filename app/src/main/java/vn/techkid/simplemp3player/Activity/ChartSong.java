@@ -24,11 +24,12 @@ import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 
 public abstract class ChartSong extends AppCompatActivity{
     private Toolbar toolbar;
-    public ListView lv_songs;
-    ArrayList<Song> songs;
+    public  ListView lv_songs;
+    public static ArrayList<Song> songs;
     ArrayList<CharSequence> titles = new ArrayList<>();
     ArrayList<CharSequence> artists = new ArrayList<>();
     ArrayList<CharSequence> urls = new ArrayList<>();
+    public String intentKey;
 
 
 
@@ -66,19 +67,21 @@ public abstract class ChartSong extends AppCompatActivity{
         lv_songs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Intent intent = new Intent(getApplicationContext(), FloatingControlWindow.class);
-                intent.putCharSequenceArrayListExtra("titles", titles);
-                intent.putCharSequenceArrayListExtra("artists", artists);
-                intent.putCharSequenceArrayListExtra("urls", urls);
+//                intent.putCharSequenceArrayListExtra("titles", titles);
+//                intent.putCharSequenceArrayListExtra("artists", artists);
+//                intent.putCharSequenceArrayListExtra("urls", urls);
                 intent.putExtra("pos", position);
-                intent.putExtra("playlist", true);
+//                intent.putExtra("playlist", true);
+                intent.putExtra("key", intentKey);
                 startService(intent);
+
             }
         });
 
 
     }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -22,6 +22,9 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import vn.techkid.simplemp3player.Activity.ChartSongKorea;
+import vn.techkid.simplemp3player.Activity.ChartSongUSUK;
+import vn.techkid.simplemp3player.Activity.ChartSongVietNam;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Getter.SongGetter;
 import vn.techkid.simplemp3player.Model.Song;
@@ -96,18 +99,33 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 //        windowManager.addView(linearLayout, params);
     }
     private void getSongListInfo(Intent intent) {
-        if (intent.getBooleanExtra("playlist", false)){
-            ArrayList<CharSequence> titles = intent.getCharSequenceArrayListExtra("titles");
-            ArrayList<CharSequence> artists = intent.getCharSequenceArrayListExtra("artists");
-            ArrayList<CharSequence> urls = intent.getCharSequenceArrayListExtra("urls");
-            for (int i = 0; i < 20; i++) {
-                Song song = new Song((String)titles.get(i), (String)artists.get(i), (String)urls.get(i), i);
-                songs.add(song);
-            }
-            currentPos = intent.getIntExtra("pos", 0);
-            Log.d("pos", currentPos+"");
+        switch (intent.getStringExtra("key")){
+            case "vn":
+                songs = ChartSongVietNam.songs;
+                currentPos = intent.getIntExtra("pos", 0);
+                break;
+            case "us-uk":
+                songs = ChartSongUSUK.songs;
+                currentPos = intent.getIntExtra("pos", 0);
+                break;
+            case "ko":
+                songs = ChartSongKorea.songs;
+                currentPos = intent.getIntExtra("pos", 0);
+                break;
 
         }
+//        if (intent.getBooleanExtra("playlist", false)){
+//            ArrayList<CharSequence> titles = intent.getCharSequenceArrayListExtra("titles");
+//            ArrayList<CharSequence> artists = intent.getCharSequenceArrayListExtra("artists");
+//            ArrayList<CharSequence> urls = intent.getCharSequenceArrayListExtra("urls");
+//            for (int i = 0; i < 20; i++) {
+//                Song song = new Song((String)titles.get(i), (String)artists.get(i), (String)urls.get(i), i);
+//                songs.add(song);
+//            }
+//            currentPos = intent.getIntExtra("pos", 0);
+//            Log.d("pos", currentPos+"");
+//
+//        }
     }
     private void get320kDownloadLink(int pos) {
         Log.d("check3", "get320kDownloadLink");

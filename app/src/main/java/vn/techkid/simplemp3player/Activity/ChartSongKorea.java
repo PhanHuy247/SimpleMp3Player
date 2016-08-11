@@ -7,5 +7,6 @@ public class ChartSongKorea extends ChartSong {
 
     public ChartSongKorea(){
         URL = "http://chiasenhac.vn/mp3/korea/";
+        intentKey = "ko";
     }
 }

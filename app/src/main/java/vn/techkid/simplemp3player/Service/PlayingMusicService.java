@@ -27,7 +27,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private String url;
     private int fullTime, eslapedTime;
     public Handler durationHandler = new Handler();
-
+    public static final int NOTIFY_ID = 1912;
 
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
@@ -82,18 +82,19 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 //
 //        String songName;
 // assign the song name to songName
-//        PendingIntent pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
-//                new Intent(getApplicationContext(), PlayerActivity.class),
-//                PendingIntent.FLAG_UPDATE_CURRENT);
-//        Notification.Builder mBuilder = new Notification.Builder(this);
-//
-//        mBuilder.setContentIntent(pendInt)
-//                .setSmallIcon(R.drawable.image_music)
-//                .setContentTitle("New Message")
-//                .setContentText("You've received new message.")
-//                .setTicker("New Message Alert!");
-//        Notification not = mBuilder.build();
-//        startForeground(NOTIFY_ID, not);
+        PendingIntent pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
+                new Intent(getApplicationContext(), PlayerActivity.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification.Builder mBuilder = new Notification.Builder(this);
+
+        mBuilder.setContentIntent(pendInt)
+                .setSmallIcon(R.drawable.image_music)
+                .setContentTitle("New Message")
+                .setContentText("You've received new message.")
+                .setTicker("New Message Alert!")
+                .setContentIntent(pendInt);
+        Notification not = mBuilder.build();
+        startForeground(NOTIFY_ID, not);
     }
 
 

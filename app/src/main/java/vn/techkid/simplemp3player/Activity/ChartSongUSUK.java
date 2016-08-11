@@ -10,5 +10,6 @@ public class ChartSongUSUK extends ChartSong {
 
     public ChartSongUSUK(){
         URL = "http://chiasenhac.vn/mp3/us-uk/";
+        intentKey = "us-uk";
     }
 }
