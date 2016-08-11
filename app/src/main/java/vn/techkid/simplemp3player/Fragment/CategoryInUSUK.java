@@ -18,7 +18,7 @@ public class CategoryInUSUK extends Fragment implements View.OnClickListener{
     public static String URLRAP_HIPHOP = "http://chiasenhac.vn/mp3/us-uk/u-rap-hiphop/";
     public static String URLDANCE_REMIX = "http://chiasenhac.vn/mp3/us-uk/u-dance-remix/";
     Button btnpop_rock,btnrap_hiphop,btndance_remix,btntraditional;
-//    CategoryUsUk categoryUsUk;
+    CategoryUsUk categoryUsUk;
     public CategoryInUSUK() {
         // Required empty public constructor
     }
@@ -59,11 +59,11 @@ public class CategoryInUSUK extends Fragment implements View.OnClickListener{
         }
     }
     public void setupFragment(String url){
-//        categoryUsUk =  new CategoryUsUk();
-//        categoryUsUk.setUrl(url);
-//        getFragmentManager().beginTransaction().replace(R.id.frame_container,categoryUsUk)
-//                .addToBackStack(null)
-//                .commit();
+        categoryUsUk =  new CategoryUsUk();
+        categoryUsUk.setUrl(url);
+        getFragmentManager().beginTransaction().replace(R.id.frame_container,categoryUsUk)
+                .addToBackStack(null)
+                .commit();
 
     }
 }
