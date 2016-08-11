@@ -68,13 +68,17 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
         }
         setUpService();
         setBroadcastReceiver();
-        Intent i = new Intent(this, PlayerActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.putExtra("title", songs.get(currentPos).getTitle());
-        i.putExtra("artist", songs.get(currentPos).getArtist());
-        startActivity(i);
+        setUpPlayer();
         return START_NOT_STICKY;
     }
+
+    private void setUpPlayer() {
+        Intent i = new Intent(this, PlayerActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+
+    }
+
 
 
     private void setBroadcastReceiver() {
@@ -141,14 +145,6 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
             }
             else if (intent.getAction().equals("next")){
                 currentPos = (++currentPos)%20;
-                if (PlayerActivity.isDestroyed==false){
-                    Intent updateSongIntent = new Intent();
-                    updateSongIntent.setAction("updateSong");
-                    updateSongIntent.putExtra("title", songs.get(currentPos).getTitle());
-                    updateSongIntent.putExtra("artist", songs.get(currentPos).getArtist());
-                    sendBroadcast(updateSongIntent);
-
-                }
                 refreshService();
                 pService.stopSelf();
                 get320kDownloadLink(currentPos);
@@ -157,6 +153,7 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
                 updateSongIntent.putExtra("artist", songs.get(currentPos).getArtist());
                 updateSongIntent.putExtra("url", url);
                 startService(updateSongIntent);
+
             }
         }
     }
@@ -193,6 +190,8 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
     private void startNewMusicService (){
         Intent intent = new Intent(this, PlayingMusicService.class);
         intent.putExtra("url", url);
+        intent.putExtra("title", songs.get(currentPos).getTitle());
+        intent.putExtra("artist", songs.get(currentPos).getArtist());
         startService(intent);
         if (isBound==false){
             bindService(intent, connection, Context.BIND_AUTO_CREATE);

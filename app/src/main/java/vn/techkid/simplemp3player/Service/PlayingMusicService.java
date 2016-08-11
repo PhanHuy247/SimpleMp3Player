@@ -25,6 +25,7 @@ import vn.techkid.simplemp3player.R;
  */
 public class PlayingMusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener{
     private String url;
+    private String title, artist;
     private int fullTime, eslapedTime;
     public Handler durationHandler = new Handler();
     public static final int NOTIFY_ID = 1912;
@@ -52,6 +53,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("dmHuy", "onStartCommand");
         url = intent.getStringExtra("url");
+        title = intent.getStringExtra("title");
+        artist = intent.getStringExtra("artist");
         setMediaPlayer();
 //        setBroadcastReceiver();
         return START_NOT_STICKY;
@@ -83,19 +86,20 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 //
 //        String songName;
 // assign the song name to songName
-//        PendingIntent pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
-//                new Intent(getApplicationContext(), PlayerActivity.class),
-//                PendingIntent.FLAG_UPDATE_CURRENT);
-//        Notification.Builder mBuilder = new Notification.Builder(this);
-//
-//        mBuilder.setContentIntent(pendInt)
-//                .setSmallIcon(R.drawable.image_music)
-//                .setContentTitle("New Message")
-//                .setContentText("You've received new message.")
-//                .setTicker("New Message Alert!")
-//                .setContentIntent(pendInt);
-//        Notification not = mBuilder.build();
-//        startForeground(NOTIFY_ID, not);
+        Intent resultIntent = new Intent(getApplicationContext(), PlayerActivity.class);
+        PendingIntent pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification.Builder mBuilder = new Notification.Builder(this);
+
+        mBuilder.setContentIntent(pendInt)
+                .setSmallIcon(R.drawable.image_music)
+                .setContentTitle("New Message")
+                .setContentText("You've received new message.")
+                .setTicker("New Message Alert!")
+                .setContentIntent(pendInt);
+        Notification not = mBuilder.build();
+        startForeground(NOTIFY_ID, not);
     }
 
 
@@ -122,6 +126,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             Intent updateProgressIntent = new Intent();
             updateProgressIntent.putExtra("progress", eslapedTime);
             updateProgressIntent.putExtra("fullTime", fullTime);
+            updateProgressIntent.putExtra("title", title);
+            updateProgressIntent.putExtra("artist", artist);
             int timeRemaining = fullTime - eslapedTime;
             int minutesEslaped = (int) TimeUnit.MILLISECONDS.toMinutes((long)eslapedTime);
             int secondsEslaped = (int) (TimeUnit.MILLISECONDS.toSeconds((long) eslapedTime)-TimeUnit.MINUTES.toSeconds((long)minutesEslaped));

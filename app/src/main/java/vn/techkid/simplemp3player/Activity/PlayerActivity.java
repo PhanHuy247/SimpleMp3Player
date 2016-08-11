@@ -30,15 +30,13 @@ import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 import vn.techkid.simplemp3player.Service.PlayingMusicService;
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener{
-    private TextView tv_songName, tv_artistName;
+    public TextView tv_songName, tv_artistName;
     private TextView tv_eslapedTime, tv_timeLeft;
     private SeekBar sb_timeProgress;
     private ImageButton ibt_shuffle, ibt_previous, ibt_play, ibt_next, ibt_repeat;
     private String eslapedTime, remainingTime;
     private int progressTime, fullTime;
     private String url;
-    private String title;
-    private String artist;
 
     public static boolean isShuffle, isLooping, isRepeat;
     PlayingMusicReceiver receiver;
@@ -57,7 +55,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         isDestroyed = false;
-        getSongInfo();
         initView();
 
 
@@ -66,17 +63,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 //        }
         setBroadcastReceiver();
     }
-    private void getSongInfo() {
-        title = getIntent().getStringExtra("title");
-        artist = getIntent().getStringExtra("artist");
-    }
 
     private void setBroadcastReceiver() {
         receiver = new PlayingMusicReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("updateSeekBar");
-        filter.addAction("updateSong");
-//        filter.addAction("completed");
         registerReceiver(receiver, filter);
     }
 
@@ -93,8 +84,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         ibt_play = (ImageButton)findViewById(R.id.button_play);
         ibt_next = (ImageButton)findViewById(R.id.button_next);
         ibt_repeat = (ImageButton)findViewById(R.id.button_repeat);
-        tv_songName.setText(title);
-        tv_artistName.setText(artist);
         setOnButtonClick();
 
 
@@ -178,11 +167,9 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 sb_timeProgress.setProgress(progressTime);
                 tv_eslapedTime.setText(eslapedTime);
                 tv_timeLeft.setText(remainingTime);
-                Log.d("music", "isplaying");
-            }
-            else if (intent.getAction().equals("updateSong")){
                 tv_songName.setText(intent.getStringExtra("title"));
                 tv_artistName.setText(intent.getStringExtra("artist"));
+                Log.d("music", "isplaying");
             }
         }
     }
