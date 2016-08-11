@@ -26,6 +26,7 @@
             android:text="namebaihat"
             android:textStyle="bold"
             android:paddingTop="6dp"
+            android:textColor="@color/colorAccent"
             android:id="@+id/tv_title"/>
         <TextView
             android:layout_below="@+id/tv_title"

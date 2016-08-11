@@ -20,9 +20,11 @@
             android:label="@string/chiasenhac"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Activity.ChartSongVietNam"
-            android:label="ChartSongVietNam"
-            android:parentActivityName=".Activity.MainActivity" />
+            android:name=".Activity.ChartSong"
+            android:label="Bảng Xếp Hạng"
+            android:theme="@style/AppTheme">
+
+        </activity>
         <activity
             android:name=".Activity.TabLayoutActivity"
             android:label="Offline"

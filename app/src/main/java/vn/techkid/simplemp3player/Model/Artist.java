@@ -6,10 +6,20 @@ package vn.techkid.simplemp3player.Model;
 public class Artist {
     String charNumber;
     String nameArtist;
+    String link;
 
-    public Artist(String charNumber, String nameArtist) {
+    public Artist(String number, String artist, String charNumber, String nameArtist, String link) {
         this.charNumber = charNumber;
         this.nameArtist = nameArtist;
+        this.link = link;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getCharNumber() {

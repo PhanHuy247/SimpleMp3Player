@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="vn.techkid.simplemp3player.Fragment.FragmentChartSong">
+    tools:context=".Fragment.ChartSongFragment">
 
     <!-- TODO: Update blank fragment layout -->
         <TextView
@@ -18,55 +18,40 @@
         <LinearLayout
             android:id="@+id/linear"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="399dp"
             android:layout_below="@id/txtBaiHat"
-            android:orientation="horizontal"
-            android:weightSum="2"
+            android:orientation="vertical"
+            android:weightSum="3"
+            android:padding="6dp"
             >
             <ImageButton
                 android:background="@color/colorWhite"
                 android:id="@+id/imgVietNam"
-                android:layout_marginTop="6dp"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
+                android:layout_marginTop="12dp"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:scaleType="fitXY"
                 android:padding="6dp"
+                android:paddingLeft="14dp"
+                android:paddingTop="14dp"
                />
             <ImageButton
                 android:background="@color/colorWhite"
                 android:id="@+id/imgEurope"
-                android:layout_marginTop="6dp"
-                android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:layout_width="0dp"
+                android:layout_marginTop="12dp"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:padding="6dp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/linear2"
-            android:layout_below="@+id/linear"
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
+                android:padding="12dp"/>
             <ImageButton
                     android:background="@color/colorWhite"
                     android:id="@+id/imgKorea"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="match_parent"
                     android:padding="6dp"
                     />
     </LinearLayout>
-
-        <View
-            android:layout_below="@id/linear2"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/purple"
-            />
-
 
 </RelativeLayout>

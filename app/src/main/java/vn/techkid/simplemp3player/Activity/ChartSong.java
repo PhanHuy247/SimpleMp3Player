@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -22,7 +24,7 @@ import vn.techkid.simplemp3player.R;
 import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 
 
-public abstract class ChartSong extends AppCompatActivity{
+public class ChartSong extends AppCompatActivity{
     private Toolbar toolbar;
     public  ListView lv_songs;
     public static ArrayList<Song> songs;
@@ -46,6 +48,7 @@ public abstract class ChartSong extends AppCompatActivity{
 
     private void initView() {
         lv_songs = (ListView) findViewById(R.id.listchartvietnam);
+        URL = getIntent().getStringExtra("URL");
         PlaylistGetter getter = new PlaylistGetter(URL);
         try {
             getter.execute().get();

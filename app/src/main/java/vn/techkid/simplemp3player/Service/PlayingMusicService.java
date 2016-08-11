@@ -103,8 +103,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public void onDestroy() {
         Log.d("destroy", "Yes");
         super.onDestroy();
-
-
     }
 
     public void play() {

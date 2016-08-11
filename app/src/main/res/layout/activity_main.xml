@@ -23,7 +23,7 @@
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:name="vn.techkid.simplemp3player.Fragment.FragmentNavi"
+        android:name="vn.techkid.simplemp3player.Fragment.NaviFragment"
         app:layout="@layout/fragment_navi"
         tools:layout="@layout/fragment_navi" />
 

@@ -52,10 +52,6 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.Catego
         holder.txtNameArtist.setText(listCategory.get(position).getNameArtistCategory());
         holder.category.setText(listCategory.get(position).getNameCategoryQuality());
         holder.ranking.setText(listCategory.get(position).getRanking());
-        Picasso.with(itemView.getContext())
-                .load(listCategory.get(position).getImgCategory())
-                .resize(50,50)
-                .into(holder.imgCategory);
     }
 
     @Override
@@ -67,13 +63,11 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.Catego
         public TextView txtNameCategory;
         public TextView txtNameArtist;
         public TextView category;
-        public ImageView imgCategory;
         public TextView ranking;
         public CategoryViewHolder(final View itemView) {
             super(itemView);
             txtNameCategory = (TextView)itemView.findViewById(R.id.txtNameSongCategory);
             txtNameArtist = (TextView)itemView.findViewById(R.id.txtNameArtistCategory);
-            imgCategory = (ImageView)itemView.findViewById(R.id.imgCategory);
             category = (TextView) itemView.findViewById(R.id.categoryQuality);
             ranking = (TextView) itemView.findViewById(R.id.txtchartCategoryNumber);
 

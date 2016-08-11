@@ -16,23 +16,32 @@ public class Song {
     private String detailDownloadLink;
     private int position;
 
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
 
     public Song(){
 
     }
+
+    public Song(int position, String title, String accessLink) {
+        this.position = position;
+        this.title = title;
+        this.accessLink = accessLink;
+    }
+
     public Song(String title, String artist, String linkSong, int position) {
         this.title = title;
         this.artist = artist;
         this.accessLink = linkSong;
         this.position = position;
     }
+
+    public Song(String title, String artist, String album, String accessLink, int position) {
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
+        this.accessLink = accessLink;
+        this.position = position;
+    }
+
     public String getImageSrc() {
         return imageSrc;
     }
@@ -96,5 +105,13 @@ public class Song {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

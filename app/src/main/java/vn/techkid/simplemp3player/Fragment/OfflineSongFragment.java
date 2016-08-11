@@ -4,7 +4,6 @@ package vn.techkid.simplemp3player.Fragment;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +11,9 @@ import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
-import vn.techkid.simplemp3player.Adapter.AdapterSong;
 import vn.techkid.simplemp3player.R;
 import vn.techkid.simplemp3player.Model.Song;
-import vn.techkid.simplemp3player.Manager.SongManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +33,7 @@ public class OfflineSongFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_song, container, false);
+        View view = inflater.inflate(R.layout.fragment_offline_song, container, false);
         initView(view);
         return view;
     }

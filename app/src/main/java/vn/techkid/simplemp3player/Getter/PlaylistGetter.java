@@ -1,11 +1,7 @@
 package vn.techkid.simplemp3player.Getter;
 
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,9 +10,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import vn.techkid.simplemp3player.Activity.ChartSongVietNam;
-import vn.techkid.simplemp3player.Activity.PlayerActivity;
-import vn.techkid.simplemp3player.Adapter.AdapterSong;
 import vn.techkid.simplemp3player.Model.Song;
 
 /**
@@ -36,6 +29,8 @@ public class PlaylistGetter extends AsyncTask<Void, Void, Void> {
         try {
             Document document = Jsoup.connect(url).get();
             Elements elements = document.select("div[class=text2 text2x]");
+            if(elements.size() == 0)
+                elements = document.select("div[class=text2]");
             Log.d("hey", elements.size()+"");
 
             for (int i = 0; i < elements.size(); i++) {

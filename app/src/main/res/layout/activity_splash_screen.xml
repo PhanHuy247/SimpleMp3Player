@@ -6,8 +6,9 @@
     android:gravity="center"
     tools:context="vn.techkid.simplemp3player.Activity.SplashScreenActivity">
     <ImageView
+        android:id="@+id/imgsplash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/splashscreen"/>
+        android:scaleType="fitXY"/>
 
 </RelativeLayout>

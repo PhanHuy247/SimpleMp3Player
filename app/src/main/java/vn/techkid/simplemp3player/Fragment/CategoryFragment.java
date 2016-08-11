@@ -6,7 +6,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,18 +35,19 @@ public class CategoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().setTitle("Category");
         if(view == null){
             view =  inflater.inflate(R.layout.fragment_category, container, false);
             setUpView(view);
             Log.d("phanhuy","phanhuy");
         }
-        getActivity().setTitle("Category");
+
         return view;
     }
     private ViewPagerAdapter setUpViewPage() {
-            adapter.addFrag(new CategoryVietNam(),"VietNam");
-            adapter.addFrag(new CategoryKorea()," Korea ");
-            adapter.addFrag(new CategoryUSUK()," US-UK ");
+            adapter.addFrag(new CategoryInVietNam(),"VietNam");
+            adapter.addFrag(new CategoryInKorea()," Korea ");
+            adapter.addFrag(new CategoryInUSUK()," US-UK ");
             adapter.addFrag(new CategoryChina()," China ");
             adapter.addFrag(new CategoryJapan()," Japan ");
             Log.d("huy", String.valueOf(adapter.getCount()));

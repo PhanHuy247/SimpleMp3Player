@@ -4,7 +4,6 @@ package vn.techkid.simplemp3player.Activity;
 
 
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,15 +13,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import vn.techkid.simplemp3player.Fragment.FragmentDisplay;
-import vn.techkid.simplemp3player.Fragment.FragmentNavi;
+import vn.techkid.simplemp3player.Fragment.DisplayFragment;
+import vn.techkid.simplemp3player.Fragment.NaviFragment;
 import vn.techkid.simplemp3player.R;
 
 public class MainActivity extends AppCompatActivity {
-    FragmentNavi fragmentNavi ;
+    NaviFragment fragmentNavi ;
     DrawerLayout drawer;
     View view;
-    FragmentDisplay fragmentDisplay = new FragmentDisplay();
+    DisplayFragment fragmentDisplay = new DisplayFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void CloseNavigation() {
-        fragmentNavi = (FragmentNavi)
+        fragmentNavi = (NaviFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         fragmentNavi.setUp(view,drawer);
     }

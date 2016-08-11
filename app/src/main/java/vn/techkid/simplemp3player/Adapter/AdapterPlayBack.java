@@ -53,10 +53,7 @@ public class AdapterPlayBack extends  RecyclerView.Adapter<AdapterPlayBack.PlayB
         holder.txtNameArtist.setText(listPlayBack.get(position).getNameArtistPlayBack());
         holder.category.setText(listPlayBack.get(position).getNameCategoryPlayBack());
         holder.ranking.setText(listPlayBack.get(position).getRanking());
-        Picasso.with(itemView.getContext())
-                .load(listPlayBack.get(position).getImgPlayBack())
-                .resize(50,50)
-                .into(holder.imgPlayBack);
+
     }
 
     @Override
@@ -68,13 +65,11 @@ public class AdapterPlayBack extends  RecyclerView.Adapter<AdapterPlayBack.PlayB
         public TextView txtNamePlayBack;
         public TextView txtNameArtist;
         public TextView category;
-        public ImageView imgPlayBack;
         public TextView ranking;
         public PlayBackViewHolder(final View itemView) {
             super(itemView);
             txtNamePlayBack = (TextView)itemView.findViewById(R.id.txtNameSongPlayBack);
             txtNameArtist = (TextView)itemView.findViewById(R.id.txtNameArtistPlayBack);
-            imgPlayBack = (ImageView)itemView.findViewById(R.id.imgPlayBack);
             category = (TextView) itemView.findViewById(R.id.categoryPlayBack);
             ranking = (TextView) itemView.findViewById(R.id.txtchartPlayBackNumber);
 

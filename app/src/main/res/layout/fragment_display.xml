@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="@color/backgroundDisplay"
     android:elevation="4dp"
-    tools:context="vn.techkid.simplemp3player.Fragment.FragmentDisplay">
+    tools:context=".Fragment.DisplayFragment">
         <ImageView
               android:layout_width="match_parent"
               android:layout_height="wrap_content"

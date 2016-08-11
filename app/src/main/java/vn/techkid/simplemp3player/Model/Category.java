@@ -10,11 +10,19 @@ public class Category {
     String nameCategoryQuality;
     String ranking;
 
-    public Category(String imgCategory , String nameSongCategory , String nameCategoryQuality, String nameArtistCategory) {
+    public Category(String ranking,String imgCategory , String nameSongCategory , String nameCategoryQuality, String nameArtistCategory) {
+        this.ranking = ranking;
         this.nameSongCategory = nameSongCategory;
         this.imgCategory = imgCategory;
         this.nameArtistCategory = nameArtistCategory;
         this.nameCategoryQuality = nameCategoryQuality;
+    }
+
+    public Category(String nameCategoryQuality, String nameSongCategory, String imgCategory, String nameArtistCategory) {
+        this.nameCategoryQuality = nameCategoryQuality;
+        this.nameSongCategory = nameSongCategory;
+        this.imgCategory = imgCategory;
+        this.nameArtistCategory = nameArtistCategory;
     }
 
     public String getImgCategory() {

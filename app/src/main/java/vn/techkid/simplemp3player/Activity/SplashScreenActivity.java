@@ -4,17 +4,25 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import vn.techkid.simplemp3player.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
     private static int SPLASH_TIME_OUT = 3000;
+    ImageView img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        img = (ImageView) findViewById(R.id.imgsplash);
+        Picasso.with(this)
+                .load("http://i.stack.imgur.com/TJWMH.jpg")
+                .into(img);
 
         new Handler().postDelayed(new Runnable() {
 

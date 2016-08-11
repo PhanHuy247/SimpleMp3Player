@@ -1,23 +1,46 @@
 package vn.techkid.simplemp3player.Fragment;
 
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import vn.techkid.simplemp3player.Activity.PlayerActivity;
+import vn.techkid.simplemp3player.Adapter.AdapterCategory;
+import vn.techkid.simplemp3player.Model.Category;
 import vn.techkid.simplemp3player.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CategoryUSUK extends Fragment implements View.OnClickListener{
-    Button btnpop_rock,btnrap_hiphop,btndance_remix,btntraditional;
+public class CategoryUsUk extends Fragment {
 
-    public CategoryUSUK() {
+    ArrayList<Category> listCategory;
+    RecyclerView recyclerView;
+    AdapterCategory adapter;
+    private String url;
+    DownloadTask task;
+
+    ArrayList<CharSequence> titles = new ArrayList<>();
+    ArrayList<CharSequence> artists = new ArrayList<>();
+    ArrayList<CharSequence> urls = new ArrayList<>();
+    public CategoryUsUk() {
         // Required empty public constructor
     }
 
@@ -26,42 +49,87 @@ public class CategoryUSUK extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_category_usuk, container, false);
+        View view = inflater.inflate(R.layout.fragment_category_us_uk, container, false);
         setupView(view);
+        getActivity().setTitle("Category VietNam");
+        listCategory = new ArrayList<>();
+        setupAsyntask();
+        createDataForListCategory();
+        adapter = new AdapterCategory(listCategory,getActivity());
+        LinearLayoutManager linearManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        recyclerView.setLayoutManager(linearManager);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new AdapterCategory.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int postion) {
+                Log.d("POSITION", String.valueOf(postion));
+                Intent intent = new Intent(getActivity(), PlayerActivity.class);
+                intent.putCharSequenceArrayListExtra("titles", titles);
+                intent.putCharSequenceArrayListExtra("artists", artists);
+                intent.putCharSequenceArrayListExtra("urls", urls);
+                intent.putExtra("pos", postion);
+                intent.putExtra("playlist", true);
+                startActivity(intent);
+            }
+        });
         return view;
     }
-    private void setupView(View view) {
-        btnpop_rock = (Button) view.findViewById(R.id.btncategoryusukpoprock);
-        btnrap_hiphop = (Button) view.findViewById(R.id.btncategoryusukraphiphop);
-        btndance_remix = (Button) view.findViewById(R.id.btncategoryusukdanceremix);
 
-        btnpop_rock.setOnClickListener(this);
-        btnrap_hiphop.setOnClickListener(this);
-        btndance_remix.setOnClickListener(this);
-
+    private void setupAsyntask() {
+        task = new DownloadTask();
+        try {
+            task.execute(url).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btncategoryusukdanceremix:
-                getFragmentManager().beginTransaction().replace(R.id.frame_container, new CategoryDanceRemixUsUk())
-                        .addToBackStack(null)
-                        .commit();
-                break;
-            case R.id.btncategoryusukpoprock:
-                Log.d("phanhuy","aaa");
-                getFragmentManager().beginTransaction().replace(R.id.frame_container, new CategoryPopRockUsUk())
-                        .addToBackStack(null)
-                        .commit();
-                break;
-            case R.id.btncategoryusukraphiphop:
-                getFragmentManager().beginTransaction().replace(R.id.frame_container, new CategoryRapHipHopUsUk())
-                        .addToBackStack(null)
-                        .commit();
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-                break;
-            default:break;
+    private void createDataForListCategory() {
+        listCategory = task.listNews;
+        for (Category song:listCategory){
+            titles.add(song.getNameSongCategory());
+            artists.add(song.getNameArtistCategory());
+            urls.add(song.getImgCategory());
+        }
+    }
+
+    private void setupView(View view) {
+        recyclerView = (RecyclerView) view.findViewById(R.id.listCategory);
+    }
+
+    static class DownloadTask extends AsyncTask<String, Void, Void> {
+        ArrayList<Category> listNews;
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            listNews = new ArrayList<>();
+            Document document = null;
+            try {
+                document = (Document) Jsoup.connect(strings[0]).get();
+                Elements subjectElements = document.select("div.text2");
+                if (subjectElements != null && subjectElements.size() > 0) {
+                    for (int i = 0; i < subjectElements.size(); i++) {
+                        Element titleSubject = subjectElements.get(i).getElementsByTag("a").first();
+                        Element artistSubject = subjectElements.get(i).getElementsByTag("p").first();
+                        if (titleSubject != null && artistSubject != null) {
+                            String title = titleSubject.text();
+                            String link = titleSubject.attr("href");
+                            String artist = artistSubject.text();
+                            listNews.add(new Category(i+1+"",link,title,"lossless",artist));
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
         }
     }
 }
