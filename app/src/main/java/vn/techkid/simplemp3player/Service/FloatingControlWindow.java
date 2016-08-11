@@ -1,6 +1,5 @@
 package vn.techkid.simplemp3player.Service;
 
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -18,15 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import vn.techkid.simplemp3player.Activity.ChartSongKorea;
-import vn.techkid.simplemp3player.Activity.ChartSongUSUK;
-import vn.techkid.simplemp3player.Activity.ChartSongVietNam;
+import vn.techkid.simplemp3player.Activity.ChartSong;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Getter.SongGetter;
 import vn.techkid.simplemp3player.Model.Song;
@@ -110,20 +106,9 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 //        windowManager.addView(linearLayout, params);
     }
     private void getSongListInfo(Intent intent) {
-        switch (intent.getStringExtra("key")){
-            case "vn":
-                songs = ChartSongVietNam.songs;
-                currentPos = intent.getIntExtra("pos", 0);
-                break;
-            case "us-uk":
-                songs = ChartSongUSUK.songs;
-                currentPos = intent.getIntExtra("pos", 0);
-                break;
-            case "ko":
-                songs = ChartSongKorea.songs;
-                currentPos = intent.getIntExtra("pos", 0);
-                break;
-
+        if (intent.getStringExtra("key").equals("chartSong")){
+            songs = ChartSong.songs;
+            currentPos = intent.getIntExtra("pos", 0);
         }
     }
     private void get320kDownloadLink(int pos) {

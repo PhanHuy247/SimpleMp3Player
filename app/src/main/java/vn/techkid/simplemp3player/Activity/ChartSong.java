@@ -31,7 +31,7 @@ public class ChartSong extends AppCompatActivity{
     ArrayList<CharSequence> titles = new ArrayList<>();
     ArrayList<CharSequence> artists = new ArrayList<>();
     ArrayList<CharSequence> urls = new ArrayList<>();
-    public String intentKey;
+    public String intentKey = "chartSong";
 
 
 
