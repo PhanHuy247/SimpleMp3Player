@@ -43,8 +43,6 @@
         <service android:name=".Service.PlayingMusicService" />
         <service android:name=".Service.FloatingControlWindow" />
 
-        <activity android:name=".Activity.ChartSongUSUK" />
-        <activity android:name=".Activity.ChartSongKorea"></activity>
     </application>
 
 </manifest>

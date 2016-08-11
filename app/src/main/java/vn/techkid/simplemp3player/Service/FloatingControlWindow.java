@@ -1,6 +1,5 @@
 package vn.techkid.simplemp3player.Service;
 
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -18,14 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import vn.techkid.simplemp3player.Activity.ChartSongKorea;
-import vn.techkid.simplemp3player.Activity.ChartSongUSUK;
 import vn.techkid.simplemp3player.Activity.ChartSongVietNam;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Getter.SongGetter;
