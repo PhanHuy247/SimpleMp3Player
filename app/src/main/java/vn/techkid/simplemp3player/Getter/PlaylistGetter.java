@@ -33,7 +33,7 @@ public class PlaylistGetter extends AsyncTask<Void, Void, Void> {
                 elements = document.select("div[class=text2]");
             Log.d("hey", elements.size()+"");
 
-            for (int i = 0; i < elements.size(); i++) {
+            for (int i = 0; i < 20; i++) {
                 Elements elements1 = elements.get(i).select("a");
                 Elements elements2 = elements.get(i).select("p");
                 String title = elements1.text();

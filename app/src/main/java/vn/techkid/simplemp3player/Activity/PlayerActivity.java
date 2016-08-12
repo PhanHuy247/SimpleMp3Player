@@ -61,10 +61,21 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         tv_timeLeft = (TextView)findViewById(R.id.text_timeLeft);
         sb_timeProgress = (SeekBar)findViewById(R.id.seekBar_progressBar);
         ibt_shuffle = (ImageButton)findViewById(R.id.button_shuffle);
+        if (isShuffle){
+            ibt_shuffle.setImageResource(R.drawable.ic_shuffle_red_200_18dp);
+        }
         ibt_previous = (ImageButton)findViewById(R.id.button_previous);
         ibt_play = (ImageButton)findViewById(R.id.button_play);
         ibt_next = (ImageButton)findViewById(R.id.button_next);
         ibt_repeat = (ImageButton)findViewById(R.id.button_repeat);
+        if (isRepeat){
+            if (isLooping){
+                ibt_repeat.setImageResource(R.drawable.ic_repeat_one_red_200_18dp);
+            }
+            else {
+                ibt_repeat.setImageResource(R.drawable.ic_repeat_red_200_18dp);
+            }
+        }
         ibt_download = (ImageButton)findViewById(R.id.button_download);
         setOnButtonClick();
 

@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import vn.techkid.simplemp3player.Activity.ChartSong;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Getter.SongGetter;
+import vn.techkid.simplemp3player.HelperClass.RandomPlaylist;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 
@@ -38,6 +39,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public static final int NOTIFY_ID = 1912;
     private int currentPos;
     ArrayList<Song> songs = new ArrayList<>();
+    RandomPlaylist randomPlaylist;
 
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
@@ -52,6 +54,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         getSongsList();
         get320kDownloadLink(currentPos);
         setMediaPlayer();
@@ -72,6 +75,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             songs = ChartSong.getSongs();
         }
         currentPos = FloatingControlWindow.getCurrentPos();
+        randomPlaylist = new RandomPlaylist(20);
+        randomPlaylist.getIntegers().remove((Integer)currentPos);
     }
 
     private void setMediaPlayer() {
@@ -175,12 +180,14 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         mediaPlayer.release();
         mediaPlayer = null;
         if (PlayerActivity.isShuffle) {
-
+            currentPos = randomPlaylist.getRandomPos();
+            Log.d("khuong1", currentPos+"");
         }
         else {
             currentPos = (currentPos+1)%20;
-            get320kDownloadLink(currentPos);
+            Log.d("khuong2", currentPos+"");
         }
+        get320kDownloadLink(currentPos);
         setMediaPlayer();
     }
 
@@ -198,10 +205,12 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             mediaPlayer = null;
             if (intent.getAction().equals("next")){
                 if (PlayerActivity.isShuffle){
-
+                    currentPos = randomPlaylist.getRandomPos();
+                    Log.d("khuong1", currentPos+"");
                 }
                 else {
                     currentPos = (currentPos+1)%20;
+                    Log.d("khuong2", currentPos+"");
 
                 }
 
