@@ -22,18 +22,26 @@ import vn.techkid.simplemp3player.Model.Song;
 
 import vn.techkid.simplemp3player.R;
 import vn.techkid.simplemp3player.Service.FloatingControlWindow;
+import vn.techkid.simplemp3player.Service.PlayingMusicService;
 
 
 public class ChartSong extends AppCompatActivity{
     private Toolbar toolbar;
     public  ListView lv_songs;
-    public static ArrayList<Song> songs;
+    private static ArrayList<Song> songs;
     ArrayList<CharSequence> titles = new ArrayList<>();
     ArrayList<CharSequence> artists = new ArrayList<>();
     ArrayList<CharSequence> urls = new ArrayList<>();
     public String intentKey = "chartSong";
 
 
+    public static ArrayList<Song> getSongs() {
+        return songs;
+    }
+
+    public static void setSongs(ArrayList<Song> songs) {
+        ChartSong.songs = songs;
+    }
 
     String URL;
     @Override
@@ -71,11 +79,7 @@ public class ChartSong extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), FloatingControlWindow.class);
-//                intent.putCharSequenceArrayListExtra("titles", titles);
-//                intent.putCharSequenceArrayListExtra("artists", artists);
-//                intent.putCharSequenceArrayListExtra("urls", urls);
                 intent.putExtra("pos", position);
-//                intent.putExtra("playlist", true);
                 intent.putExtra("key", intentKey);
                 startService(intent);
 
@@ -87,20 +91,17 @@ public class ChartSong extends AppCompatActivity{
 
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // getMenuInflater().inflate(R.menu.menu_main, menu);
+
         getMenuInflater().inflate(R.menu.menu_chartsongvietnam, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+
         if (id == R.id.action_settings) {
             return true;
         }

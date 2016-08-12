@@ -15,9 +15,14 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import vn.techkid.simplemp3player.Activity.ChartSong;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
+import vn.techkid.simplemp3player.Getter.SongGetter;
+import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 
 /**
@@ -29,6 +34,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private int fullTime, eslapedTime;
     public Handler durationHandler = new Handler();
     public static final int NOTIFY_ID = 1912;
+    private int currentPos;
+    ArrayList<Song> songs = new ArrayList<>();
 
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
@@ -41,33 +48,25 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         return new MyBinder();
     }
 
-    public int getEslapedTime() {
-        return eslapedTime;
-    }
-
-    public void setEslapedTime(int eslapedTime) {
-        this.eslapedTime = eslapedTime;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("dmHuy", "onStartCommand");
-        url = intent.getStringExtra("url");
-        title = intent.getStringExtra("title");
-        artist = intent.getStringExtra("artist");
+        getSongsList();
+        get320kDownloadLink(currentPos);
         setMediaPlayer();
 //        setBroadcastReceiver();
         return START_NOT_STICKY;
     }
+
+    private void getSongsList() {
+        if (FloatingControlWindow.getKey().equals("chartSong")){
+            songs = ChartSong.getSongs();
+        }
+        currentPos = FloatingControlWindow.getCurrentPos();
+    }
+
     private void setMediaPlayer() {
         mediaPlayer = new MediaPlayer();
         try {
-            Log.d("lm", url);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(url);
             mediaPlayer.setOnPreparedListener(this);
@@ -79,18 +78,17 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         }
     }
 
+    public void setMediaPlayer(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
+    }
+
     @Override
     public void onPrepared(MediaPlayer mp) {
-
+        title = songs.get(currentPos).getTitle();
+        artist = songs.get(currentPos).getArtist();
         play();
-//        Intent notIntent = new Intent(this, PlayerActivity.class);
-//        notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        PendingIntent pendInt = PendingIntent.getActivity(this, 0,
-//                notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//
-//        String songName;
-// assign the song name to songName
+
+
         Intent resultIntent = new Intent(getApplicationContext(), PlayerActivity.class);
         PendingIntent pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
                 resultIntent,
@@ -107,12 +105,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         startForeground(NOTIFY_ID, not);
     }
 
-
-    @Override
-    public void onDestroy() {
-        Log.d("destroy", "Yes");
-        super.onDestroy();
-    }
 
     public void play() {
         mediaPlayer.start();
@@ -146,13 +138,24 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         }
     };
 
-    public  void setMediaPlayer(MediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
-    }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         return false;
+
+    }
+    private void get320kDownloadLink(int pos) {
+        SongGetter getter = new SongGetter(songs.get(pos).getAccessLink());
+        try {
+            getter.execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        url = getter.getUrl();
+        Log.d("final", url);
+
 
     }
 
@@ -164,12 +167,13 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         durationHandler.removeCallbacks(updateSeekBarTime);
         Intent requestNextSong = new Intent();
         if (PlayerActivity.isShuffle) {
-            requestNextSong.setAction("nextRand");
+
         }
         else {
-            requestNextSong.setAction("next");
+            currentPos = (currentPos+1)%20;
+            get320kDownloadLink(currentPos);
         }
-        sendBroadcast(requestNextSong);
+        setMediaPlayer();
     }
 
     public class MyBinder extends Binder {

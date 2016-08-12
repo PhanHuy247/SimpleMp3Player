@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
 
+    <item
+        jar="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="3b4e714aceee6bb7b0d289d88d52f2ee87b46c78">
+        <dex dex="C:\Users\Laptop88\StudioProjects\SimpleMp3Player\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_5d320c6d0d3a7bc911ec627a761fea25cd4074c0\classes.dex" />
+    </item>
+
+</items>

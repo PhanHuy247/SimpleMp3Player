@@ -35,14 +35,30 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
     public  WindowManager windowManager;
     LinearLayout linearLayout;
     private ImageButton imageSong;
-    private int currentPos;
-    ArrayList<Song> songs = new ArrayList<>();
+    private static int currentPos;
+
     private String url;
-    private MusicControlReceiver receiver;
+//    private MusicControlReceiver receiver;
     ServiceConnection connection;
     public static PlayingMusicService pService = null;
     boolean isBound;
+    private static String key;
 
+    public static String getKey() {
+        return key;
+    }
+
+    public static void setKey(String key) {
+        FloatingControlWindow.key = key;
+    }
+
+    public static int getCurrentPos() {
+        return currentPos;
+    }
+
+    public static void setCurrentPos(int currentPos) {
+        FloatingControlWindow.currentPos = currentPos;
+    }
 
     @Nullable
     @Override
@@ -61,13 +77,13 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         getSongListInfo(intent);
-        get320kDownloadLink(currentPos);
+//        get320kDownloadLink(currentPos);
         if (pService!=null){
             refreshService();
             pService.stopSelf();
         }
         setUpService();
-        setBroadcastReceiver();
+//        setBroadcastReceiver();
         setUpPlayer();
         return START_NOT_STICKY;
     }
@@ -76,18 +92,17 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
         Intent i = new Intent(this, PlayerActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
-
     }
 
 
 
-    private void setBroadcastReceiver() {
-        receiver = new MusicControlReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("nextRand");
-        filter.addAction("next");
-        registerReceiver(receiver, filter);
-    }
+//    private void setBroadcastReceiver() {
+//        receiver = new MusicControlReceiver();
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction("nextRand");
+//        filter.addAction("next");
+//        registerReceiver(receiver, filter);
+////    }
 
     private void initView() {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -110,52 +125,36 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 //        windowManager.addView(linearLayout, params);
     }
     private void getSongListInfo(Intent intent) {
-        if (intent.getStringExtra("key").equals("chartSong")){
-            songs = ChartSong.songs;
-            currentPos = intent.getIntExtra("pos", 0);
-        }
+        key = intent.getStringExtra("key");
+        currentPos = intent.getIntExtra("pos", 0);
     }
-    private void get320kDownloadLink(int pos) {
-        Log.d("check3", "get320kDownloadLink");
-        SongGetter getter = new SongGetter(songs.get(pos).getAccessLink());
-        try {
-            getter.execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        url = getter.getUrl();
-        Log.d("final", url);
 
-
-    }
     @Override
     public void onClick(View v) {
 
 
     }
 
-    private class MusicControlReceiver extends BroadcastReceiver {
+//    private class MusicControlReceiver extends BroadcastReceiver {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("nextRand")){
-
-            }
-            else if (intent.getAction().equals("next")){
-                currentPos = (currentPos+1)%20;
-                pService.stopSelf();
-                get320kDownloadLink(currentPos);
-                Intent updateSongIntent = new Intent(getApplicationContext(), PlayingMusicService.class);
-                updateSongIntent.putExtra("title", songs.get(currentPos).getTitle());
-                updateSongIntent.putExtra("artist", songs.get(currentPos).getArtist());
-                updateSongIntent.putExtra("url", url);
-                startService(updateSongIntent);
-
-            }
-        }
-    }
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if (intent.getAction().equals("nextRand")){
+//
+//            }
+//            else if (intent.getAction().equals("next")){
+//                currentPos = (currentPos+1)%20;
+//                pService.stopSelf();
+//                get320kDownloadLink(currentPos);
+//                Intent updateSongIntent = new Intent(getApplicationContext(), PlayingMusicService.class);
+//                updateSongIntent.putExtra("title", songs.get(currentPos).getTitle());
+//                updateSongIntent.putExtra("artist", songs.get(currentPos).getArtist());
+//                updateSongIntent.putExtra("url", url);
+//                startService(updateSongIntent);
+//
+//            }
+//        }
+//    }
     private void refreshService() {
         if (pService.getMediaPlayer()!=null){
             pService.getMediaPlayer().stop();
@@ -188,9 +187,6 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 
     private void startNewMusicService (){
         Intent intent = new Intent(this, PlayingMusicService.class);
-        intent.putExtra("url", url);
-        intent.putExtra("title", songs.get(currentPos).getTitle());
-        intent.putExtra("artist", songs.get(currentPos).getArtist());
         startService(intent);
         if (isBound==false){
             bindService(intent, connection, Context.BIND_AUTO_CREATE);
