@@ -3,8 +3,10 @@ package vn.techkid.simplemp3player.Service;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
@@ -40,7 +42,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
     }
-
+    private MusicController musicController;
     private MediaPlayer mediaPlayer;
     @Nullable
     @Override
@@ -53,8 +55,16 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         getSongsList();
         get320kDownloadLink(currentPos);
         setMediaPlayer();
-//        setBroadcastReceiver();
+        setBroadcastReceiver();
         return START_NOT_STICKY;
+    }
+
+    private void setBroadcastReceiver() {
+        musicController = new MusicController();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("next");
+        filter.addAction("previous");
+        registerReceiver(musicController, filter);
     }
 
     private void getSongsList() {
@@ -164,8 +174,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         mediaPlayer.stop();
         mediaPlayer.release();
         mediaPlayer = null;
-        durationHandler.removeCallbacks(updateSeekBarTime);
-        Intent requestNextSong = new Intent();
         if (PlayerActivity.isShuffle) {
 
         }
@@ -179,6 +187,35 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public class MyBinder extends Binder {
         public PlayingMusicService getService(){
             return PlayingMusicService.this;
+        }
+    }
+    private class MusicController extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+            if (intent.getAction().equals("next")){
+                if (PlayerActivity.isShuffle){
+
+                }
+                else {
+                    currentPos = (currentPos+1)%20;
+
+                }
+
+            }
+            else if (intent.getAction().equals("previous")){
+                if (PlayerActivity.isShuffle){
+
+                }
+                else {
+                    currentPos = (currentPos-1)%20;
+                }
+            }
+            get320kDownloadLink(currentPos);
+            setMediaPlayer();
         }
     }
 

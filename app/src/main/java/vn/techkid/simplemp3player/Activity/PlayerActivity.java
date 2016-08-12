@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +25,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     public TextView tv_songName, tv_artistName;
     private TextView tv_eslapedTime, tv_timeLeft;
     private SeekBar sb_timeProgress;
-    private ImageButton ibt_shuffle, ibt_previous, ibt_play, ibt_next, ibt_repeat;
+    private ImageButton ibt_shuffle, ibt_previous, ibt_play, ibt_next, ibt_repeat, ibt_download;
     private String eslapedTime, remainingTime;
     private int progressTime, fullTime;
     private String url;
@@ -64,6 +65,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         ibt_play = (ImageButton)findViewById(R.id.button_play);
         ibt_next = (ImageButton)findViewById(R.id.button_next);
         ibt_repeat = (ImageButton)findViewById(R.id.button_repeat);
+        ibt_download = (ImageButton)findViewById(R.id.button_download);
         setOnButtonClick();
 
 
@@ -75,6 +77,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         ibt_next.setOnClickListener(this);
         ibt_repeat.setOnClickListener(this);
         ibt_shuffle.setOnClickListener(this);
+        ibt_download.setOnClickListener(this);
         sb_timeProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -106,15 +109,16 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         if (FloatingControlWindow.pService.getMediaPlayer()!=null){
             switch (v.getId()){
                 case R.id.button_play:
-
                     playAction();
                     break;
                 case R.id.button_previous:
+                    previousAction();
                     break;
                 case R.id.button_next:
                     nextAction();
                     break;
                 case R.id.button_shuffle:
+                    shuffleAction();
                     break;
                 case R.id.button_repeat:
                     repeatAction();
@@ -124,8 +128,40 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private void repeatAction() {
+    private void shuffleAction() {
+        if (isShuffle){
+            isShuffle = false;
+            ibt_shuffle.setImageResource(R.drawable.ic_shuffle_red_300_18dp);
+        }
+        else {
+            isShuffle = true;
+            ibt_shuffle.setImageResource(R.drawable.ic_shuffle_red_200_18dp);
+        }
+    }
 
+    private void repeatAction() {
+        if (isRepeat){
+            if (isLooping){
+                isLooping = false;
+                isRepeat = false;
+                ibt_repeat.setImageResource(R.drawable.ic_repeat_red_300_18dp);
+            }
+            else {
+                isLooping = true;
+                ibt_repeat.setImageResource(R.drawable.ic_repeat_one_red_200_18dp);
+            }
+        }
+        else {
+            isRepeat = true;
+            ibt_repeat.setImageResource(R.drawable.ic_repeat_red_200_18dp);
+        }
+
+    }
+
+    private void previousAction() {
+        Intent nextIntent = new Intent();
+        nextIntent.setAction("previous");
+        sendBroadcast(nextIntent);
     }
 
     private void playAction() {
@@ -161,12 +197,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void nextAction() {
-
-        FloatingControlWindow.pService.getMediaPlayer().seekTo(fullTime);
-        if (!FloatingControlWindow.pService.getMediaPlayer().isPlaying()){
-            ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
-            FloatingControlWindow.pService.getMediaPlayer().start();
-        }
+        Intent nextIntent = new Intent();
+        nextIntent.setAction("next");
+        sendBroadcast(nextIntent);
+//        if (!FloatingControlWindow.pService.getMediaPlayer().isPlaying()){
+//            ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
+//            FloatingControlWindow.pService.getMediaPlayer().start();
+//        }
     }
 
     @Override

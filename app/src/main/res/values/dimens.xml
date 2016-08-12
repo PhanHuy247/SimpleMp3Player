@@ -8,4 +8,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="image_dimen_width">300dp</dimen>
     <dimen name="image_dimen_height">300dp</dimen>
+    <dimen name="imageButtonDimens">32dp</dimen>
+    <dimen name="imageButtonMargin">16dp</dimen>
 </resources>

@@ -3,6 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/activity_horizontal_margin">
+    <ImageButton
+        android:layout_width="@dimen/imageButtonDimens"
+        android:layout_height="@dimen/imageButtonDimens"
+        android:id="@+id/button_download"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/backgroundDisplay"
+        android:src="@drawable/ic_file_download_red_300_18dp"/>
     <TextView
         android:id="@+id/text_songName"
         android:layout_width="wrap_content"
@@ -19,6 +27,7 @@
         android:layout_height="@dimen/image_dimen_height"
         android:layout_centerInParent="true"
         android:layout_marginBottom="24dp"
+
         android:src="@drawable/image_music"/>
 
     <LinearLayout
@@ -44,45 +53,58 @@
             android:layout_weight="1"
             android:id="@+id/text_timeLeft"/>
     </LinearLayout>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:weightSum="8"
         android:gravity="center"
         android:id="@+id/functionBar"
-        android:layout_below="@id/song_duration"
-        android:orientation="horizontal">
+        android:layout_below="@id/song_duration">
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/imageButtonDimens"
+            android:layout_height="@dimen/imageButtonDimens"
             android:id="@+id/button_shuffle"
-            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/imageButtonMargin"
+            android:layout_marginRight="@dimen/imageButtonMargin"
+            android:background="@color/backgroundDisplay"
             android:src="@drawable/ic_shuffle_red_300_18dp"/>
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/imageButtonDimens"
+            android:layout_height="@dimen/imageButtonDimens"
+            android:layout_marginLeft="@dimen/imageButtonMargin"
+            android:layout_marginRight="@dimen/imageButtonMargin"
             android:id="@+id/button_previous"
-            android:layout_weight="1"
+            android:layout_toRightOf="@id/button_shuffle"
+            android:background="@color/backgroundDisplay"
             android:src="@drawable/ic_skip_previous_red_300_18dp"/>
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/imageButtonDimens"
+            android:layout_height="@dimen/imageButtonDimens"
+            android:layout_marginLeft="@dimen/imageButtonMargin"
+            android:layout_marginRight="@dimen/imageButtonMargin"
             android:id="@+id/button_play"
-            android:layout_weight="1"
+            android:layout_toRightOf="@id/button_previous"
+            android:background="@color/backgroundDisplay"
             android:src="@drawable/ic_pause_circle_outline_red_300_18dp"/>
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/imageButtonDimens"
+            android:layout_height="@dimen/imageButtonDimens"
+            android:layout_marginLeft="@dimen/imageButtonMargin"
+            android:layout_marginRight="@dimen/imageButtonMargin"
             android:id="@+id/button_next"
-            android:layout_weight="1"
+            android:layout_toRightOf="@id/button_play"
+            android:background="@color/backgroundDisplay"
             android:src="@drawable/ic_skip_next_red_300_18dp"/>
         <ImageButton
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/button_repeat"
+            android:layout_width="@dimen/imageButtonDimens"
+            android:layout_height="@dimen/imageButtonDimens"
+            android:layout_marginLeft="@dimen/imageButtonMargin"
+            android:layout_marginRight="@dimen/imageButtonMargin"
+            android:layout_toRightOf="@id/button_next"
+            android:background="@color/backgroundDisplay"
             android:src="@drawable/ic_repeat_red_300_18dp"/>
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </RelativeLayout>
