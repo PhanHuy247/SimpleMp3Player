@@ -50,6 +50,11 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("dmHuy", "onStartCommand");
         url = intent.getStringExtra("url");
@@ -118,8 +123,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     public Runnable updateSeekBarTime = new Runnable() {
         public void run() {
-            if (mediaPlayer==null){
-                durationHandler.removeCallbacks(this);
+            if (mediaPlayer == null){
+                durationHandler.removeCallbacks(updateSeekBarTime);
                 return;
             }
             eslapedTime = mediaPlayer.getCurrentPosition();
@@ -153,6 +158,10 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public void onCompletion(MediaPlayer mp) {
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        mediaPlayer = null;
+        durationHandler.removeCallbacks(updateSeekBarTime);
         Intent requestNextSong = new Intent();
         if (PlayerActivity.isShuffle) {
             requestNextSong.setAction("nextRand");

@@ -144,8 +144,7 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 
             }
             else if (intent.getAction().equals("next")){
-                currentPos = (++currentPos)%20;
-                refreshService();
+                currentPos = (currentPos+1)%20;
                 pService.stopSelf();
                 get320kDownloadLink(currentPos);
                 Intent updateSongIntent = new Intent(getApplicationContext(), PlayingMusicService.class);

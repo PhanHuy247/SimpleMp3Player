@@ -1,14 +1,11 @@
 package vn.techkid.simplemp3player.Activity;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.media.MediaPlayer;
-import android.os.Handler;
-import android.os.IBinder;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,18 +13,12 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
-import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
-import vn.techkid.simplemp3player.Getter.SongGetter;
+
 import vn.techkid.simplemp3player.Service.FloatingControlWindow;
-import vn.techkid.simplemp3player.Service.PlayingMusicService;
+
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener{
     public TextView tv_songName, tv_artistName;
@@ -40,27 +31,16 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     public static boolean isShuffle, isLooping, isRepeat;
     PlayingMusicReceiver receiver;
-    public static boolean isCompleted;
-//    static int currentPos;
-//    private boolean fromUser;
     public static boolean isDestroyed;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        if (getIntent().getStringExtra("resume").equals("yes")){
-//
-//        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-        isDestroyed = false;
         initView();
-
-
-//        if (FloatingControlWindow.windowManager!=null){
-//            FloatingControlWindow.windowManager.removeView();
-//        }
         setBroadcastReceiver();
     }
 
@@ -108,8 +88,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                int pgr = (seekBar.getProgress()<fullTime-1000)?seekBar.getProgress():(fullTime-1000);
-                FloatingControlWindow.pService.getMediaPlayer().seekTo(pgr);
+                if (FloatingControlWindow.pService.getMediaPlayer()!=null) {
+                    int pgr = (seekBar.getProgress() < fullTime - 1000) ? seekBar.getProgress() : (fullTime - 1000);
+                    FloatingControlWindow.pService.getMediaPlayer().seekTo(pgr);
+                }
             }
         });
     }
@@ -121,21 +103,25 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.button_play:
-                playAction();
-                break;
-            case R.id.button_previous:
-                break;
-            case R.id.button_next:
-                nextAction();
-                break;
-            case R.id.button_shuffle:
-                break;
-            case R.id.button_repeat:
-                repeatAction();
-                break;
+        if (FloatingControlWindow.pService.getMediaPlayer()!=null){
+            switch (v.getId()){
+                case R.id.button_play:
+
+                    playAction();
+                    break;
+                case R.id.button_previous:
+                    break;
+                case R.id.button_next:
+                    nextAction();
+                    break;
+                case R.id.button_shuffle:
+                    break;
+                case R.id.button_repeat:
+                    repeatAction();
+                    break;
+            }
         }
+
     }
 
     private void repeatAction() {
@@ -175,14 +161,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void nextAction() {
-        Intent nextSongIntent = new Intent();
-        if (isShuffle){
-            nextSongIntent.setAction("nextRand");
+
+        FloatingControlWindow.pService.getMediaPlayer().seekTo(fullTime);
+        if (!FloatingControlWindow.pService.getMediaPlayer().isPlaying()){
+            ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
+            FloatingControlWindow.pService.getMediaPlayer().start();
         }
-        else {
-            nextSongIntent.setAction("next");
-        }
-        sendBroadcast(nextSongIntent);
     }
 
     @Override
