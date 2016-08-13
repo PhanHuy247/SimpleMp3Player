@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -24,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 import vn.techkid.simplemp3player.Activity.ChartSong;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Getter.SongGetter;
-import vn.techkid.simplemp3player.HelperClass.RandomPlaylist;
+import vn.techkid.simplemp3player.HelperClass.HelperClass;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 
@@ -35,16 +34,14 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private String url;
     private String title, artist;
     private int fullTime, eslapedTime;
-    public Handler durationHandler = new Handler();
+    private Handler durationHandler = new Handler();
     public static final int NOTIFY_ID = 1912;
     private int currentPos;
+    private static int maxSongs;
+    private int count;
     ArrayList<Song> songs = new ArrayList<>();
-    RandomPlaylist randomPlaylist;
-
-    public MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
-    }
-    private MusicController musicController;
+    public static HelperClass helperClass;
+//    private MusicController musicController;
     private MediaPlayer mediaPlayer;
     @Nullable
     @Override
@@ -58,28 +55,30 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         getSongsList();
         get320kDownloadLink(currentPos);
         setMediaPlayer();
-        setBroadcastReceiver();
+//        setBroadcastReceiver();
         return START_NOT_STICKY;
     }
 
-    private void setBroadcastReceiver() {
-        musicController = new MusicController();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("next");
-        filter.addAction("previous");
-        registerReceiver(musicController, filter);
+
+
+    public int getCurrentPos() {
+        return currentPos;
+    }
+
+    public void setCurrentPos(int currentPos) {
+        this.currentPos = currentPos;
     }
 
     private void getSongsList() {
         if (FloatingControlWindow.getKey().equals("chartSong")){
             songs = ChartSong.getSongs();
+            maxSongs = 20;
         }
         currentPos = FloatingControlWindow.getCurrentPos();
-        randomPlaylist = new RandomPlaylist(20);
-        randomPlaylist.getIntegers().remove((Integer)currentPos);
+        helperClass = new HelperClass(maxSongs);
     }
 
-    private void setMediaPlayer() {
+    public void setMediaPlayer() {
         mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -91,6 +90,9 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
     }
 
     public void setMediaPlayer(MediaPlayer mediaPlayer) {
@@ -122,6 +124,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
 
     public void play() {
+        count++;
         mediaPlayer.start();
         fullTime = mediaPlayer.getDuration();
         durationHandler.postDelayed(updateSeekBarTime, 100);
@@ -156,10 +159,11 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
+        mediaPlayer.reset();
         return false;
 
     }
-    private void get320kDownloadLink(int pos) {
+    public void get320kDownloadLink(int pos) {
         SongGetter getter = new SongGetter(songs.get(pos).getAccessLink());
         try {
             getter.execute().get();
@@ -176,11 +180,9 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        mediaPlayer.stop();
         mediaPlayer.release();
-        mediaPlayer = null;
         if (PlayerActivity.isShuffle) {
-            currentPos = randomPlaylist.getRandomPos();
+            currentPos = helperClass.getRandomPos();
             Log.d("khuong1", currentPos+"");
         }
         else {
@@ -196,37 +198,10 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             return PlayingMusicService.this;
         }
     }
-    private class MusicController extends BroadcastReceiver{
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
-            if (intent.getAction().equals("next")){
-                if (PlayerActivity.isShuffle){
-                    currentPos = randomPlaylist.getRandomPos();
-                    Log.d("khuong1", currentPos+"");
-                }
-                else {
-                    currentPos = (currentPos+1)%20;
-                    Log.d("khuong2", currentPos+"");
-
-                }
-
-            }
-            else if (intent.getAction().equals("previous")){
-                if (PlayerActivity.isShuffle){
-
-                }
-                else {
-                    currentPos = (currentPos-1)%20;
-                }
-            }
-            get320kDownloadLink(currentPos);
-            setMediaPlayer();
-        }
+    @Override
+    public void onDestroy() {
+        stopForeground(true);
+        super.onDestroy();
     }
-
-
 }

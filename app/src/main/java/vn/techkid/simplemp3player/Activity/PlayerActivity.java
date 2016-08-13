@@ -19,6 +19,7 @@ import android.widget.TextView;
 import vn.techkid.simplemp3player.R;
 
 import vn.techkid.simplemp3player.Service.FloatingControlWindow;
+import vn.techkid.simplemp3player.Service.PlayingMusicService;
 
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener{
@@ -28,7 +29,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private ImageButton ibt_shuffle, ibt_previous, ibt_play, ibt_next, ibt_repeat, ibt_download;
     private String eslapedTime, remainingTime;
     private int progressTime, fullTime;
-    private String url;
+
 
     public static boolean isShuffle, isLooping, isRepeat;
     PlayingMusicReceiver receiver;
@@ -152,27 +153,35 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     private void repeatAction() {
         if (isRepeat){
+            isLooping = true;
+            isRepeat = false;
+            ibt_repeat.setImageResource(R.drawable.ic_repeat_one_red_200_18dp);
+        }
+        else {
             if (isLooping){
                 isLooping = false;
-                isRepeat = false;
                 ibt_repeat.setImageResource(R.drawable.ic_repeat_red_300_18dp);
             }
             else {
-                isLooping = true;
-                ibt_repeat.setImageResource(R.drawable.ic_repeat_one_red_200_18dp);
+                isRepeat = true;
+                ibt_repeat.setImageResource(R.drawable.ic_repeat_red_200_18dp);
             }
         }
-        else {
-            isRepeat = true;
-            ibt_repeat.setImageResource(R.drawable.ic_repeat_red_200_18dp);
-        }
-
     }
 
     private void previousAction() {
-        Intent nextIntent = new Intent();
-        nextIntent.setAction("previous");
-        sendBroadcast(nextIntent);
+        FloatingControlWindow.pService.getMediaPlayer().reset();
+        if (isShuffle){
+//            int i = FloatingControlWindow.pService.helperClass.getRandomPos();
+//            FloatingControlWindow.pService.setCurrentPos(i);
+        }
+        else {
+            int i = FloatingControlWindow.pService.getCurrentPos();
+            FloatingControlWindow.pService.setCurrentPos((i-1)%20);
+        }
+        int currentPos = FloatingControlWindow.pService.getCurrentPos();
+        FloatingControlWindow.pService.get320kDownloadLink(currentPos);
+        FloatingControlWindow.pService.setMediaPlayer();
     }
 
     private void playAction() {
@@ -208,13 +217,18 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void nextAction() {
-        Intent nextIntent = new Intent();
-        nextIntent.setAction("next");
-        sendBroadcast(nextIntent);
-//        if (!FloatingControlWindow.pService.getMediaPlayer().isPlaying()){
-//            ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
-//            FloatingControlWindow.pService.getMediaPlayer().start();
-//        }
+        FloatingControlWindow.pService.getMediaPlayer().reset();
+        if (isShuffle){
+            int i = FloatingControlWindow.pService.helperClass.getRandomPos();
+            FloatingControlWindow.pService.setCurrentPos(i);
+        }
+        else {
+            int i = FloatingControlWindow.pService.getCurrentPos();
+            FloatingControlWindow.pService.setCurrentPos((i+1)%20);
+        }
+        int currentPos = FloatingControlWindow.pService.getCurrentPos();
+        FloatingControlWindow.pService.get320kDownloadLink(currentPos);
+        FloatingControlWindow.pService.setMediaPlayer();
     }
 
     @Override

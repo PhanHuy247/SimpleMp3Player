@@ -1,25 +1,25 @@
 package vn.techkid.simplemp3player.HelperClass;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Queue;
+import java.util.Stack;
+
+import vn.techkid.simplemp3player.Model.Song;
 
 /**
  * Created by Laptop88 on 8/12/2016.
  */
-public class RandomPlaylist {
+public class HelperClass {
     private ArrayList<Integer> integers = new ArrayList<>();
     private int n;
-    public ArrayList<Integer> getIntegers() {
-        return integers;
-    }
 
 
-    public void setIntegers(ArrayList<Integer> integers) {
-        this.integers = integers;
-    }
-
-    public RandomPlaylist(int n){
+    public HelperClass(int n){
         this.n = n;
         for (int i = 0; i < n; i++) {
             integers.add(i);
@@ -34,8 +34,9 @@ public class RandomPlaylist {
             return integers.remove(0);
         }
         int rand = (int)(Math.random()*integers.size());
-        Log.d("random", integers.get(rand)+"");
         return integers.remove(rand);
     }
+
+
 
 }
