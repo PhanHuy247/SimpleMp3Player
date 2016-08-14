@@ -15,7 +15,7 @@ import vn.techkid.simplemp3player.Model.Song;
  * Created by Laptop88 on 8/12/2016.
  */
 public class HelperClass {
-    private ArrayList<Integer> integers = new ArrayList<>();
+    public static ArrayList<Integer> integers = new ArrayList<>();
     private int n;
 
 
@@ -27,12 +27,6 @@ public class HelperClass {
 
     }
     public int getRandomPos(){
-        if (integers.size()==1){
-            for (int i = 1; i < n+1; i++) {
-                integers.add(i);
-            }
-            return integers.remove(0);
-        }
         int rand = (int)(Math.random()*integers.size());
         return integers.remove(rand);
     }

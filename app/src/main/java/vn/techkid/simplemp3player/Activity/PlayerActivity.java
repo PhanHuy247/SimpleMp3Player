@@ -190,6 +190,9 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             FloatingControlWindow.pService.getMediaPlayer().pause();
         }
         else {
+            if (PlayingMusicService.isWait){
+                PlayingMusicService.isWait = false;
+            }
             ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
             FloatingControlWindow.pService.getMediaPlayer().start();
         }
@@ -212,19 +215,42 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 tv_songName.setText(intent.getStringExtra("title"));
                 tv_artistName.setText(intent.getStringExtra("artist"));
                 Log.d("music", "isplaying");
+                if (FloatingControlWindow.pService.getMediaPlayer().isPlaying()){
+                    ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
+
+                }
+                else {
+                    ibt_play.setImageResource(R.drawable.ic_play_circle_outline_red_300_18dp);
+                }
             }
         }
     }
 
     private void nextAction() {
         FloatingControlWindow.pService.getMediaPlayer().reset();
-        if (isShuffle){
-            int i = FloatingControlWindow.pService.helperClass.getRandomPos();
-            FloatingControlWindow.pService.setCurrentPos(i);
-        }
-        else {
-            int i = FloatingControlWindow.pService.getCurrentPos();
-            FloatingControlWindow.pService.setCurrentPos((i+1)%20);
+        if (!isLooping){
+            PlayingMusicService.helperClass.integers.remove((Integer)FloatingControlWindow.pService.getCurrentPos());
+            Log.d("khuong", "size: "+PlayingMusicService.helperClass.integers.size());
+            if (PlayingMusicService.helperClass.integers.size()==0){
+                for (int i = 0; i < PlayingMusicService.maxSongs; i++) {
+                    PlayingMusicService.helperClass.integers.add(i);
+                }
+                if (!PlayerActivity.isRepeat){
+                    PlayingMusicService.isWait = true;
+                    Log.d("khuong", "isWait: "+PlayingMusicService.isWait);
+                }
+            }
+            if (isShuffle){
+                int i = FloatingControlWindow.pService.helperClass.getRandomPos();
+                FloatingControlWindow.pService.setCurrentPos(i);
+                Log.d("khuong1", FloatingControlWindow.pService.getCurrentPos()+"");
+            }
+            else {
+                int i = FloatingControlWindow.pService.getCurrentPos();
+                FloatingControlWindow.pService.setCurrentPos((i+1)%20);
+                Log.d("khuong1", FloatingControlWindow.pService.getCurrentPos()+"");
+            }
+
         }
         int currentPos = FloatingControlWindow.pService.getCurrentPos();
         FloatingControlWindow.pService.get320kDownloadLink(currentPos);

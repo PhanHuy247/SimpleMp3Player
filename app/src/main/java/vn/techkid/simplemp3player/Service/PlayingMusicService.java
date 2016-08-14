@@ -37,10 +37,11 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private Handler durationHandler = new Handler();
     public static final int NOTIFY_ID = 1912;
     private int currentPos;
-    private static int maxSongs;
+    public static int maxSongs;
     private int count;
     ArrayList<Song> songs = new ArrayList<>();
     public static HelperClass helperClass;
+    public static boolean isWait;
 //    private MusicController musicController;
     private MediaPlayer mediaPlayer;
     @Nullable
@@ -59,8 +60,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         return START_NOT_STICKY;
     }
 
-
-
     public int getCurrentPos() {
         return currentPos;
     }
@@ -75,6 +74,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             maxSongs = 20;
         }
         currentPos = FloatingControlWindow.getCurrentPos();
+        helperClass.integers.clear();
         helperClass = new HelperClass(maxSongs);
     }
 
@@ -126,6 +126,9 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public void play() {
         count++;
         mediaPlayer.start();
+        if (isWait){
+            mediaPlayer.pause();
+        }
         fullTime = mediaPlayer.getDuration();
         durationHandler.postDelayed(updateSeekBarTime, 100);
 
@@ -181,14 +184,29 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     @Override
     public void onCompletion(MediaPlayer mp) {
         mediaPlayer.release();
-        if (PlayerActivity.isShuffle) {
-            currentPos = helperClass.getRandomPos();
-            Log.d("khuong1", currentPos+"");
+        if (!PlayerActivity.isLooping){
+            helperClass.integers.remove((Integer)currentPos);
+
+            Log.d("khuong", "size: "+helperClass.integers.size());
+            if (helperClass.integers.size()==0){
+                for (int i = 0; i < maxSongs; i++) {
+                    helperClass.integers.add(i);
+                }
+                if (!PlayerActivity.isRepeat){
+                    isWait = true;
+                    Log.d("khuong", "isWait: "+isWait);
+                }
+            }
+            if (PlayerActivity.isShuffle) {
+                currentPos = helperClass.getRandomPos();
+                Log.d("khuong1", currentPos+"");
+            }
+            else {
+                currentPos = (currentPos+1)%20;
+                Log.d("khuong2", currentPos+"");
+            }
         }
-        else {
-            currentPos = (currentPos+1)%20;
-            Log.d("khuong2", currentPos+"");
-        }
+
         get320kDownloadLink(currentPos);
         setMediaPlayer();
     }
