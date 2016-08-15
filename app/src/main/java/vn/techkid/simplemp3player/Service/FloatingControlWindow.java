@@ -32,9 +32,7 @@ import vn.techkid.simplemp3player.R;
  * Created by Laptop88 on 8/10/2016.
  */
 public class FloatingControlWindow extends Service implements View.OnClickListener{
-    public  WindowManager windowManager;
-    LinearLayout linearLayout;
-    private ImageButton imageSong;
+
     private static int currentPos;
 
     private String url;
@@ -68,7 +66,7 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
     @Override
     public void onCreate() {
         super.onCreate();
-        initView();
+//        initView();
 
 
 
@@ -94,26 +92,7 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 
 
 
-    private void initView() {
-        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        linearLayout = new LinearLayout(this);
-        imageSong = new ImageButton(this);
 
-        ViewGroup.LayoutParams iParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        imageSong.setImageResource(R.drawable.image_music);
-        imageSong.setLayoutParams(iParams);
-        imageSong.setOnClickListener(this);
-
-        LinearLayout.LayoutParams llParameters = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        linearLayout.setBackgroundColor(Color.WHITE);
-        linearLayout.setLayoutParams(llParameters);
-
-        WindowManager.LayoutParams  params = new WindowManager.LayoutParams (LinearLayout.LayoutParams.MATCH_PARENT, 100, WindowManager.LayoutParams.TYPE_PHONE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.BOTTOM;
-
-        linearLayout.addView(imageSong);
-//        windowManager.addView(linearLayout, params);
-    }
     private void getSongListInfo(Intent intent) {
         key = intent.getStringExtra("key");
         currentPos = intent.getIntExtra("pos", 0);

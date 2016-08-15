@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
@@ -14,6 +16,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,17 +29,22 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import vn.techkid.simplemp3player.Activity.ChartSong;
+import vn.techkid.simplemp3player.Activity.MainActivity;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Getter.SongGetter;
-import vn.techkid.simplemp3player.HelperClass.HelperClass;
+
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 
 /**
  * Created by Laptop88 on 8/4/2016.
  */
-public class PlayingMusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener{
-    private String url;
+public class PlayingMusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, View.OnClickListener{
+    public  WindowManager windowManager;
+    public  LinearLayout linearLayout;
+    public  WindowManager.LayoutParams params;
+    private ImageButton imageSong;private String url;
+
     private String title, artist;
     private int fullTime, eslapedTime;
     private Handler durationHandler = new Handler();
@@ -40,10 +53,39 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public static int maxSongs;
     private int count;
     ArrayList<Song> songs = new ArrayList<>();
-    public static HelperClass helperClass;
+    public HelperClass helperClass;
     public static boolean isWait;
 //    private MusicController musicController;
     private MediaPlayer mediaPlayer;
+    private boolean isVisible;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initView();
+    }
+    private void initView() {
+        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        linearLayout = new LinearLayout(this);
+        imageSong = new ImageButton(this);
+
+        ViewGroup.LayoutParams iParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        imageSong.setBackgroundColor(0x00388E3C);
+        imageSong.setLayoutParams(iParams);
+        imageSong.setOnClickListener(this);
+
+        LinearLayout.LayoutParams llParameters = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        linearLayout.setBackgroundColor(Color.WHITE);
+        linearLayout.setLayoutParams(llParameters);
+
+        params = new WindowManager.LayoutParams (LinearLayout.LayoutParams.MATCH_PARENT, 100, WindowManager.LayoutParams.TYPE_PHONE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
+        params.gravity = Gravity.BOTTOM;
+
+        linearLayout.addView(imageSong);
+
+//        windowManager.addView(linearLayout, params);
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -74,7 +116,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             maxSongs = 20;
         }
         currentPos = FloatingControlWindow.getCurrentPos();
-        helperClass.integers.clear();
         helperClass = new HelperClass(maxSongs);
     }
 
@@ -155,6 +196,27 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             updateProgressIntent.putExtra("timeRemaining", String.format("%d:%d", minutesRemaining, secondsRemaining));
             updateProgressIntent.setAction("updateSeekBar");
             sendBroadcast(updateProgressIntent);
+            if (MainActivity.isAlive){
+                if (PlayerActivity.isBackPressed && !MainActivity.isForceClose){
+                    if (!isVisible){
+                       isVisible = true;
+                        windowManager.addView(linearLayout, params);
+                    }
+
+                }
+                else {
+                    if (isVisible){
+                        isVisible = false;
+                        windowManager.removeView(linearLayout);
+                    }
+                }
+            }
+            else {
+                if (isVisible){
+                    isVisible = false;
+                    windowManager.removeView(linearLayout);
+                }
+            }
             durationHandler.postDelayed(this, 100);
         }
     };
@@ -211,6 +273,11 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         setMediaPlayer();
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
     public class MyBinder extends Binder {
         public PlayingMusicService getService(){
             return PlayingMusicService.this;
@@ -221,5 +288,27 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public void onDestroy() {
         stopForeground(true);
         super.onDestroy();
+    }
+    //////////////////////////////////////
+    /////////////////////////////////////
+    public class HelperClass {
+        public ArrayList<Integer> integers = new ArrayList<>();
+        private int n;
+
+
+        public HelperClass(int n){
+            this.n = n;
+            for (int i = 0; i < n; i++) {
+                integers.add(i);
+            }
+
+        }
+        public int getRandomPos(){
+            int rand = (int)(Math.random()*integers.size());
+            return integers.remove(rand);
+        }
+
+
+
     }
 }

@@ -16,15 +16,22 @@ import android.view.View;
 import vn.techkid.simplemp3player.Fragment.DisplayFragment;
 import vn.techkid.simplemp3player.Fragment.NaviFragment;
 import vn.techkid.simplemp3player.R;
+import vn.techkid.simplemp3player.Service.FloatingControlWindow;
+import vn.techkid.simplemp3player.Service.PlayingMusicService;
 
 public class MainActivity extends AppCompatActivity {
     NaviFragment fragmentNavi ;
     DrawerLayout drawer;
     View view;
     DisplayFragment fragmentDisplay = new DisplayFragment();
+    public static boolean isForceClose;
+    public static boolean isAlive;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        isForceClose = false;
+        isAlive = true;
         setContentView(R.layout.activity_main);
         setUpToolbar();
         setupView();
@@ -86,4 +93,16 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isAlive = false;
+
+    }
 }

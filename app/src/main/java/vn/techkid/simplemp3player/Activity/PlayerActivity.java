@@ -33,7 +33,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     public static boolean isShuffle, isLooping, isRepeat;
     PlayingMusicReceiver receiver;
-    public static boolean isDestroyed;
+    public static boolean isBackPressed;
+    public static boolean isShowing;
 
 
 
@@ -56,6 +57,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
 
     private void initView() {
+
         tv_songName = (TextView)findViewById(R.id.text_songName);
         tv_artistName = (TextView)findViewById(R.id.text_artist);
         tv_eslapedTime = (TextView)findViewById(R.id.text_eslapedTime);
@@ -112,9 +114,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isShowing = true;
+        isBackPressed = false;
+    }
 
     @Override
     public void onClick(View v) {
@@ -229,26 +234,28 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private void nextAction() {
         FloatingControlWindow.pService.getMediaPlayer().reset();
         if (!isLooping){
-            PlayingMusicService.helperClass.integers.remove((Integer)FloatingControlWindow.pService.getCurrentPos());
-            Log.d("khuong", "size: "+PlayingMusicService.helperClass.integers.size());
-            if (PlayingMusicService.helperClass.integers.size()==0){
+            FloatingControlWindow.pService.helperClass
+                    .integers.remove((Integer)FloatingControlWindow.pService.getCurrentPos());
+
+            if (FloatingControlWindow.pService.helperClass.integers.size()==0){
                 for (int i = 0; i < PlayingMusicService.maxSongs; i++) {
-                    PlayingMusicService.helperClass.integers.add(i);
+                    FloatingControlWindow.pService.helperClass
+                            .integers.add(i);
                 }
                 if (!PlayerActivity.isRepeat){
                     PlayingMusicService.isWait = true;
-                    Log.d("khuong", "isWait: "+PlayingMusicService.isWait);
+
                 }
             }
             if (isShuffle){
                 int i = FloatingControlWindow.pService.helperClass.getRandomPos();
                 FloatingControlWindow.pService.setCurrentPos(i);
-                Log.d("khuong1", FloatingControlWindow.pService.getCurrentPos()+"");
+
             }
             else {
                 int i = FloatingControlWindow.pService.getCurrentPos();
                 FloatingControlWindow.pService.setCurrentPos((i+1)%20);
-                Log.d("khuong1", FloatingControlWindow.pService.getCurrentPos()+"");
+
             }
 
         }
@@ -257,9 +264,19 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         FloatingControlWindow.pService.setMediaPlayer();
     }
 
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        isDestroyed = true;
+    public void onBackPressed() {
+        super.onBackPressed();
+        isBackPressed = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (!isBackPressed){
+            MainActivity.isForceClose = true;
+        }
+        isShowing = false;
     }
 }
