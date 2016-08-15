@@ -39,20 +39,31 @@ public class MainActivity extends AppCompatActivity {
     View view;
     SearchSong searchSong;
     DisplayFragment fragmentDisplay = new DisplayFragment();
-    public static boolean isForceClose;
+
     public static boolean isAlive;
     FinishSignalReceiver finishSignalReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isForceClose = false;
-        isAlive = true;
+
         setContentView(R.layout.activity_main);
         setUpToolbar();
         setupView();
         CloseNavigation();
         serBroadcastReceiver();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isAlive = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isAlive = true;
     }
 
     private void serBroadcastReceiver() {
@@ -127,9 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -147,13 +156,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        isAlive = false;
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        isAlive = false;
 
     }
     private class FinishSignalReceiver extends BroadcastReceiver{

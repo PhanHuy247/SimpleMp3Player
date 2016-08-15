@@ -20,6 +20,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -52,13 +53,15 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public static final int NOTIFY_ID = 1912;
     private int currentPos;
     public static int maxSongs;
-    private int count;
     ArrayList<Song> songs = new ArrayList<>();
     public HelperClass helperClass;
     public static boolean isWait;
 //    private MusicController musicController;
     private MediaPlayer mediaPlayer;
     private boolean isVisible;
+    private ImageButton pauseBtn;
+    private ImageButton nextBtn;
+    private ImageButton prevBtn;
 
     @Override
     public void onCreate() {
@@ -69,22 +72,41 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         linearLayout = new LinearLayout(this);
         imageSong = new ImageButton(this);
+        pauseBtn = new ImageButton(this);
+        pauseBtn.setImageResource(R.drawable.ic_pause_blue_grey_800_36dp);
+        pauseBtn.setBackgroundColor(0x80388E3C);
 
-//        ViewGroup.LayoutParams iParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        nextBtn = new ImageButton(this);
+        nextBtn.setImageResource(R.drawable.ic_skip_next_blue_grey_800_36dp);
+        nextBtn.setBackgroundColor(0x80388E3C);
+
+        prevBtn = new ImageButton(this);
+        prevBtn.setImageResource(R.drawable.ic_skip_previous_blue_grey_800_36dp);
+        prevBtn.setBackgroundColor(0x80388E3C);
+
+
+        ViewGroup.LayoutParams btnParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        pauseBtn.setLayoutParams(btnParams);
+        nextBtn.setLayoutParams(btnParams);
+        pauseBtn.setLayoutParams(btnParams);
 //        imageSong.setBackgroundColor(0x80388E3C);
 //        imageSong.setLayoutParams(iParams);
 //        imageSong.setOnClickListener(this);
 
         LinearLayout.LayoutParams llParameters = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        linearLayout.setBackgroundColor(0x80388E3C);
+        linearLayout.setBackgroundColor(0x95388E3C);
         linearLayout.setLayoutParams(llParameters);
 
-        params = new WindowManager.LayoutParams (LinearLayout.LayoutParams.MATCH_PARENT, 100, WindowManager.LayoutParams.TYPE_PHONE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
+        params = new WindowManager.LayoutParams (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_PHONE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
+        params.x = 0;
+        params.y = 0;
         params.gravity = Gravity.BOTTOM;
 
-        linearLayout.addView(imageSong);
 
-//        windowManager.addView(linearLayout, params);
+        linearLayout.addView(prevBtn);
+        linearLayout.addView(pauseBtn);
+        linearLayout.addView(nextBtn);
+
     }
 
     @Nullable
@@ -166,7 +188,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
 
     public void play() {
-        count++;
         mediaPlayer.start();
         if (isWait){
             mediaPlayer.pause();
@@ -198,18 +219,10 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             updateProgressIntent.setAction("updateSeekBar");
             sendBroadcast(updateProgressIntent);
             if (MainActivity.isAlive){
-                if (PlayerActivity.isBackPressed && !MainActivity.isForceClose){
-                    if (!isVisible){
-                       isVisible = true;
-                        windowManager.addView(linearLayout, params);
-                    }
+                if (!isVisible){
+                    isVisible = true;
 
-                }
-                else {
-                    if (isVisible){
-                        isVisible = false;
-                        windowManager.removeView(linearLayout);
-                    }
+                    windowManager.addView(linearLayout, params);
                 }
             }
             else {
