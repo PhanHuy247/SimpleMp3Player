@@ -276,6 +276,9 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         super.onStop();
         if (!isBackPressed){
             MainActivity.isForceClose = true;
+            Intent intent = new Intent();
+            intent.setAction("finish");
+            sendBroadcast(intent);
         }
         isShowing = false;
     }

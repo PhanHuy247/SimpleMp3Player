@@ -5,8 +5,10 @@ package vn.techkid.simplemp3player.Activity;
 
 
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     DisplayFragment fragmentDisplay = new DisplayFragment();
     public static boolean isForceClose;
     public static boolean isAlive;
+    FinishSignalReceiver finishSignalReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,14 @@ public class MainActivity extends AppCompatActivity {
         setUpToolbar();
         setupView();
         CloseNavigation();
+        serBroadcastReceiver();
+    }
 
+    private void serBroadcastReceiver() {
+        finishSignalReceiver = new FinishSignalReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("finish");
+        registerReceiver(finishSignalReceiver, filter);
     }
 
     private void CloseNavigation() {
@@ -145,5 +155,14 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         isAlive = false;
 
+    }
+    private class FinishSignalReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("finish")){
+                finish();
+            }
+        }
     }
 }
