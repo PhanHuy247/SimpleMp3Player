@@ -66,13 +66,11 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         getSongListInfo(intent);
-//        get320kDownloadLink(currentPos);
         if (pService!=null){
             refreshService();
             pService.stopSelf();
         }
         setUpService();
-//        setBroadcastReceiver();
         setUpPlayer();
         return START_NOT_STICKY;
     }
@@ -84,14 +82,6 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
     }
 
 
-
-//    private void setBroadcastReceiver() {
-//        receiver = new MusicControlReceiver();
-//        IntentFilter filter = new IntentFilter();
-//        filter.addAction("nextRand");
-//        filter.addAction("next");
-//        registerReceiver(receiver, filter);
-////    }
 
     private void initView() {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);

@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Fragment.ChartSong;
 import vn.techkid.simplemp3player.Getter.SongGetter;
+import vn.techkid.simplemp3player.HelperClass.HelperClass;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 
@@ -33,15 +34,15 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private String url;
     private String title, artist;
     private int fullTime, eslapedTime;
-    public Handler durationHandler = new Handler();
+    private Handler durationHandler = new Handler();
     public static final int NOTIFY_ID = 1912;
     private int currentPos;
+    public static int maxSongs;
+    private int count;
     ArrayList<Song> songs = new ArrayList<>();
-
-    public MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
-    }
-    private MusicController musicController;
+    public static HelperClass helperClass;
+    public static boolean isWait;
+//    private MusicController musicController;
     private MediaPlayer mediaPlayer;
     @Nullable
     @Override
@@ -51,29 +52,33 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         getSongsList();
         get320kDownloadLink(currentPos);
         setMediaPlayer();
-        setBroadcastReceiver();
+//        setBroadcastReceiver();
         return START_NOT_STICKY;
     }
 
-    private void setBroadcastReceiver() {
-        musicController = new MusicController();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("next");
-        filter.addAction("previous");
-        registerReceiver(musicController, filter);
+    public int getCurrentPos() {
+        return currentPos;
+    }
+
+    public void setCurrentPos(int currentPos) {
+        this.currentPos = currentPos;
     }
 
     private void getSongsList() {
         if (FloatingControlWindow.getKey().equals("chartSong")){
             songs = ChartSong.getSongs();
+            maxSongs = 20;
         }
         currentPos = FloatingControlWindow.getCurrentPos();
+        helperClass.integers.clear();
+        helperClass = new HelperClass(maxSongs);
     }
 
-    private void setMediaPlayer() {
+    public void setMediaPlayer() {
         mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -85,6 +90,9 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
     }
 
     public void setMediaPlayer(MediaPlayer mediaPlayer) {
@@ -116,7 +124,11 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
 
     public void play() {
+        count++;
         mediaPlayer.start();
+        if (isWait){
+            mediaPlayer.pause();
+        }
         fullTime = mediaPlayer.getDuration();
         durationHandler.postDelayed(updateSeekBarTime, 100);
 
@@ -150,10 +162,11 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
+        mediaPlayer.reset();
         return false;
 
     }
-    private void get320kDownloadLink(int pos) {
+    public void get320kDownloadLink(int pos) {
         SongGetter getter = new SongGetter(songs.get(pos).getAccessLink());
         try {
             getter.execute().get();
@@ -170,16 +183,31 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        mediaPlayer.stop();
         mediaPlayer.release();
-        mediaPlayer = null;
-        if (PlayerActivity.isShuffle) {
+        if (!PlayerActivity.isLooping){
+            helperClass.integers.remove((Integer)currentPos);
 
+            Log.d("khuong", "size: "+helperClass.integers.size());
+            if (helperClass.integers.size()==0){
+                for (int i = 0; i < maxSongs; i++) {
+                    helperClass.integers.add(i);
+                }
+                if (!PlayerActivity.isRepeat){
+                    isWait = true;
+                    Log.d("khuong", "isWait: "+isWait);
+                }
+            }
+            if (PlayerActivity.isShuffle) {
+                currentPos = helperClass.getRandomPos();
+                Log.d("khuong1", currentPos+"");
+            }
+            else {
+                currentPos = (currentPos+1)%20;
+                Log.d("khuong2", currentPos+"");
+            }
         }
-        else {
-            currentPos = (currentPos+1)%20;
-            get320kDownloadLink(currentPos);
-        }
+
+        get320kDownloadLink(currentPos);
         setMediaPlayer();
     }
 
@@ -188,35 +216,10 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             return PlayingMusicService.this;
         }
     }
-    private class MusicController extends BroadcastReceiver{
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
-            if (intent.getAction().equals("next")){
-                if (PlayerActivity.isShuffle){
-
-                }
-                else {
-                    currentPos = (currentPos+1)%20;
-
-                }
-
-            }
-            else if (intent.getAction().equals("previous")){
-                if (PlayerActivity.isShuffle){
-
-                }
-                else {
-                    currentPos = (currentPos-1)%20;
-                }
-            }
-            get320kDownloadLink(currentPos);
-            setMediaPlayer();
-        }
+    @Override
+    public void onDestroy() {
+        stopForeground(true);
+        super.onDestroy();
     }
-
-
 }
