@@ -8,12 +8,22 @@ public class Album  {
     String NameAlbum;
     String NameArtist;
     String category;
+    String link;
 
-    public Album(String imageAlbum, String nameAlbum, String category, String nameArtist) {
+
+    public Album(String imageAlbum, String nameAlbum, String category, String link) {
         this.imageAlbum = imageAlbum;
         NameAlbum = nameAlbum;
         this.category = category;
-        NameArtist = nameArtist;
+        this.link = link;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getImageAlbum() {

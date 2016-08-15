@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -21,8 +20,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import vn.techkid.simplemp3player.Activity.ChartSong;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
+import vn.techkid.simplemp3player.Fragment.ChartSong;
 import vn.techkid.simplemp3player.Getter.SongGetter;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;

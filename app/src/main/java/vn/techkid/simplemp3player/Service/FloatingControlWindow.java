@@ -1,11 +1,9 @@
 package vn.techkid.simplemp3player.Service;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -19,13 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
-import vn.techkid.simplemp3player.Activity.ChartSong;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
-import vn.techkid.simplemp3player.Getter.SongGetter;
-import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 
 /**
@@ -69,9 +61,6 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
     public void onCreate() {
         super.onCreate();
         initView();
-
-
-
     }
 
     @Override
@@ -192,6 +181,5 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
             bindService(intent, connection, Context.BIND_AUTO_CREATE);
             isBound = true;
         }
-        Log.d("check2","startNewMusicService");
     }
 }

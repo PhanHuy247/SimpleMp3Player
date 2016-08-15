@@ -3,118 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragment.AlbumFragment">
-    <ScrollView
+    tools:context=".Fragment.AlbumCountry"
+   >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listAlbum"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/list_background_pressed">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="14dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Album Song Viet Nam 2016"
-            android:textSize="18dp"
-            android:textColor="@color/backgroundArtist"
-            android:textStyle="bold"
-            android:layout_gravity="center"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listAlbum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager">
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Album Song US-UK 2016"
-            android:textSize="18dp"
-            android:textColor="@color/backgroundArtist"
-            android:layout_gravity="center"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listAlbumUSUK"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager">
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Album Song Korea 2016"
-            android:textSize="18dp"
-            android:textColor="@color/backgroundArtist"
-            android:layout_gravity="center"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listAlbumKorea"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager">
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Album Song Beat-Black 2016"
-            android:textSize="18dp"
-            android:textColor="@color/backgroundArtist"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listAlbumBeatBlack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager">
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Album Song China 2016"
-            android:textSize="18dp"
-            android:textColor="@color/backgroundArtist"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listAlbumChiNa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager">
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Album Song Japan 2016"
-            android:textSize="18dp"
-            android:textColor="@color/backgroundArtist"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listAlbumJapan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager">
-        </android.support.v7.widget.RecyclerView>
-
-
-    </LinearLayout>
-    </ScrollView>
+        android:layout_height="wrap_content"
+        >
+    </android.support.v7.widget.RecyclerView>
 </FrameLayout>

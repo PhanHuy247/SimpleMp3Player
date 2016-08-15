@@ -11,19 +11,17 @@ import com.squareup.picasso.Picasso;
 import vn.techkid.simplemp3player.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
-
+    // Splash screen timer
+    ImageView imageView;
     private static int SPLASH_TIME_OUT = 3000;
-    ImageView img;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        img = (ImageView) findViewById(R.id.imgsplash);
+        imageView = (ImageView) findViewById(R.id.imgsplash);
         Picasso.with(this)
                 .load("http://i.stack.imgur.com/TJWMH.jpg")
-                .into(img);
-
+                .into(imageView);
         new Handler().postDelayed(new Runnable() {
 
             /*
@@ -35,8 +33,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-                startActivity(intent);
+                Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
+                startActivity(i);
 
                 // close this activity
                 finish();

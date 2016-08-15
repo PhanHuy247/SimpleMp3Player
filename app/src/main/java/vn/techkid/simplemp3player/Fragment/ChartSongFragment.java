@@ -1,7 +1,6 @@
 package vn.techkid.simplemp3player.Fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.ImageButton;
 
 import com.squareup.picasso.Picasso;
 
-import vn.techkid.simplemp3player.Activity.ChartSong;
 import vn.techkid.simplemp3player.R;
 
 /**
@@ -25,6 +23,8 @@ public class ChartSongFragment extends Fragment {
     public static String URLVIETNAM = "http://chiasenhac.vn/mp3/vietnam/";
     public static String URLUSUK = "http://chiasenhac.vn/mp3/us-uk/";
     public static String URLKOREA = "http://chiasenhac.vn/mp3/korea/";
+
+    ChartSong chartSong;
 
     public ChartSongFragment() {
         // Required empty public constructor
@@ -67,9 +67,11 @@ public class ChartSongFragment extends Fragment {
         imgVietnam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ChartSong.class);
-                intent.putExtra("URL",urlvietnam);
-                startActivity(intent);
+                chartSong = new ChartSong();
+                chartSong.setupUrl(urlvietnam);
+                getFragmentManager().beginTransaction().replace(R.id.frame_container,chartSong)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }

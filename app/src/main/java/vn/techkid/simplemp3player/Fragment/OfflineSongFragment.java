@@ -50,7 +50,7 @@ public class OfflineSongFragment extends Fragment {
 //                return lhs.getTitle().compareTo(rhs.getTitle());
 //            }
 //        });
-//        AdapterSong adapterSong = new AdapterSong(songList);
+//        AdapterChartSong adapterSong = new AdapterChartSong(songList);
 //        songsView.setAdapter(adapterSong);
 
     }

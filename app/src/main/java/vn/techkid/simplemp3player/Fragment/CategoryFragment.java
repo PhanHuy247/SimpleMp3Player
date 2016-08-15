@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,6 @@ public class CategoryFragment extends Fragment {
         if(view == null){
             view =  inflater.inflate(R.layout.fragment_category, container, false);
             setUpView(view);
-            Log.d("phanhuy","phanhuy");
         }
 
         return view;
@@ -48,9 +46,7 @@ public class CategoryFragment extends Fragment {
             adapter.addFrag(new CategoryInVietNam(),"VietNam");
             adapter.addFrag(new CategoryInKorea()," Korea ");
             adapter.addFrag(new CategoryInUSUK()," US-UK ");
-            adapter.addFrag(new CategoryChina()," China ");
-            adapter.addFrag(new CategoryJapan()," Japan ");
-            Log.d("huy", String.valueOf(adapter.getCount()));
+
 
         return adapter;
     }

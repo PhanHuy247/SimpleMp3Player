@@ -4,24 +4,38 @@ package vn.techkid.simplemp3player.Activity;
 
 
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import vn.techkid.simplemp3player.Fragment.DisplayFragment;
 import vn.techkid.simplemp3player.Fragment.NaviFragment;
+import vn.techkid.simplemp3player.Fragment.SearchSong;
 import vn.techkid.simplemp3player.R;
+import android.support.v7.widget.SearchView;
+
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
     NaviFragment fragmentNavi ;
     DrawerLayout drawer;
     View view;
+    SearchSong searchSong;
     DisplayFragment fragmentDisplay = new DisplayFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         setUpToolbar();
         setupView();
         CloseNavigation();
-
     }
 
     private void CloseNavigation() {
@@ -66,10 +79,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // getMenuInflater().inflate(R.menu.menu_main, menu);
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(myActionMenuItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String word) {
+                //search
+                searchSong = new SearchSong();
+                searchSong.setQuery(word);
+                searchView.clearFocus();
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_container,searchSong)
+                        .addToBackStack(null)
+                        .commit();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String arg0) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -83,6 +119,11 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if(id == R.id.action_search){
+            startSearch("", false, null, false);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

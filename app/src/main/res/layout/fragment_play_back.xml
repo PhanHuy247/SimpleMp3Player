@@ -1,58 +1,27 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.ArtistFragment">
-    <LinearLayout
+
+    >
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabsPlayback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/colorWhite"
+            android:dividerHeight="1dp"
+            app:tabMode="fixed"
+            app:tabGravity="fill"/>
+    </android.support.design.widget.AppBarLayout>
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpagerplayback"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="6dp">
-        <Button
-            android:id="@+id/btnplaybackvietnam"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="PlayBack VietNam"
-            android:textColor="@color/black"
-            android:background="@drawable/button_playback"
-            android:layout_marginTop="8dp"
-            />
-        <Button
-            android:id="@+id/btnplaybackusuk"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="PlayBack US-UK"
-            android:textColor="@color/black"
-            android:background="@drawable/button_playback"
-            android:layout_marginTop="8dp"
-            />
-        <Button
-            android:id="@+id/btnplaybackKorea"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="PlayBack Korea"
-            android:textColor="@color/black"
-            android:background="@drawable/button_playback"
-            android:layout_marginTop="8dp"
-            />
-        <Button
-            android:id="@+id/btnplaybackchina"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="PlayBack ChiNa"
-            android:textColor="@color/black"
-            android:background="@drawable/button_playback"
-            android:layout_marginTop="8dp"
-            />
-
-        <Button
-            android:id="@+id/btnplaybackjapan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="PlayBack Japan"
-            android:textColor="@color/black"
-            android:background="@drawable/button_playback"
-            android:layout_marginTop="8dp"
-            />
-    </LinearLayout>
-</FrameLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+</android.support.design.widget.CoordinatorLayout>
