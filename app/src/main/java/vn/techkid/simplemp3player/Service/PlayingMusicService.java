@@ -290,8 +290,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         stopForeground(true);
         super.onDestroy();
     }
-    //////////////////////////////////////
-    /////////////////////////////////////
     public class HelperClass {
         public ArrayList<Integer> integers = new ArrayList<>();
         private int n;

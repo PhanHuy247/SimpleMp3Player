@@ -45,7 +45,7 @@ public class ArtistCountryFragment extends Fragment {
         return view;
     }
     private ViewPagerAdapter setUpViewPage() {
-        artistFragment1.setupPosForChart(0,22);
+        artistFragment1.setupPosForChart(0,20);
         artistFragment2.setupPosForChart(22,32);
         artistFragment3.setupPosForChart(32,54);
         adapter.addFrag(artistFragment1,"VietNam");

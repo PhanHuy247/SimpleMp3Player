@@ -19,9 +19,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         imageView = (ImageView) findViewById(R.id.imgsplash);
-        Picasso.with(this)
-                .load("http://i.stack.imgur.com/TJWMH.jpg")
-                .into(imageView);
+
         new Handler().postDelayed(new Runnable() {
 
             /*

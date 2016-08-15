@@ -111,11 +111,15 @@ public class CategoryVietNam extends Fragment {
         protected Void doInBackground(String... strings) {
             listNews = new ArrayList<>();
             Document document = null;
+            int length = 20;
             try {
                 document = (Document) Jsoup.connect(strings[0]).get();
                 Elements subjectElements = document.select("div.text2");
                 if (subjectElements != null && subjectElements.size() > 0) {
-                    for (int i = 0; i < subjectElements.size(); i++) {
+                    if(subjectElements.size() < 20) {
+                        length = subjectElements.size();
+                    }
+                    for (int i = 0; i < length; i++) {
                         Element titleSubject = subjectElements.get(i).getElementsByTag("a").first();
                         Element artistSubject = subjectElements.get(i).getElementsByTag("p").first();
                         if (titleSubject != null && artistSubject != null) {

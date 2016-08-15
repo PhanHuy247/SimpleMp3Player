@@ -29,28 +29,29 @@
                 android:id="@+id/imgVietNam"
                 android:layout_marginTop="12dp"
                 android:layout_height="0dp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:padding="6dp"
-                android:paddingLeft="14dp"
-                android:paddingTop="14dp"
+                android:scaleType="fitXY"
                />
             <ImageButton
                 android:background="@color/colorWhite"
                 android:id="@+id/imgEurope"
                 android:layout_marginTop="12dp"
                 android:layout_height="0dp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:padding="12dp"/>
+                android:padding="6dp"
+                android:scaleType="fitXY"/>
             <ImageButton
                     android:background="@color/colorWhite"
                     android:id="@+id/imgKorea"
                     android:layout_weight="1"
                     android:layout_height="0dp"
                     android:layout_marginTop="12dp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:padding="6dp"
+                android:scaleType="fitXY"
                     />
     </LinearLayout>
 

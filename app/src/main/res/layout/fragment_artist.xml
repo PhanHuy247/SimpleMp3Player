@@ -5,7 +5,6 @@
     tools:context=".Fragment.ArtistFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:background="@color/list_divider"
         android:id="@+id/listCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

@@ -94,7 +94,6 @@ public class ArtistFragment extends Fragment {
 
     private void createDataForListNews() {
          listNews = task.listNews ;
-        Log.d("1234","12345");
     }
 
     private void setupView(View view) {

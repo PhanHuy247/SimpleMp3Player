@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="1dp">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="48dp">
@@ -15,7 +16,8 @@
                 android:gravity="center"
                 android:textSize="16dp"
                 android:layout_width="48dp"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                />
             <TextView
                 android:layout_toRightOf="@id/txtchartArtistNumber"
                 android:id="@+id/txtNameArtistRating"
@@ -23,6 +25,7 @@
                 android:layout_height="match_parent"
                 android:text="nameARTIST"
                 android:textStyle="bold"
+                android:textColor="@color/colorAccent"
                 android:gravity="center_vertical"/>
         </RelativeLayout>
 
