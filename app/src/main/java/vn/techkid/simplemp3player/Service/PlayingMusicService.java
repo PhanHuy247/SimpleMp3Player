@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import vn.techkid.simplemp3player.Activity.ChartSong;
+
 import vn.techkid.simplemp3player.Activity.MainActivity;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Fragment.ChartSong;
@@ -70,13 +70,13 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         linearLayout = new LinearLayout(this);
         imageSong = new ImageButton(this);
 
-        ViewGroup.LayoutParams iParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        imageSong.setBackgroundColor(0x00388E3C);
-        imageSong.setLayoutParams(iParams);
-        imageSong.setOnClickListener(this);
+//        ViewGroup.LayoutParams iParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//        imageSong.setBackgroundColor(0x80388E3C);
+//        imageSong.setLayoutParams(iParams);
+//        imageSong.setOnClickListener(this);
 
         LinearLayout.LayoutParams llParameters = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        linearLayout.setBackgroundColor(Color.WHITE);
+        linearLayout.setBackgroundColor(0x80388E3C);
         linearLayout.setLayoutParams(llParameters);
 
         params = new WindowManager.LayoutParams (LinearLayout.LayoutParams.MATCH_PARENT, 100, WindowManager.LayoutParams.TYPE_PHONE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);

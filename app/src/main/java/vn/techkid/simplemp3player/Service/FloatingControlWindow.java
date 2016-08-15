@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import vn.techkid.simplemp3player.Activity.ChartSong;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Getter.SongGetter;
 import vn.techkid.simplemp3player.Model.Song;
