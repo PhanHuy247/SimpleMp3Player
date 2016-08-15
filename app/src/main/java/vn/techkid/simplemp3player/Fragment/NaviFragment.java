@@ -114,7 +114,7 @@ public class NaviFragment extends Fragment {
                         .commit();
                 break;
             case 1:
-                getFragmentManager().beginTransaction().replace(R.id.frame_container, new AlbumFragment())
+                getFragmentManager().beginTransaction().replace(R.id.frame_container, new AlbumCountryFragment())
                         .addToBackStack(null)
                         .commit();
                 break;

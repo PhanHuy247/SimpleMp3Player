@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 import vn.techkid.simplemp3player.Activity.ChartSong;
 import vn.techkid.simplemp3player.Activity.MainActivity;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
+import vn.techkid.simplemp3player.Fragment.ChartSong;
 import vn.techkid.simplemp3player.Getter.SongGetter;
 
 import vn.techkid.simplemp3player.Model.Song;

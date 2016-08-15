@@ -1,6 +1,5 @@
 package vn.techkid.simplemp3player.Adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +8,19 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import vn.techkid.simplemp3player.R;
 import vn.techkid.simplemp3player.Model.Song;
+import vn.techkid.simplemp3player.R;
 
 /**
- * Created by HP on 7/27/2016.
+ * Created by HP on 8/15/2016.
  */
-public class AdapterSong extends BaseAdapter {
+public class AdapterSearchSong extends BaseAdapter {
     ArrayList<Song> arrayList = new ArrayList<>();
-    public AdapterSong(ArrayList<Song> arrayList){
+
+    public AdapterSearchSong(ArrayList<Song> arrayList) {
         this.arrayList = arrayList;
     }
+
     @Override
     public int getCount() {
         return arrayList.size();
@@ -35,16 +36,15 @@ public class AdapterSong extends BaseAdapter {
         return position;
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            convertView = inflater.inflate(R.layout.item_chart_vietnam , parent, false);
+            convertView = inflater.inflate(R.layout.item_search_song, parent, false);
             CommentViewHolder holder = new CommentViewHolder();
-            holder.txtNameSong = (TextView)convertView.findViewById(R.id.tv_title);
-            holder.txtNameArtist = (TextView)convertView.findViewById(R.id.tv_artist);
-            holder.txtRank = (TextView)convertView.findViewById(R.id.txtRank);
+            holder.txtNameSong = (TextView)convertView.findViewById(R.id.tv_titleSearch);
+            holder.txtNameArtist = (TextView)convertView.findViewById(R.id.tv_artistSearch);
+            holder.txtRank = (TextView)convertView.findViewById(R.id.txtRankSearch);
             convertView.setTag(holder);
         }
 
@@ -55,7 +55,6 @@ public class AdapterSong extends BaseAdapter {
 
         return convertView;
     }
-
     public static class CommentViewHolder{
         public TextView txtNameSong;
         public TextView txtNameArtist;

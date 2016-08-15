@@ -45,14 +45,14 @@ public class ArtistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        getActivity().setTitle("Artist");
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
         listNews  = new ArrayList<>();
         setupPosForChart(posFirst,posLast);
         setupAsyntask();
         createDataForListNews();
         setupView(view);
-        getActivity().setTitle("Chart Artist");
+
 
         listCardAdapter = new AdapterChartArtist(listNews,getActivity());
         LinearLayoutManager linearManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);

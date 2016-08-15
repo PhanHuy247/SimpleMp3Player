@@ -50,7 +50,6 @@ public class AdapterAlbum extends  RecyclerView.Adapter<AdapterAlbum.AlbumViewHo
     @Override
     public void onBindViewHolder(AlbumViewHolder holder, int position) {
         holder.txtNameAlbum.setText(listAlbum.get(position).getNameAlbum());
-        holder.txtNameAlbumArtist.setText(listAlbum.get(position).getNameArtist());
         holder.category.setText(listAlbum.get(position).getCategory());
         Picasso.with(itemView.getContext())
                 .load(listAlbum.get(position).getImageAlbum())
@@ -68,13 +67,11 @@ public class AdapterAlbum extends  RecyclerView.Adapter<AdapterAlbum.AlbumViewHo
     public static class AlbumViewHolder extends RecyclerView.ViewHolder {
         OnItemClickListener onItemClickListener;
         public TextView txtNameAlbum;
-        public TextView txtNameAlbumArtist;
         public TextView category;
         public ImageView imgAlbum;
         public AlbumViewHolder(final View itemView) {
             super(itemView);
             txtNameAlbum = (TextView)itemView.findViewById(R.id.txtNameAlbum);
-            txtNameAlbumArtist = (TextView)itemView.findViewById(R.id.txtNameAlbumArtist);
             imgAlbum = (ImageView)itemView.findViewById(R.id.imgAlbum);
             category = (TextView) itemView.findViewById(R.id.categotyAlbum);
 

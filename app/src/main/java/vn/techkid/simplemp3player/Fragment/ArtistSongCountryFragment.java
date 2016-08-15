@@ -22,10 +22,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
-import vn.techkid.simplemp3player.Adapter.AdapterCategory;
-import vn.techkid.simplemp3player.Adapter.AdapterChartSong;
-import vn.techkid.simplemp3player.Model.Artist;
-import vn.techkid.simplemp3player.Model.Category;
+import vn.techkid.simplemp3player.Adapter.AdapterSongArtist;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 
@@ -37,7 +34,7 @@ public class ArtistSongCountryFragment extends Fragment {
     ArrayList<Song> listSong;
     String url;
     RecyclerView recyclerView;
-    AdapterChartSong adapter;
+    AdapterSongArtist adapter;
     DownloadTask task;
 
     ArrayList<CharSequence> titles = new ArrayList<>();
@@ -54,17 +51,18 @@ public class ArtistSongCountryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().setTitle("Artist");
         View view = inflater.inflate(R.layout.fragment_artist_song_viet_nam, container, false);
         setupView(view);
-        getActivity().setTitle("Category VietNam");
+
         listSong = new ArrayList<>();
         setupAsyntask();
         createDataForListSong();
-        adapter = new AdapterChartSong(listSong,getActivity());
+        adapter = new AdapterSongArtist(listSong,getActivity());
         LinearLayoutManager linearManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(linearManager);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new AdapterChartSong.OnItemClickListener() {
+        adapter.setOnItemClickListener(new AdapterSongArtist.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion) {
                 Log.d("POSITION", String.valueOf(postion));

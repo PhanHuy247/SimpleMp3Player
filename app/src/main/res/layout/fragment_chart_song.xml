@@ -18,7 +18,7 @@
         <LinearLayout
             android:id="@+id/linear"
             android:layout_width="match_parent"
-            android:layout_height="399dp"
+            android:layout_height="match_parent"
             android:layout_below="@id/txtBaiHat"
             android:orientation="vertical"
             android:weightSum="3"
@@ -29,7 +29,7 @@
                 android:id="@+id/imgVietNam"
                 android:layout_marginTop="12dp"
                 android:layout_height="0dp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:padding="6dp"
                 android:paddingLeft="14dp"
@@ -40,7 +40,7 @@
                 android:id="@+id/imgEurope"
                 android:layout_marginTop="12dp"
                 android:layout_height="0dp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:padding="12dp"/>
             <ImageButton
@@ -49,7 +49,7 @@
                     android:layout_weight="1"
                     android:layout_height="0dp"
                     android:layout_marginTop="12dp"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:padding="6dp"
                     />
     </LinearLayout>
