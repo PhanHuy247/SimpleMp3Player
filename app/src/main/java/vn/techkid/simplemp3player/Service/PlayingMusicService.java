@@ -23,6 +23,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,9 +45,10 @@ import vn.techkid.simplemp3player.R;
  */
 public class PlayingMusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, View.OnClickListener{
     public  WindowManager windowManager;
-    public  LinearLayout linearLayout;
+    public  LinearLayout linearLayout, linearLayout1, linearLayout2;
     public  WindowManager.LayoutParams params;
-    private ImageButton imageSong;private String url;
+    private ImageButton imageSong;
+    private String url;
 
     private String title, artist;
     private int fullTime, eslapedTime;
@@ -62,6 +65,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private ImageButton pauseBtn;
     private ImageButton nextBtn;
     private ImageButton prevBtn;
+    private TextView textView;
 
     @Override
     public void onCreate() {
@@ -71,24 +75,77 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private void initView() {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         linearLayout = new LinearLayout(this);
+        linearLayout1 = new LinearLayout(this);
+        linearLayout2 = new LinearLayout(this);
         imageSong = new ImageButton(this);
+        textView = new TextView(this);
+        textView.setBackgroundColor(0x80388E3C);
+        ViewGroup.LayoutParams tvParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        textView.setLayoutParams(tvParams);
+        textView.setGravity(Gravity.CENTER);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(PlayingMusicService.this, PlayerActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+            }
+        });
+
         pauseBtn = new ImageButton(this);
         pauseBtn.setImageResource(R.drawable.ic_pause_blue_grey_800_36dp);
         pauseBtn.setBackgroundColor(0x80388E3C);
+        pauseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer.isPlaying()){
+                    mediaPlayer.pause();
+                }
+                else {
+                    mediaPlayer.start();
+                }
+
+
+            }
+        });
 
         nextBtn = new ImageButton(this);
         nextBtn.setImageResource(R.drawable.ic_skip_next_blue_grey_800_36dp);
         nextBtn.setBackgroundColor(0x80388E3C);
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextAction();
+            }
+        });
+
 
         prevBtn = new ImageButton(this);
         prevBtn.setImageResource(R.drawable.ic_skip_previous_blue_grey_800_36dp);
         prevBtn.setBackgroundColor(0x80388E3C);
+        prevBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.release();
+                if (PlayerActivity.isShuffle) {
+//            int i = FloatingControlWindow.pService.helperClass.getRandomPos();
+//            FloatingControlWindow.pService.setCurrentPos(i);
+                } else {
+                    currentPos = (currentPos - 1) % 20;
+                }
+                get320kDownloadLink(currentPos);
+                setMediaPlayer();
+            }
+        });
 
 
-        ViewGroup.LayoutParams btnParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        ViewGroup.LayoutParams btnParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         pauseBtn.setLayoutParams(btnParams);
         nextBtn.setLayoutParams(btnParams);
         pauseBtn.setLayoutParams(btnParams);
+
+
 //        imageSong.setBackgroundColor(0x80388E3C);
 //        imageSong.setLayoutParams(iParams);
 //        imageSong.setOnClickListener(this);
@@ -97,15 +154,21 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         linearLayout.setBackgroundColor(0x95388E3C);
         linearLayout.setLayoutParams(llParameters);
 
+
+        LinearLayout.LayoutParams l2Parameters = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        linearLayout2.setBackgroundColor(0x80388E3C);
+        linearLayout2.setLayoutParams(l2Parameters);
+
         params = new WindowManager.LayoutParams (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_PHONE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
         params.x = 0;
         params.y = 0;
         params.gravity = Gravity.BOTTOM;
 
-
         linearLayout.addView(prevBtn);
         linearLayout.addView(pauseBtn);
         linearLayout.addView(nextBtn);
+        linearLayout.addView(textView);
+        linearLayout.addView(linearLayout2);
 
     }
 
@@ -217,6 +280,15 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             int secondsRemaining = (int) (TimeUnit.MILLISECONDS.toSeconds((long) timeRemaining)-TimeUnit.MINUTES.toSeconds((long)minutesRemaining));
             updateProgressIntent.putExtra("timeRemaining", String.format("%d:%d", minutesRemaining, secondsRemaining));
             updateProgressIntent.setAction("updateSeekBar");
+            if (isVisible){
+                textView.setText("Playing: "+songs.get(currentPos).getTitle()+"\n"+songs.get(currentPos).getArtist());
+                if (mediaPlayer.isPlaying()){
+                    pauseBtn.setImageResource(R.drawable.ic_pause_blue_grey_800_36dp);
+                }
+                else {
+                    pauseBtn.setImageResource(R.drawable.ic_play_arrow_blue_grey_800_36dp);
+                }
+            }
             sendBroadcast(updateProgressIntent);
             if (MainActivity.isAlive){
                 if (!isVisible){
@@ -234,31 +306,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             durationHandler.postDelayed(this, 100);
         }
     };
-
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        mediaPlayer.reset();
-        return false;
-
-    }
-    public void get320kDownloadLink(int pos) {
-        SongGetter getter = new SongGetter(songs.get(pos).getAccessLink());
-        try {
-            getter.execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        url = getter.getUrl();
-        Log.d("final", url);
-
-
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
+    public  void nextAction(){
         mediaPlayer.release();
         if (!PlayerActivity.isLooping){
             helperClass.integers.remove((Integer)currentPos);
@@ -285,6 +333,32 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
         get320kDownloadLink(currentPos);
         setMediaPlayer();
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        mediaPlayer.reset();
+        return false;
+
+    }
+    public void get320kDownloadLink(int pos) {
+        SongGetter getter = new SongGetter(songs.get(pos).getAccessLink());
+        try {
+            getter.execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        url = getter.getUrl();
+        Log.d("final", url);
+
+
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        nextAction();
     }
 
     @Override

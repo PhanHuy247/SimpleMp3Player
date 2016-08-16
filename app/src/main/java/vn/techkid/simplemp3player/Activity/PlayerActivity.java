@@ -163,7 +163,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void previousAction() {
-        FloatingControlWindow.pService.getMediaPlayer().reset();
+        FloatingControlWindow.pService.getMediaPlayer().release();
         if (isShuffle) {
 //            int i = FloatingControlWindow.pService.helperClass.getRandomPos();
 //            FloatingControlWindow.pService.setCurrentPos(i);
@@ -217,7 +217,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void nextAction() {
-        FloatingControlWindow.pService.getMediaPlayer().reset();
+        FloatingControlWindow.pService.getMediaPlayer().release();
         if (!isLooping) {
             FloatingControlWindow.pService.helperClass
                     .integers.remove((Integer) FloatingControlWindow.pService.getCurrentPos());
