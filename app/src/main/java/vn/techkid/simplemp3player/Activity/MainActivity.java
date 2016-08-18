@@ -127,6 +127,12 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isAlive = false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 

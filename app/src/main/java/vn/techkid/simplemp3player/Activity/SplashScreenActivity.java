@@ -104,8 +104,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                                 String link = titleSubject.attr("href");
                                 String artist = artistSubject.text();
                                 String category = categorySubject.text();
-                                if(link != null)
-                                listNews.add(new Song(i+1,link,title,category,artist));
+                                listNews.add(new Song(i,link,title,category,artist));
                             }
                         }
                     }

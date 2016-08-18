@@ -58,7 +58,7 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.Catego
         holder.txtNameCategory.setText(listCategory.get(position).getTitle());
         holder.txtNameArtist.setText(listCategory.get(position).getArtist());
         holder.category.setText(listCategory.get(position).getCategory());
-        holder.ranking.setText(listCategory.get(position).getPosition()+"");
+        holder.ranking.setText(listCategory.get(position).getPosition()+1+"");
     }
 
     @Override

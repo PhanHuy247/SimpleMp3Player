@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import vn.techkid.simplemp3player.Activity.MainActivity;
 import vn.techkid.simplemp3player.Adapter.AdapterChartSong;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
@@ -44,6 +45,7 @@ public class SearchSong extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        MainActivity.isAlive = true;
         // Inflate the layout for this fragment
         getActivity().setTitle(query);
         View view = inflater.inflate(R.layout.fragment_search_song, container, false);

@@ -63,7 +63,7 @@ public class AdapterSongArtist extends RecyclerView.Adapter<AdapterSongArtist.Ch
         holder.txtNameSong.setText(listSong.get(position).getTitle());
         holder.txtNameArtist.setText(listSong.get(position).getArtist());
         holder.category.setText(listSong.get(position).getAlbum());
-        holder.ranking.setText(listSong.get(position).getPosition()+"");
+        holder.ranking.setText(listSong.get(position).getPosition()+1+"");
     }
 
     @Override
