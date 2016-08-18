@@ -9,7 +9,7 @@
         android:id="@+id/button_download"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:background="@color/backgroundDisplay"
+        android:background="@color/transparent"
         android:src="@drawable/ic_file_download_red_300_18dp"/>
     <TextView
         android:id="@+id/text_songName"
@@ -53,58 +53,50 @@
             android:layout_weight="1"
             android:id="@+id/text_timeLeft"/>
     </LinearLayout>
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="8"
+        android:weightSum="12"
         android:gravity="center"
         android:id="@+id/functionBar"
-        android:layout_below="@id/song_duration">
+        android:layout_below="@id/song_duration"
+        android:orientation="horizontal">
         <ImageButton
             android:layout_width="@dimen/imageButtonDimens"
             android:layout_height="@dimen/imageButtonDimens"
             android:id="@+id/button_shuffle"
-            android:layout_marginLeft="@dimen/imageButtonMargin"
-            android:layout_marginRight="@dimen/imageButtonMargin"
-            android:background="@color/backgroundDisplay"
-            android:src="@drawable/ic_shuffle_red_300_18dp"/>
+            android:layout_weight="2"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_shuffle_red_300_36dp"/>
         <ImageButton
             android:layout_width="@dimen/imageButtonDimens"
             android:layout_height="@dimen/imageButtonDimens"
-            android:layout_marginLeft="@dimen/imageButtonMargin"
-            android:layout_marginRight="@dimen/imageButtonMargin"
+            android:layout_weight="2"
             android:id="@+id/button_previous"
-            android:layout_toRightOf="@id/button_shuffle"
-            android:background="@color/backgroundDisplay"
-            android:src="@drawable/ic_skip_previous_red_300_18dp"/>
+            android:background="@color/transparent"
+            android:src="@drawable/ic_skip_next_red_300_36dp"/>
         <ImageButton
             android:layout_width="@dimen/imageButtonDimens"
             android:layout_height="@dimen/imageButtonDimens"
-            android:layout_marginLeft="@dimen/imageButtonMargin"
-            android:layout_marginRight="@dimen/imageButtonMargin"
+            android:layout_weight="2"
             android:id="@+id/button_play"
-            android:layout_toRightOf="@id/button_previous"
-            android:background="@color/backgroundDisplay"
+            android:background="@color/transparent"
             android:src="@drawable/ic_pause_circle_outline_red_300_18dp"/>
         <ImageButton
             android:layout_width="@dimen/imageButtonDimens"
             android:layout_height="@dimen/imageButtonDimens"
-            android:layout_marginLeft="@dimen/imageButtonMargin"
-            android:layout_marginRight="@dimen/imageButtonMargin"
+            android:layout_weight="2"
             android:id="@+id/button_next"
-            android:layout_toRightOf="@id/button_play"
-            android:background="@color/backgroundDisplay"
-            android:src="@drawable/ic_skip_next_red_300_18dp"/>
+            android:background="@color/transparent"
+            android:src="@drawable/ic_skip_next_red_300_36dp"/>
         <ImageButton
             android:id="@+id/button_repeat"
             android:layout_width="@dimen/imageButtonDimens"
             android:layout_height="@dimen/imageButtonDimens"
-            android:layout_marginLeft="@dimen/imageButtonMargin"
-            android:layout_marginRight="@dimen/imageButtonMargin"
-            android:layout_toRightOf="@id/button_next"
-            android:background="@color/backgroundDisplay"
-            android:src="@drawable/ic_repeat_red_300_18dp"/>
-    </RelativeLayout>
+            android:layout_weight="2"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_repeat_red_300_36dp"/>
+    </LinearLayout>
 
 
 </RelativeLayout>

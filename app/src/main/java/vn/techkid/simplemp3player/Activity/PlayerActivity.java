@@ -22,7 +22,7 @@ import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 import vn.techkid.simplemp3player.Service.PlayingMusicService;
 
 
-public class PlayerActivity extends AppCompatActivity implements View.OnClickListener{
+public class PlayerActivity extends AppCompatActivity implements View.OnClickListener {
     public TextView tv_songName, tv_artistName;
     private TextView tv_eslapedTime, tv_timeLeft;
     private SeekBar sb_timeProgress;
@@ -33,8 +33,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     public static boolean isShuffle, isLooping, isRepeat;
     PlayingMusicReceiver receiver;
-    public static boolean isBackPressed;
-    public static boolean isShowing;
 
 
 
@@ -55,31 +53,29 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-
     private void initView() {
 
-        tv_songName = (TextView)findViewById(R.id.text_songName);
-        tv_artistName = (TextView)findViewById(R.id.text_artist);
-        tv_eslapedTime = (TextView)findViewById(R.id.text_eslapedTime);
-        tv_timeLeft = (TextView)findViewById(R.id.text_timeLeft);
-        sb_timeProgress = (SeekBar)findViewById(R.id.seekBar_progressBar);
-        ibt_shuffle = (ImageButton)findViewById(R.id.button_shuffle);
-        if (isShuffle){
+        tv_songName = (TextView) findViewById(R.id.text_songName);
+        tv_artistName = (TextView) findViewById(R.id.text_artist);
+        tv_eslapedTime = (TextView) findViewById(R.id.text_eslapedTime);
+        tv_timeLeft = (TextView) findViewById(R.id.text_timeLeft);
+        sb_timeProgress = (SeekBar) findViewById(R.id.seekBar_progressBar);
+        ibt_shuffle = (ImageButton) findViewById(R.id.button_shuffle);
+        if (isShuffle) {
             ibt_shuffle.setImageResource(R.drawable.ic_shuffle_red_200_18dp);
         }
-        ibt_previous = (ImageButton)findViewById(R.id.button_previous);
-        ibt_play = (ImageButton)findViewById(R.id.button_play);
-        ibt_next = (ImageButton)findViewById(R.id.button_next);
-        ibt_repeat = (ImageButton)findViewById(R.id.button_repeat);
-        if (isRepeat){
-            if (isLooping){
+        ibt_previous = (ImageButton) findViewById(R.id.button_previous);
+        ibt_play = (ImageButton) findViewById(R.id.button_play);
+        ibt_next = (ImageButton) findViewById(R.id.button_next);
+        ibt_repeat = (ImageButton) findViewById(R.id.button_repeat);
+        if (isRepeat) {
+            if (isLooping) {
                 ibt_repeat.setImageResource(R.drawable.ic_repeat_one_red_200_18dp);
-            }
-            else {
+            } else {
                 ibt_repeat.setImageResource(R.drawable.ic_repeat_red_200_18dp);
             }
         }
-        ibt_download = (ImageButton)findViewById(R.id.button_download);
+        ibt_download = (ImageButton) findViewById(R.id.button_download);
         setOnButtonClick();
 
 
@@ -105,7 +101,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (FloatingControlWindow.pService.getMediaPlayer()!=null) {
+                if (FloatingControlWindow.pService.getMediaPlayer() != null) {
                     int pgr = (seekBar.getProgress() < fullTime - 1000) ? seekBar.getProgress() : (fullTime - 1000);
                     FloatingControlWindow.pService.getMediaPlayer().seekTo(pgr);
                 }
@@ -114,17 +110,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        isShowing = true;
-        isBackPressed = false;
-    }
+
 
     @Override
     public void onClick(View v) {
-        if (FloatingControlWindow.pService.getMediaPlayer()!=null){
-            switch (v.getId()){
+        if (FloatingControlWindow.pService.getMediaPlayer() != null) {
+            switch (v.getId()) {
                 case R.id.button_play:
                     playAction();
                     break;
@@ -146,28 +137,25 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void shuffleAction() {
-        if (isShuffle){
+        if (isShuffle) {
             isShuffle = false;
-            ibt_shuffle.setImageResource(R.drawable.ic_shuffle_red_300_18dp);
-        }
-        else {
+            ibt_shuffle.setImageResource(R.drawable.ic_shuffle_red_300_36dp);
+        } else {
             isShuffle = true;
             ibt_shuffle.setImageResource(R.drawable.ic_shuffle_red_200_18dp);
         }
     }
 
     private void repeatAction() {
-        if (isRepeat){
+        if (isRepeat) {
             isLooping = true;
             isRepeat = false;
             ibt_repeat.setImageResource(R.drawable.ic_repeat_one_red_200_18dp);
-        }
-        else {
-            if (isLooping){
+        } else {
+            if (isLooping) {
                 isLooping = false;
-                ibt_repeat.setImageResource(R.drawable.ic_repeat_red_300_18dp);
-            }
-            else {
+                ibt_repeat.setImageResource(R.drawable.ic_repeat_red_300_36dp);
+            } else {
                 isRepeat = true;
                 ibt_repeat.setImageResource(R.drawable.ic_repeat_red_200_18dp);
             }
@@ -175,14 +163,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void previousAction() {
-        FloatingControlWindow.pService.getMediaPlayer().reset();
-        if (isShuffle){
+        FloatingControlWindow.pService.getMediaPlayer().release();
+        if (isShuffle) {
 //            int i = FloatingControlWindow.pService.helperClass.getRandomPos();
 //            FloatingControlWindow.pService.setCurrentPos(i);
-        }
-        else {
+        } else {
             int i = FloatingControlWindow.pService.getCurrentPos();
-            FloatingControlWindow.pService.setCurrentPos((i-1)%20);
+            FloatingControlWindow.pService.setCurrentPos((i - 1) % 20);
         }
         int currentPos = FloatingControlWindow.pService.getCurrentPos();
         FloatingControlWindow.pService.get320kDownloadLink(currentPos);
@@ -190,12 +177,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void playAction() {
-        if (FloatingControlWindow.pService.getMediaPlayer().isPlaying()){
-            ibt_play.setImageResource(R.drawable.ic_play_circle_outline_red_300_18dp);
+        if (FloatingControlWindow.pService.getMediaPlayer().isPlaying()) {
+            ibt_play.setImageResource(R.drawable.ic_play_circle_outline_red_300_36dp);
             FloatingControlWindow.pService.getMediaPlayer().pause();
-        }
-        else {
-            if (PlayingMusicService.isWait){
+        } else {
+            if (PlayingMusicService.isWait) {
                 PlayingMusicService.isWait = false;
             }
             ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
@@ -204,11 +190,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    private class PlayingMusicReceiver extends BroadcastReceiver{
+    private class PlayingMusicReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("updateSeekBar")){
+            if (intent.getAction().equals("updateSeekBar")) {
                 fullTime = intent.getIntExtra("fullTime", 0);
                 sb_timeProgress.setMax(fullTime);
                 eslapedTime = intent.getStringExtra("eslapsedTime");
@@ -220,41 +206,39 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 tv_songName.setText(intent.getStringExtra("title"));
                 tv_artistName.setText(intent.getStringExtra("artist"));
                 Log.d("music", "isplaying");
-                if (FloatingControlWindow.pService.getMediaPlayer().isPlaying()){
+                if (FloatingControlWindow.pService.getMediaPlayer().isPlaying()) {
                     ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
 
-                }
-                else {
-                    ibt_play.setImageResource(R.drawable.ic_play_circle_outline_red_300_18dp);
+                } else {
+                    ibt_play.setImageResource(R.drawable.ic_play_circle_outline_red_300_36dp);
                 }
             }
         }
     }
 
     private void nextAction() {
-        FloatingControlWindow.pService.getMediaPlayer().reset();
-        if (!isLooping){
+        FloatingControlWindow.pService.getMediaPlayer().release();
+        if (!isLooping) {
             FloatingControlWindow.pService.helperClass
-                    .integers.remove((Integer)FloatingControlWindow.pService.getCurrentPos());
+                    .integers.remove((Integer) FloatingControlWindow.pService.getCurrentPos());
 
-            if (FloatingControlWindow.pService.helperClass.integers.size()==0){
+            if (FloatingControlWindow.pService.helperClass.integers.size() == 0) {
                 for (int i = 0; i < PlayingMusicService.maxSongs; i++) {
                     FloatingControlWindow.pService.helperClass
                             .integers.add(i);
                 }
-                if (!PlayerActivity.isRepeat){
+                if (!PlayerActivity.isRepeat) {
                     PlayingMusicService.isWait = true;
 
                 }
             }
-            if (isShuffle){
+            if (isShuffle) {
                 int i = FloatingControlWindow.pService.helperClass.getRandomPos();
                 FloatingControlWindow.pService.setCurrentPos(i);
 
-            }
-            else {
+            } else {
                 int i = FloatingControlWindow.pService.getCurrentPos();
-                FloatingControlWindow.pService.setCurrentPos((i+1)%20);
+                FloatingControlWindow.pService.setCurrentPos((i + 1) % 20);
 
             }
 
@@ -262,24 +246,5 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         int currentPos = FloatingControlWindow.pService.getCurrentPos();
         FloatingControlWindow.pService.get320kDownloadLink(currentPos);
         FloatingControlWindow.pService.setMediaPlayer();
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        isBackPressed = true;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (!isBackPressed){
-            MainActivity.isForceClose = true;
-            Intent intent = new Intent();
-            intent.setAction("finish");
-            sendBroadcast(intent);
-        }
-        isShowing = false;
     }
 }

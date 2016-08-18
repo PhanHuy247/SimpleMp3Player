@@ -33,17 +33,20 @@ public class PlaylistGetter extends AsyncTask<Void, Void, Void> {
                 elements = document.select("div[class=text2]");
             Log.d("hey", elements.size()+"");
 
-            for (int i = 0; i < 20; i++) {
-                Elements elements1 = elements.get(i).select("a");
-                Elements elements2 = elements.get(i).select("p");
-                String title = elements1.text();
-                String artist = elements2.text();
-                String linkSong = elements1.attr("href");
-                Log.d("link", linkSong);
-                Song song = new Song(title, artist, linkSong, i+1);
-                songs.add(song);
-                Log.d("tag", songs.size()+"");
+            if (elements.size()>0){
+                for (int i = 0; i < 20; i++) {
+                    Elements elements1 = elements.get(i).select("a");
+                    Elements elements2 = elements.get(i).select("p");
+                    String title = elements1.text();
+                    String artist = elements2.text();
+                    String linkSong = elements1.attr("href");
+                    Log.d("link", linkSong);
+                    Song song = new Song(title, artist, linkSong, i+1);
+                    songs.add(song);
+                    Log.d("tag", songs.size()+"");
+                }
             }
+
 
         } catch (IOException e) {
             e.printStackTrace();
