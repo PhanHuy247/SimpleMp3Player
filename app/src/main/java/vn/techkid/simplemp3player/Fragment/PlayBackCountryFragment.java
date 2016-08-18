@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,122 +19,63 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import vn.techkid.simplemp3player.Activity.PlayerActivity;
+import vn.techkid.simplemp3player.Activity.SplashScreenActivity;
 import vn.techkid.simplemp3player.Adapter.AdapterPlayBack;
-import vn.techkid.simplemp3player.Model.PlayBack;
+import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
+import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PlayBackCountryFragment extends Fragment {
-    ArrayList<PlayBack> listPlayBack;
+
+    public  String KEY = "PlayBackCountryFragment";
+    public  ArrayList<Song> listPlayBack = new ArrayList<>();
     RecyclerView recyclerView;
     AdapterPlayBack adapter;
-    DownloadTask task;
-    String url;
-
-    ArrayList<CharSequence> titles = new ArrayList<>();
-    ArrayList<CharSequence> artists = new ArrayList<>();
-    ArrayList<CharSequence> urls = new ArrayList<>();
 
     public PlayBackCountryFragment() {
         // Required empty public constructor
     }
 
+    public void setListPlayBack(ArrayList<Song> listPlayBack) {
+        this.listPlayBack = listPlayBack;
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         getActivity().setTitle("Play Back");
         View view=  inflater.inflate(R.layout.fragment_play_back_country, container, false);
         setupView(view);
-        listPlayBack = new ArrayList<>();
-        setupAsyntask();
-        createDataForListPlayBack();
+      //  createrDataforList();
         adapter = new AdapterPlayBack(listPlayBack,getActivity());
         LinearLayoutManager linearManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(linearManager);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new AdapterPlayBack.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion) {
-                Log.d("POSITION", String.valueOf(postion));
-                Log.d("POSITION", String.valueOf(postion));
-                Intent intent = new Intent(getActivity(), PlayerActivity.class);
-                intent.putCharSequenceArrayListExtra("titles", titles);
-                intent.putCharSequenceArrayListExtra("artists", artists);
-                intent.putCharSequenceArrayListExtra("urls", urls);
-                intent.putExtra("pos", postion);
-                intent.putExtra("playlist", true);
-                startActivity(intent);
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(getActivity(), FloatingControlWindow.class);
+                Bundle bundle  = new Bundle();
+                bundle.putInt("pos", position);
+                bundle.putString("key", KEY);
+                bundle.putSerializable("list",listPlayBack);
+                intent.putExtra("bundle",bundle);
+                getActivity().startService(intent);
             }
         });
         return view;
     }
 
-    private void setupAsyntask() {
-        task = new DownloadTask();
-        try {
-            task.execute(url).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void getURL(String url){
-        this.url = url;
-    }
-
-    private void createDataForListPlayBack() {
-        listPlayBack = task.listNews;
-        for (PlayBack song:listPlayBack){
-            titles.add(song.getNameSongPlayBack());
-            artists.add(song.getNameArtistPlayBack());
-            urls.add(song.getImgPlayBack());
-        }
-    }
-
     private void setupView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.listPlayBack);
     }
-    static class DownloadTask extends AsyncTask<String, Void, Void> {
-        ArrayList<PlayBack> listNews;
 
-        @Override
-        protected Void doInBackground(String... strings) {
-            listNews = new ArrayList<>();
-            Document document = null;
-            int length = 20;
-            try {
-                document = (Document) Jsoup.connect(strings[0]).get();
-                Elements subjectElements = document.select("div.text2");
-                if (subjectElements != null && subjectElements.size() > 0) {
-                    if(subjectElements.size() < 20) {
-                       length = subjectElements.size();
-                    }
-                    for (int i = 0; i < length; i++) {
-                        Element titleSubject = subjectElements.get(i).getElementsByTag("a").first();
-                        Element artistSubject = subjectElements.get(i).getElementsByTag("p").first();
-                        if (titleSubject != null && artistSubject != null) {
-                            String title = titleSubject.text();
-                            String link = titleSubject.attr("href");
-                            String artist = artistSubject.text();
-                            listNews.add(new PlayBack(i+1+"",link,title,"lossless",artist));
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }
 }

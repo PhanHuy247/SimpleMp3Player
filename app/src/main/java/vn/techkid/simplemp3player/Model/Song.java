@@ -2,10 +2,12 @@ package vn.techkid.simplemp3player.Model;
 
 import android.widget.ImageView;
 
+import java.io.Serializable;
+
 /**
  * Created by Laptop88 on 7/27/2016.
  */
-public class Song {
+public class Song implements Serializable {
     private String title;
     private String path;
     private String artist;
@@ -15,6 +17,7 @@ public class Song {
     private String downloadLink;
     private String detailDownloadLink;
     private int position;
+    String  category;
 
 
     public Song(){
@@ -40,6 +43,22 @@ public class Song {
         this.album = album;
         this.accessLink = accessLink;
         this.position = position;
+    }
+
+    public Song( int position, String accessLink,String title , String category,String artist) {
+        this.title = title;
+        this.artist = artist;
+        this.accessLink = accessLink;
+        this.position = position;
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getImageSrc() {

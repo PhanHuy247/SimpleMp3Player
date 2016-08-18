@@ -20,6 +20,7 @@ public class CategoryInVietNam extends Fragment implements View.OnClickListener{
     public static String URLTRADITIONAL = "http://chiasenhac.vn/mp3/vietnam/v-truyen-thong/";
     Button btnpop_rock,btnrap_hiphop,btndance_remix,btntraditional;
     CategoryVietNam fragment;
+    static View view;
 
     public CategoryInVietNam(){
 
@@ -30,7 +31,9 @@ public class CategoryInVietNam extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_category_in_viet_nam, container, false);
+        if(view == null){
+            view = inflater.inflate(R.layout.fragment_category_in_viet_nam, container, false);
+        }
         setupView(view);
         return view;
     }
@@ -71,4 +74,5 @@ public class CategoryInVietNam extends Fragment implements View.OnClickListener{
                 .addToBackStack(null)
                 .commit();
     }
+
 }

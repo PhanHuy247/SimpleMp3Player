@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 import vn.techkid.simplemp3player.Activity.MainActivity;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Fragment.ChartSong;
+import vn.techkid.simplemp3player.Fragment.PlayBackCountryFragment;
 import vn.techkid.simplemp3player.Getter.SongGetter;
 
 import vn.techkid.simplemp3player.Model.Song;
@@ -112,9 +113,24 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     }
 
     private void getSongsList() {
+        maxSongs = 20;
         if (FloatingControlWindow.getKey().equals("chartSong")){
-            songs = ChartSong.getSongs();
-            maxSongs = 20;
+            songs = FloatingControlWindow.arrayList;
+        }
+        if(FloatingControlWindow.getKey().equals("PlayBackCountryFragment")){
+            songs = FloatingControlWindow.arrayList;
+        }
+        if(FloatingControlWindow.getKey().equals("artist")){
+            songs = FloatingControlWindow.arrayList;
+        }
+        if(FloatingControlWindow.getKey().equals("categoryKorea")){
+            songs = FloatingControlWindow.arrayList;
+        }
+        if(FloatingControlWindow.getKey().equals("categoryUsuk")){
+            songs = FloatingControlWindow.arrayList;
+        }
+        if(FloatingControlWindow.getKey().equals("categoryVietnam")){
+            songs = FloatingControlWindow.arrayList;
         }
         currentPos = FloatingControlWindow.getCurrentPos();
         helperClass = new HelperClass(maxSongs);
@@ -197,6 +213,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             updateProgressIntent.putExtra("timeRemaining", String.format("%d:%d", minutesRemaining, secondsRemaining));
             updateProgressIntent.setAction("updateSeekBar");
             sendBroadcast(updateProgressIntent);
+            Log.d("123", String.valueOf(MainActivity.isAlive));
             if (MainActivity.isAlive){
                 if (PlayerActivity.isBackPressed && !MainActivity.isForceClose){
                     if (!isVisible){
@@ -230,7 +247,9 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     }
     public void get320kDownloadLink(int pos) {
+       Log.d("phanhuy246",pos+"");
         SongGetter getter = new SongGetter(songs.get(pos).getAccessLink());
+
         try {
             getter.execute().get();
         } catch (InterruptedException e) {

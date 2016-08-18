@@ -28,7 +28,7 @@ public class SongGetter extends AsyncTask<Void, Void, Void>{
         url = url.substring (0, url.length()-5) + "_download.html";
         try {
             Document document = Jsoup.connect(url).get();
-            Elements elements = document.select("div[id=downloadlink]").select("b").select("script");
+            Elements elements = document.select("div.tip-text").select("b").select("script");
             String text = elements.get(1).data();
             String temp[] = text.split("a href=\"", 6);
             for (String s:temp){

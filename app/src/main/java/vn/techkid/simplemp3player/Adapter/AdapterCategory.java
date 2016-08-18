@@ -1,32 +1,29 @@
 package vn.techkid.simplemp3player.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import vn.techkid.simplemp3player.Model.Category;
-import vn.techkid.simplemp3player.Model.PlayBack;
+import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 
 /**
  * Created by HP on 8/8/2016.
  */
 public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.CategoryViewHolder>{
-    ArrayList<Category> listCategory;
+    ArrayList<Song> listCategory;
     Context mContext;
     View itemView;
 
     OnItemClickListener onItemClickListener;
-    public AdapterCategory(ArrayList<Category> listCategory, Context mContext) {
+    public AdapterCategory(ArrayList<Song> listCategory, Context mContext) {
         this.listCategory = listCategory;
         this.mContext = mContext;
     }
@@ -47,11 +44,21 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.Catego
     }
     @Override
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
-        Log.d("phanhuy", String.valueOf(listCategory.size()));
-        holder.txtNameCategory.setText(listCategory.get(position).getNameSongCategory());
-        holder.txtNameArtist.setText(listCategory.get(position).getNameArtistCategory());
-        holder.category.setText(listCategory.get(position).getNameCategoryQuality());
-        holder.ranking.setText(listCategory.get(position).getRanking());
+        holder.category.setTextColor(Color.parseColor("#303F9F"));
+
+        if(listCategory.get(position).getCategory().equals("500kbps")){
+            holder.category.setTextColor(Color.parseColor("#CDDC39"));
+        }
+        if(listCategory.get(position).getCategory().equals("128kbps")){
+            holder.category.setTextColor(Color.parseColor("#4CAF50"));
+        }
+        if(listCategory.get(position).getCategory().equals("Lossless")){
+            holder.category.setTextColor(Color.parseColor("#F44336"));
+        }
+        holder.txtNameCategory.setText(listCategory.get(position).getTitle());
+        holder.txtNameArtist.setText(listCategory.get(position).getArtist());
+        holder.category.setText(listCategory.get(position).getCategory());
+        holder.ranking.setText(listCategory.get(position).getPosition()+"");
     }
 
     @Override
@@ -76,7 +83,6 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.Catego
                 public void onClick(View v) {
                     if (onItemClickListener != null){
                         onItemClickListener.onItemClick(itemView, getPosition());
-                        Log.d("phanhuy", String.valueOf(getPosition()));
                     }
                 }
             });

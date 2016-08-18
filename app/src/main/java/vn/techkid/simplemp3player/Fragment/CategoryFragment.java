@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public class CategoryFragment extends Fragment {
         // Inflate the layout for this fragment
         getActivity().setTitle("Category");
         if(view == null){
+            Log.d("categoryfragment","phanhuy95");
             view =  inflater.inflate(R.layout.fragment_category, container, false);
             setUpView(view);
         }
@@ -43,11 +45,9 @@ public class CategoryFragment extends Fragment {
         return view;
     }
     private ViewPagerAdapter setUpViewPage() {
-            adapter.addFrag(new CategoryInVietNam(),"VietNam");
-            adapter.addFrag(new CategoryInKorea()," Korea ");
-            adapter.addFrag(new CategoryInUSUK()," US-UK ");
-
-
+        adapter.addFrag(new CategoryInVietNam(),"VietNam");
+        adapter.addFrag(new CategoryInKorea()," Korea ");
+        adapter.addFrag(new CategoryInUSUK()," US-UK ");
         return adapter;
     }
 
@@ -58,6 +58,9 @@ public class CategoryFragment extends Fragment {
         tabLayout = (TabLayout) view.findViewById(R.id.tabscategory);
         tabLayout.setupWithViewPager(viewPager);
     }
+
+
+
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();

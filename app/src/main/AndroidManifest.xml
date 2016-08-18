@@ -25,10 +25,6 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity
-            android:name=".Activity.TabLayoutActivity"
-            android:label="Offline"
-            android:parentActivityName=".Activity.MainActivity" />
 
         <service android:name=".Service.PlayingMusicService" />
         <service android:name=".Service.FloatingControlWindow" />
