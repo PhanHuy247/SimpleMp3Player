@@ -3,6 +3,7 @@ package vn.techkid.simplemp3player.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ public class CategoryInKorea extends Fragment implements View.OnClickListener{
     public static String URLDANCE_REMIX = "http://chiasenhac.vn/mp3/korea/k-dance-remix/";
     Button btnpop_rock,btnrap_hiphop,btndance_remix;
     CategoryKorea categoryKorea;
-
+    static View view;
 
 
     public CategoryInKorea() {
@@ -33,7 +34,10 @@ public class CategoryInKorea extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_category_in_korea, container, false);
+        if(view == null){
+            Log.d("categorykorea","phanhuy");
+             view = inflater.inflate(R.layout.fragment_category_in_korea, container, false);
+        }
         setupView(view);
         return view;
     }
@@ -71,4 +75,6 @@ public class CategoryInKorea extends Fragment implements View.OnClickListener{
                 .commit();
 
     }
+
+
 }

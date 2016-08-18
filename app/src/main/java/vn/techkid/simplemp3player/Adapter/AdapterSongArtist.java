@@ -1,6 +1,7 @@
 package vn.techkid.simplemp3player.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +45,21 @@ public class AdapterSongArtist extends RecyclerView.Adapter<AdapterSongArtist.Ch
     @Override
     public void onBindViewHolder(ChartSongViewHolder holder, int position) {
         Log.d("phanhuy", String.valueOf(listSong.size()));
+
+        holder.category.setTextColor(Color.parseColor("#303F9F"));
+
+        if(listSong.get(position).getAlbum().equals("150kbps")){
+            holder.category.setTextColor(Color.parseColor("#CDDC39"));
+        }
+        if(listSong.get(position).getAlbum().equals("128kbps")){
+            holder.category.setTextColor(Color.parseColor("#4CAF50"));
+        }
+        if(listSong.get(position).getAlbum().equals("Lossless")){
+            holder.category.setTextColor(Color.parseColor("#F44336"));
+        }
+        if(listSong.get(position).getAlbum().equals("HD 1080p")){
+            holder.category.setTextColor(Color.parseColor("#F44336"));
+        }
         holder.txtNameSong.setText(listSong.get(position).getTitle());
         holder.txtNameArtist.setText(listSong.get(position).getArtist());
         holder.category.setText(listSong.get(position).getAlbum());

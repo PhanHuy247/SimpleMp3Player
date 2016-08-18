@@ -25,22 +25,19 @@ import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Adapter.AdapterSongArtist;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
+import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ArtistSongCountryFragment extends Fragment {
     public static String URL = "http://chiasenhac.vn/";
+    public static final String KEY = "artist";
     ArrayList<Song> listSong;
     String url;
     RecyclerView recyclerView;
     AdapterSongArtist adapter;
     DownloadTask task;
-
-    ArrayList<CharSequence> titles = new ArrayList<>();
-    ArrayList<CharSequence> artists = new ArrayList<>();
-    ArrayList<CharSequence> urls = new ArrayList<>();
-
 
     public ArtistSongCountryFragment() {
         // Required empty public constructor
@@ -65,14 +62,13 @@ public class ArtistSongCountryFragment extends Fragment {
         adapter.setOnItemClickListener(new AdapterSongArtist.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion) {
-                Log.d("POSITION", String.valueOf(postion));
-                Intent intent = new Intent(getActivity(), PlayerActivity.class);
-                intent.putCharSequenceArrayListExtra("titles", titles);
-                intent.putCharSequenceArrayListExtra("artists", artists);
-                intent.putCharSequenceArrayListExtra("urls", urls);
-                intent.putExtra("pos", postion);
-                intent.putExtra("playlist", true);
-                startActivity(intent);
+                Intent intent = new Intent(getActivity(),  FloatingControlWindow.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("pos", postion);
+                bundle.putString("key",KEY);
+                bundle.putSerializable("list",listSong);
+                intent.putExtra("bundle",bundle);
+                getActivity().startService(intent);
             }
         });
         return view;
@@ -92,11 +88,6 @@ public class ArtistSongCountryFragment extends Fragment {
 
     private void createDataForListSong() {
         listSong = task.listNews;
-        for (Song song:listSong){
-            titles.add(song.getTitle());
-            artists.add(song.getArtist());
-            urls.add(song.getAccessLink());
-        }
     }
 
     private void setupView(View view) {
@@ -113,6 +104,7 @@ public class ArtistSongCountryFragment extends Fragment {
             try {
                 document = (Document) Jsoup.connect(strings[0]).get();
                 Elements subjectElements = document.select("div.tenbh");
+                Elements categoryElements = document.select("span.gen");
                 if (subjectElements != null && subjectElements.size() > 0) {
                     if(subjectElements.size() < 20) {
                         length = subjectElements.size();
@@ -120,12 +112,13 @@ public class ArtistSongCountryFragment extends Fragment {
                     for (int i = 0; i< length; i++) {
                         Element titleSubject = subjectElements.get(i).getElementsByTag("a").first();
                         Element artistSubject = subjectElements.get(i).getElementsByTag("p").last();
+                        Element categorySubject = categoryElements.get(i).getElementsByTag("span").last();
                         if (titleSubject != null) {
                             String link = titleSubject.attr("href");
                             String name = titleSubject.text();
                             String artist = artistSubject.text();
-                            listNews.add(new Song(name,artist,"lossless",URL+link,i+1));
-                            Log.e("phanhuy123", "doInBackground: " +name +"/n" +artist+ "   "+link);
+                            String category = categorySubject.text();
+                            listNews.add(new Song(name,artist,category,URL+link,i+1));
                         }
                     }
                 }

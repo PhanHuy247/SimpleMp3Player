@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -35,6 +36,7 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
     private static int currentPos;
 
     private String url;
+    public static ArrayList<Song> arrayList;
 //    private MusicControlReceiver receiver;
     ServiceConnection connection;
     public static PlayingMusicService pService = null;
@@ -73,6 +75,7 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         getSongListInfo(intent);
         if (pService!=null){
             refreshService();
@@ -93,8 +96,10 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 
 
     private void getSongListInfo(Intent intent) {
-        key = intent.getStringExtra("key");
-        currentPos = intent.getIntExtra("pos", 0);
+        Bundle bundle = intent.getBundleExtra("bundle");
+        key = bundle.getString("key");
+        currentPos = bundle.getInt("pos", 0);
+        arrayList = (ArrayList<Song>) bundle.getSerializable("list");
     }
 
     @Override
@@ -102,27 +107,6 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 
 
     }
-
-//    private class MusicControlReceiver extends BroadcastReceiver {
-
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals("nextRand")){
-//
-//            }
-//            else if (intent.getAction().equals("next")){
-//                currentPos = (currentPos+1)%20;
-//                pService.stopSelf();
-//                get320kDownloadLink(currentPos);
-//                Intent updateSongIntent = new Intent(getApplicationContext(), PlayingMusicService.class);
-//                updateSongIntent.putExtra("title", songs.get(currentPos).getTitle());
-//                updateSongIntent.putExtra("artist", songs.get(currentPos).getArtist());
-//                updateSongIntent.putExtra("url", url);
-//                startService(updateSongIntent);
-//
-//            }
-//        }
-//    }
     private void refreshService() {
         if (pService.getMediaPlayer()!=null){
 

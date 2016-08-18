@@ -25,9 +25,9 @@ import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 public class ChartSong extends Fragment {
 
     public ListView lv_songs;
-    private static ArrayList<Song> songs;
+    public  ArrayList<Song> songs;
     public String intentKey = "chartSong";
-    public static ArrayList<Song> getSongs() {
+    public  ArrayList<Song> getSongs() {
         return songs;
     }
     String URL;
@@ -66,8 +66,11 @@ public class ChartSong extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), FloatingControlWindow.class);
-                intent.putExtra("pos", position);
-                intent.putExtra("key", intentKey);
+                Bundle bundle = new Bundle();
+                bundle.putInt("pos", position);
+                bundle.putString("key", intentKey);
+                bundle.putSerializable("list",songs);
+                intent.putExtra("bundle",bundle);
                 getActivity().startService(intent);
 
             }

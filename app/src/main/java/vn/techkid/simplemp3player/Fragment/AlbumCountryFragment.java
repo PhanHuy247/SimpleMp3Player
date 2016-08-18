@@ -15,15 +15,14 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import vn.techkid.simplemp3player.Activity.SplashScreenActivity;
 import vn.techkid.simplemp3player.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AlbumCountryFragment extends Fragment {
-    public static String URL = "http://chiasenhac.vn/mp3/vietnam/album.html";
-    public static String URLUSUK = "http://chiasenhac.vn/mp3/us-uk/album.html";
-    public static String URLKOREA = "http://chiasenhac.vn/mp3/korea/album.html";
+
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private AlbumCountryAdapter adapter;
@@ -47,15 +46,14 @@ public class AlbumCountryFragment extends Fragment {
     }
     private AlbumCountryAdapter setUpViewPage() {
         albumvietnam = new AlbumCountry();
-        albumvietnam.setUrl(URL);
+        albumvietnam.setListAlbum(SplashScreenActivity.taskAlbum1.listAlbum);
         albumusuk = new AlbumCountry();
-        albumusuk.setUrl(URLUSUK);
+        albumusuk.setListAlbum(SplashScreenActivity.taskAlbum2.listAlbum);
         albumkorea = new AlbumCountry();
-        albumkorea.setUrl(URLKOREA);
+        albumkorea.setListAlbum(SplashScreenActivity.taskAlbum3.listAlbum);
         adapter.addFrag(albumvietnam,"VietNam");
-        adapter.addFrag(albumusuk," Korea ");
-        adapter.addFrag(albumkorea," US-UK ");
-        Log.d("huy", String.valueOf(adapter.getCount()));
+        adapter.addFrag(albumusuk," US-UK ");
+        adapter.addFrag(albumkorea," Korea ");
 
         return adapter;
     }

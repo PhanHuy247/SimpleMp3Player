@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 import vn.techkid.simplemp3player.Activity.MainActivity;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
 import vn.techkid.simplemp3player.Fragment.ChartSong;
+import vn.techkid.simplemp3player.Fragment.PlayBackCountryFragment;
 import vn.techkid.simplemp3player.Getter.SongGetter;
 
 import vn.techkid.simplemp3player.Model.Song;
@@ -65,6 +66,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public static final int NOTIFY_ID = 1912;
     private int currentPos;
     public static int maxSongs;
+    private int count;
     ArrayList<Song> songs = new ArrayList<>();
     public HelperClass helperClass;
     public static boolean isWait;
@@ -193,6 +195,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         linearLayout.addView(textView);
         linearLayout.addView(linearLayout2);
 
+//        windowManager.addView(linearLayout, params);
     }
 
     @Nullable
@@ -230,9 +233,24 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     }
 
     private void getSongsList() {
+        maxSongs = 20;
         if (FloatingControlWindow.getKey().equals("chartSong")){
-            songs = ChartSong.getSongs();
-            maxSongs = 20;
+            songs = FloatingControlWindow.arrayList;
+        }
+        if(FloatingControlWindow.getKey().equals("PlayBackCountryFragment")){
+            songs = FloatingControlWindow.arrayList;
+        }
+        if(FloatingControlWindow.getKey().equals("artist")){
+            songs = FloatingControlWindow.arrayList;
+        }
+        if(FloatingControlWindow.getKey().equals("categoryKorea")){
+            songs = FloatingControlWindow.arrayList;
+        }
+        if(FloatingControlWindow.getKey().equals("categoryUsuk")){
+            songs = FloatingControlWindow.arrayList;
+        }
+        if(FloatingControlWindow.getKey().equals("categoryVietnam")){
+            songs = FloatingControlWindow.arrayList;
         }
         currentPos = FloatingControlWindow.getCurrentPos();
         helperClass = new HelperClass(maxSongs);

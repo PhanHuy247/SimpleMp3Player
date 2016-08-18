@@ -1,63 +1,69 @@
-package vn.techkid.simplemp3player.Activity;
+package vn.techkid.simplemp3player.Fragment;
+
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.techkid.simplemp3player.Fragment.OfflineAlbumFragment;
-import vn.techkid.simplemp3player.Fragment.OfflineArtistFragment;
-import vn.techkid.simplemp3player.Fragment.OfflinePlayListFragment;
-import vn.techkid.simplemp3player.Fragment.OfflineSongFragment;
 import vn.techkid.simplemp3player.R;
 
-public class TabLayoutActivity extends AppCompatActivity {
-    private Toolbar toolbar;
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class OfflineFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tab_layout);
-        setUpView();
+    private int position;
+
+    public OfflineFragment() {
+        // Required empty public constructor
     }
 
-    private void setUpView() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view =  inflater.inflate(R.layout.fragment_offline, container, false);
+        setupView(view);
+        return view;
+    }
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+    private void setupView(View view) {
+        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         chooseTabLayout(tabLayout);
-        setUpChangeViewPage(viewPager);
+
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     private void chooseTabLayout(TabLayout tabLayout) {
-        Intent intent = getIntent();
-        int position = intent.getIntExtra("Position",0);
-        Log.d("phanhuy", String.valueOf(position));
         TabLayout.Tab tab = tabLayout.getTabAt(position);
+        setUpChangeViewPage(viewPager);
         tab.select();
     }
 
@@ -86,9 +92,8 @@ public class TabLayoutActivity extends AppCompatActivity {
     }
 
     private void changeColorTabLayout(int color) {
-        toolbar.setBackgroundColor(getResources().getColor(color));
         tabLayout.setBackgroundColor(getResources().getColor(color));
-        Window window = this.getWindow();
+        Window window = getActivity().getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -98,7 +103,7 @@ public class TabLayoutActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this.getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
         adapter.addFrag(new OfflinePlayListFragment(),"PLAYLIST");
         adapter.addFrag(new OfflineSongFragment(),"SONG");
         adapter.addFrag(new OfflineAlbumFragment(),"ALBUM");
@@ -133,33 +138,5 @@ public class TabLayoutActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //  inflater.inflate(R.menu.menu_nav, menu);
-        getMenuInflater().inflate(R.menu.menu_tab_layout, menu);
-        for(int i = 0; i < menu.size(); i++){
-            Drawable drawable = menu.getItem(i).getIcon();
-            if(drawable != null) {
-                drawable.mutate();
-                drawable.setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        switch (id){
-            case R.id.action_search:
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

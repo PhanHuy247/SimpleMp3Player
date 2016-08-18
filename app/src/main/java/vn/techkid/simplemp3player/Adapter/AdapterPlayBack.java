@@ -1,20 +1,17 @@
 package vn.techkid.simplemp3player.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import vn.techkid.simplemp3player.Model.Album;
-import vn.techkid.simplemp3player.Model.PlayBack;
+import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 
 /**
@@ -22,12 +19,12 @@ import vn.techkid.simplemp3player.R;
  */
 public class AdapterPlayBack extends  RecyclerView.Adapter<AdapterPlayBack.PlayBackViewHolder> {
 
-    ArrayList<PlayBack> listPlayBack;
+    ArrayList<Song> listPlayBack;
     Context mContext;
     View itemView;
 
     OnItemClickListener onItemClickListener;
-    public AdapterPlayBack(ArrayList<PlayBack> listPlayBack, Context mContext) {
+    public AdapterPlayBack(ArrayList<Song> listPlayBack, Context mContext) {
         this.listPlayBack = listPlayBack;
         this.mContext = mContext;
     }
@@ -49,11 +46,22 @@ public class AdapterPlayBack extends  RecyclerView.Adapter<AdapterPlayBack.PlayB
     @Override
     public void onBindViewHolder(PlayBackViewHolder holder, int position) {
         Log.d("phanhuy", String.valueOf(listPlayBack.size()));
-        holder.txtNamePlayBack.setText(listPlayBack.get(position).getNameSongPlayBack());
-        holder.txtNameArtist.setText(listPlayBack.get(position).getNameArtistPlayBack());
-        holder.category.setText(listPlayBack.get(position).getNameCategoryPlayBack());
-        holder.ranking.setText(listPlayBack.get(position).getRanking());
 
+        holder.category.setTextColor(Color.parseColor("#303F9F"));
+
+        if(listPlayBack.get(position).getCategory().equals("500kbps")){
+            holder.category.setTextColor(Color.parseColor("#CDDC39"));
+        }
+        if(listPlayBack.get(position).getCategory().equals("192kbps")){
+            holder.category.setTextColor(Color.parseColor("#4CAF50"));
+        }
+        if(listPlayBack.get(position).getCategory().equals("Lossless")){
+            holder.category.setTextColor(Color.parseColor("#F44336"));
+        }
+        holder.txtNamePlayBack.setText(listPlayBack.get(position).getTitle());
+        holder.txtNameArtist.setText(listPlayBack.get(position).getArtist());
+        holder.category.setText(listPlayBack.get(position).getCategory());
+        holder.ranking.setText(listPlayBack.get(position).getPosition()+"");
     }
 
     @Override

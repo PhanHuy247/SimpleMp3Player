@@ -14,11 +14,12 @@ import vn.techkid.simplemp3player.R;
  * A simple {@link Fragment} subclass.
  */
 public class CategoryInUSUK extends Fragment implements View.OnClickListener{
-    public static String URLPOP_ROCK = "http://chiasenhac.vn/mp3/us-uk/u-pop/";
-    public static String URLRAP_HIPHOP = "http://chiasenhac.vn/mp3/us-uk/u-rap-hiphop/";
-    public static String URLDANCE_REMIX = "http://chiasenhac.vn/mp3/us-uk/u-dance-remix/";
-    Button btnpop_rock,btnrap_hiphop,btndance_remix,btntraditional;
+    public static String URLPOP_ROCK = "http://chiasenhac.vn/mp3/us-uk/us-pop/";
+    public static String URLRAP_HIPHOP = "http://chiasenhac.vn/mp3/us-uk/us-rap-hiphop/";
+    public static String URLDANCE_REMIX = "http://chiasenhac.vn/mp3/us-uk/us-dance-remix/";
+    Button btnpop_rock,btnrap_hiphop,btndance_remix;
     CategoryUsUk categoryUsUk;
+    static View view;
     public CategoryInUSUK() {
         // Required empty public constructor
     }
@@ -28,7 +29,9 @@ public class CategoryInUSUK extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_category_in_usuk, container, false);
+        if(view == null){
+            view = inflater.inflate(R.layout.fragment_category_in_usuk, container, false);
+        }
         setupView(view);
         return view;
     }
@@ -66,4 +69,5 @@ public class CategoryInUSUK extends Fragment implements View.OnClickListener{
                 .commit();
 
     }
+
 }

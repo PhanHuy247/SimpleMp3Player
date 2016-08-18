@@ -2,10 +2,8 @@ package vn.techkid.simplemp3player.Fragment;
 
 
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import vn.techkid.simplemp3player.Activity.TabLayoutActivity;
 import vn.techkid.simplemp3player.Adapter.AdapterNavigation;
 import vn.techkid.simplemp3player.Model.Navigation;
 import vn.techkid.simplemp3player.R;
@@ -27,6 +24,7 @@ public class DisplayFragment extends Fragment {
     AdapterNavigation adapter;
     ArrayList<Navigation> listDisPlay = new ArrayList<>();
     FragmentManager fragmentManager;
+    OfflineFragment offlineFragment;
     public DisplayFragment() {
         // Required empty public constructor
     }
@@ -59,10 +57,11 @@ public class DisplayFragment extends Fragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), TabLayoutActivity.class);
-                intent.putExtra("Position",position);
-                startActivity(intent);
-                Log.d("phanhuy","123");
+                offlineFragment = new OfflineFragment();
+                offlineFragment.setPosition(position);
+                getFragmentManager().beginTransaction().replace(R.id.frame_container,offlineFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }
