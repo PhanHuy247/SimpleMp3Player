@@ -220,6 +220,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         filter.addAction(ACTION_NEXT);
         filter.addAction(ACTION_PAUSE);
         filter.addAction(ACTION_PREVIOUS);
+        filter.addAction(ACTION_STOP);
         registerReceiver(receiver, filter);
 
     }
@@ -278,7 +279,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         this.mediaPlayer = mediaPlayer;
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onPrepared(MediaPlayer mp) {
         title = songs.get(currentPos).getTitle();
@@ -287,24 +288,11 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         artwork = BitmapFactory.decodeResource(getResources(), R.drawable.image_music);
 
 // Create a new MediaSession
-        mediaSession = new MediaSession(this, "debug tag");
-//         Update the current metadata
-        mediaSession.setMetadata(new MediaMetadata.Builder()
-                .putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, artwork)
-                .putString(MediaMetadata.METADATA_KEY_ARTIST, "Pink Floyd")
-                .putString(MediaMetadata.METADATA_KEY_ALBUM, "Dark Side of the Moon")
-                .putString(MediaMetadata.METADATA_KEY_TITLE, "The Great Gig in the Sky")
-                .build());
-        // Indicate you're ready to receive media commands
-        mediaSession.setActive(true);
-        // Attach a new Callback to receive MediaSession updates
-        mediaSession.setCallback(new MediaSession.Callback() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            mediaSession = new MediaSession(this, "debug tag");
+//            mediaSession.setActive(true);
+//        }
 
-            // Implement your callbacks
-
-        });
-        // Indicate you want to receive transport controls via your Callback
-        mediaSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
         resultIntent = new Intent(getApplicationContext(), PlayerActivity.class);
         pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
                 resultIntent,
@@ -467,17 +455,12 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     @Override
     public void onDestroy() {
         mediaPlayer.release();
-        stopForeground(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mediaSession.release();
-        }
+        mediaPlayer = null;
         super.onDestroy();
     }
     public class HelperClass {
         public ArrayList<Integer> integers = new ArrayList<>();
         private int n;
-
-
         public HelperClass(int n){
             this.n = n;
             for (int i = 0; i < n; i++) {
@@ -490,11 +473,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             return integers.remove(rand);
         }
 
-
-
     }
     private class NotiReceiver extends BroadcastReceiver{
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(ACTION_NEXT)){
@@ -522,43 +502,69 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
                 setMediaPlayer();
             }
             else if (intent.getAction().equals(ACTION_STOP)){
-                stopSelf();
+                mediaPlayer.pause();
+                stopForeground(true);
+
             }
 
         }
     }
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setupNotification () {
         Notification.Builder mBuilder = new Notification.Builder(PlayingMusicService.this);
         int id;
-        if (mediaPlayer.isPlaying()){
-            id = R.drawable.ic_pause_green_800_36dp;
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (mediaPlayer.isPlaying()){
+                id = R.drawable.ic_pause_white_36dp;
+            }
+            else {
+                id = R.drawable.ic_play_arrow_white_36dp;
+            }
+            mBuilder.setContentIntent(pendInt)
+                    .setColor(0x388E3C)
+                    .setLargeIcon(artwork)
+                    .setSmallIcon(R.drawable.image_music)
+                    .setShowWhen(false)
+    //                .setContentTitle("New Message")
+    //                .setContentText("You've received new message.")
+    //                .setTicker("New Message Alert!")
+                    .setStyle(new Notification.MediaStyle()
+                            // Attach our MediaSession token
+//                            .setMediaSession(mediaSession.getSessionToken())
+                            // Show our playback controls in the compat view
+                            .setShowActionsInCompactView(0, 1, 2))
+                    .setContentText(songs.get(currentPos).getArtist())
+                    .setContentTitle(songs.get(currentPos).getTitle())
+                    // Add some playback controls
+
+                    .setContentIntent(pendInt)
+
+//                    .addAction(R.drawable.ic_skip_previous_white_36dp, "prev", retreivePlaybackAction(3))
+                    .addAction(id, "pause", retreivePlaybackAction(1))
+                    .addAction(R.drawable.ic_skip_next_white_36dp, "next", retreivePlaybackAction(2))
+                    .addAction(R.drawable.ic_stop_green_800_36dp, "stop", retreivePlaybackAction(4));
+
         }
         else {
-            id = R.drawable.ic_play_arrow_green_800_36dp;
+            if (mediaPlayer.isPlaying()){
+                id = R.drawable.ic_pause_green_800_36dp;
+            }
+            else {
+                id = R.drawable.ic_play_arrow_green_800_36dp;
+            }
+            mBuilder.setContentIntent(pendInt)
+//                .setLargeIcon(artwork)
+                    .setSmallIcon(R.drawable.image_music)
+                    .setShowWhen(false)
+                    .setContentText(songs.get(currentPos).getArtist())
+                    .setContentTitle(songs.get(currentPos).getTitle())
+                    .setContentIntent(pendInt)
+                    .addAction(id, "", retreivePlaybackAction(1))
+                    .addAction(R.drawable.ic_skip_next_green_800_36dp, "", retreivePlaybackAction(2))
+                    .addAction(R.drawable.ic_stop_green_800_36dp, "", retreivePlaybackAction(4));
+
         }
-        mBuilder.setContentIntent(pendInt)
-                .setColor(0x388E3C)
-                .setLargeIcon(artwork)
-                .setSmallIcon(R.drawable.image_music)
-                .setShowWhen(false)
-//                .setContentTitle("New Message")
-//                .setContentText("You've received new message.")
-//                .setTicker("New Message Alert!")
-                .setStyle(new Notification.MediaStyle()
-                        // Attach our MediaSession token
-                        .setMediaSession(mediaSession.getSessionToken())
-                        // Show our playback controls in the compat view
-                        .setShowActionsInCompactView(0, 1, 2))
-                .setContentText(songs.get(currentPos).getArtist())
-                .setContentTitle(songs.get(currentPos).getTitle())
-                // Add some playback controls
-
-                .setContentIntent(pendInt)
-
-                .addAction(R.drawable.ic_skip_previous_green_800_36dp, "prev", retreivePlaybackAction(3))
-                .addAction(id, "pause", retreivePlaybackAction(1))
-                .addAction(R.drawable.ic_skip_next_green_800_36dp, "next", retreivePlaybackAction(2));
         Notification not = mBuilder.build();
         startForeground(NOTIFY_ID, not);
     }

@@ -17,7 +17,7 @@ public class Song implements Serializable {
     private String downloadLink;
     private String detailDownloadLink;
     private int position;
-    String  category;
+    private String  category;
 
 
     public Song(){

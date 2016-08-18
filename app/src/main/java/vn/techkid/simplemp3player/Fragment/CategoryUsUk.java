@@ -38,7 +38,6 @@ public class CategoryUsUk extends Fragment {
     AdapterCategory adapter;
     private String url;
     DownloadTask task;
-    static View view;
 
     public CategoryUsUk() {
         // Required empty public constructor
@@ -49,10 +48,8 @@ public class CategoryUsUk extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        if(view == null){
-            view = inflater.inflate(R.layout.fragment_category_us_uk, container, false);
-            setupView(view);
-        }
+        View  view = inflater.inflate(R.layout.fragment_category_us_uk, container, false);
+        setupView(view);
         getActivity().setTitle("Category USUK");
         listCategory = new ArrayList<>();
         setupAsyntask();
@@ -126,7 +123,7 @@ public class CategoryUsUk extends Fragment {
                             String link = titleSubject.attr("href");
                             String artist = artistSubject.text();
                             String category = categorySubject.text();
-                            listNews.add(new Song(i+1,link,title,category,artist));
+                            listNews.add(new Song(i,link,title,category,artist));
                         }
                     }
                 }

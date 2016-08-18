@@ -121,7 +121,7 @@ public class CategoryVietNam extends Fragment {
                             String link = titleSubject.attr("href");
                             String artist = artistSubject.text();
                             String category = categorySubject.text();
-                            listNews.add(new Song(i+1,link,title,category,artist));
+                            listNews.add(new Song(i,link,title,category,artist));
                         }
                     }
                 }
