@@ -177,15 +177,16 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void playAction() {
+        Intent intent = new Intent("action_pause");
+        sendBroadcast(intent);
         if (FloatingControlWindow.pService.getMediaPlayer().isPlaying()) {
             ibt_play.setImageResource(R.drawable.ic_play_circle_outline_red_300_36dp);
-            FloatingControlWindow.pService.getMediaPlayer().pause();
+
         } else {
             if (PlayingMusicService.isWait) {
                 PlayingMusicService.isWait = false;
             }
             ibt_play.setImageResource(R.drawable.ic_pause_circle_outline_red_300_18dp);
-            FloatingControlWindow.pService.getMediaPlayer().start();
         }
     }
 
@@ -246,5 +247,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         int currentPos = FloatingControlWindow.pService.getCurrentPos();
         FloatingControlWindow.pService.get320kDownloadLink(currentPos);
         FloatingControlWindow.pService.setMediaPlayer();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
     }
 }

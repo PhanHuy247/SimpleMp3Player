@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     DisplayFragment fragmentDisplay = new DisplayFragment();
 
     public static boolean isAlive;
-    FinishSignalReceiver finishSignalReceiver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setUpToolbar();
         setupView();
         CloseNavigation();
-        serBroadcastReceiver();
+
     }
 
     @Override
@@ -64,13 +64,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         isAlive = true;
-    }
-
-    private void serBroadcastReceiver() {
-        finishSignalReceiver = new FinishSignalReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("finish");
-        registerReceiver(finishSignalReceiver, filter);
     }
 
     private void CloseNavigation() {
@@ -154,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         isAlive = false;
 
     }
@@ -165,13 +158,5 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
 
     }
-    private class FinishSignalReceiver extends BroadcastReceiver{
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("finish")){
-                finish();
-            }
-        }
-    }
 }

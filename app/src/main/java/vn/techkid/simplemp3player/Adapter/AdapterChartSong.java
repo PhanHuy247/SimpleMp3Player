@@ -50,7 +50,7 @@ public class AdapterChartSong extends BaseAdapter {
         CommentViewHolder holder = (CommentViewHolder) convertView.getTag();
         holder.txtNameSong.setText(getItem(position).getTitle());
         holder.txtNameArtist.setText(getItem(position).getArtist());
-        holder.txtRank.setText(getItem(position).getPosition()+"");
+        holder.txtRank.setText(getItem(position).getPosition()+1+"");
 
         return convertView;
     }

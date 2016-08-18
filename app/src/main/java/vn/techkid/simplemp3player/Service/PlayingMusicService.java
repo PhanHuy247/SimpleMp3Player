@@ -1,17 +1,26 @@
 package vn.techkid.simplemp3player.Service;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
+import android.media.MediaMetadata;
 import android.media.MediaPlayer;
+import android.media.session.MediaController;
+import android.media.session.MediaSession;
+import android.media.session.MediaSessionManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -66,6 +75,19 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private ImageButton nextBtn;
     private ImageButton prevBtn;
     private TextView textView;
+    private Bitmap artwork;
+
+    public static final String ACTION_PLAY = "action_play";
+    public static final String ACTION_PAUSE = "action_pause";
+    public static final String ACTION_NEXT = "action_next";
+    public static final String ACTION_PREVIOUS = "action_previous";
+    public static final String ACTION_STOP = "action_stop";
+
+    Intent resultIntent;
+    PendingIntent pendInt;
+    MediaSession mediaSession;
+    NotiReceiver receiver;
+
 
     @Override
     public void onCreate() {
@@ -82,7 +104,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         textView.setBackgroundColor(0x80388E3C);
         ViewGroup.LayoutParams tvParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(tvParams);
-        textView.setGravity(Gravity.CENTER);
+        textView.setGravity(Gravity.CENTER_VERTICAL);
+//        textView.setMaxWidth(400);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,12 +203,22 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        setBroadcastReceiver();
         getSongsList();
         get320kDownloadLink(currentPos);
         setMediaPlayer();
 //        setBroadcastReceiver();
         return START_NOT_STICKY;
+    }
+
+    private void setBroadcastReceiver() {
+        receiver = new NotiReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_NEXT);
+        filter.addAction(ACTION_PAUSE);
+        filter.addAction(ACTION_PREVIOUS);
+        registerReceiver(receiver, filter);
+
     }
 
     public int getCurrentPos() {
@@ -205,6 +238,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         helperClass = new HelperClass(maxSongs);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void setMediaPlayer() {
         mediaPlayer = new MediaPlayer();
         try {
@@ -226,29 +260,68 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         this.mediaPlayer = mediaPlayer;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onPrepared(MediaPlayer mp) {
         title = songs.get(currentPos).getTitle();
         artist = songs.get(currentPos).getArtist();
         play();
+        artwork = BitmapFactory.decodeResource(getResources(), R.drawable.image_music);
 
+// Create a new MediaSession
+        mediaSession = new MediaSession(this, "debug tag");
+//         Update the current metadata
+        mediaSession.setMetadata(new MediaMetadata.Builder()
+                .putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, artwork)
+                .putString(MediaMetadata.METADATA_KEY_ARTIST, "Pink Floyd")
+                .putString(MediaMetadata.METADATA_KEY_ALBUM, "Dark Side of the Moon")
+                .putString(MediaMetadata.METADATA_KEY_TITLE, "The Great Gig in the Sky")
+                .build());
+        // Indicate you're ready to receive media commands
+        mediaSession.setActive(true);
+        // Attach a new Callback to receive MediaSession updates
+        mediaSession.setCallback(new MediaSession.Callback() {
 
-        Intent resultIntent = new Intent(getApplicationContext(), PlayerActivity.class);
-        PendingIntent pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
+            // Implement your callbacks
+
+        });
+        // Indicate you want to receive transport controls via your Callback
+        mediaSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        resultIntent = new Intent(getApplicationContext(), PlayerActivity.class);
+        pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
                 resultIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification.Builder mBuilder = new Notification.Builder(this);
-
-        mBuilder.setContentIntent(pendInt)
-                .setSmallIcon(R.drawable.image_music)
-                .setContentTitle("New Message")
-                .setContentText("You've received new message.")
-                .setTicker("New Message Alert!")
-                .setContentIntent(pendInt);
-        Notification not = mBuilder.build();
-        startForeground(NOTIFY_ID, not);
+        setupNotification();
     }
-
+    private PendingIntent retreivePlaybackAction(int which) {
+        Intent action;
+        PendingIntent pendingIntent;
+        switch (which) {
+            case 1:
+                // Play and pause
+                action = new Intent(ACTION_PAUSE);
+                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 1, action, 0);
+                return pendingIntent;
+            case 2:
+                // Skip tracks
+                action = new Intent(ACTION_NEXT);
+                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 2, action, 0);
+                return pendingIntent;
+            case 3:
+                // Previous tracks
+                action = new Intent(ACTION_PREVIOUS);
+                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 3, action, 0);
+                return pendingIntent;
+            case 4:
+                //stop foreground
+                action = new Intent(ACTION_STOP);
+                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 4, action, 0);
+                return pendingIntent;
+            default:
+                break;
+        }
+        return null;
+    }
 
     public void play() {
         mediaPlayer.start();
@@ -281,7 +354,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             updateProgressIntent.putExtra("timeRemaining", String.format("%d:%d", minutesRemaining, secondsRemaining));
             updateProgressIntent.setAction("updateSeekBar");
             if (isVisible){
-                textView.setText("Playing: "+songs.get(currentPos).getTitle()+"\n"+songs.get(currentPos).getArtist());
+                textView.setText("\t"+songs.get(currentPos).getTitle()+"\n\t"+songs.get(currentPos).getArtist());
                 if (mediaPlayer.isPlaying()){
                     pauseBtn.setImageResource(R.drawable.ic_pause_blue_grey_800_36dp);
                 }
@@ -342,7 +415,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     }
     public void get320kDownloadLink(int pos) {
-        SongGetter getter = new SongGetter(songs.get(pos).getAccessLink());
+        Log.d("before", songs.get(pos).getAccessLink());
+        SongGetter getter = new SongGetter(songs.get(pos).getAccessLink(), songs.get(pos).getPosition());
         try {
             getter.execute().get();
         } catch (InterruptedException e) {
@@ -374,7 +448,11 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     @Override
     public void onDestroy() {
+        mediaPlayer.release();
         stopForeground(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mediaSession.release();
+        }
         super.onDestroy();
     }
     public class HelperClass {
@@ -397,4 +475,74 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
 
     }
+    private class NotiReceiver extends BroadcastReceiver{
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(ACTION_NEXT)){
+                nextAction();
+
+            }
+            else if (intent.getAction().equals(ACTION_PAUSE)){
+
+                if (mediaPlayer.isPlaying()){
+                    mediaPlayer.pause();
+                }
+                else {
+                    mediaPlayer.start();
+                }
+                setupNotification();
+
+            }
+            else if (intent.getAction().equals(ACTION_PREVIOUS)){
+                mediaPlayer.release();
+                Log.d("bombaya", currentPos+"");
+                currentPos = (currentPos-1)%20;
+                Log.d("bombaya", currentPos+"");
+
+                get320kDownloadLink(currentPos);
+                setMediaPlayer();
+            }
+            else if (intent.getAction().equals(ACTION_STOP)){
+                stopSelf();
+            }
+
+        }
+    }
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupNotification () {
+        Notification.Builder mBuilder = new Notification.Builder(PlayingMusicService.this);
+        int id;
+        if (mediaPlayer.isPlaying()){
+            id = R.drawable.ic_pause_green_800_36dp;
+        }
+        else {
+            id = R.drawable.ic_play_arrow_green_800_36dp;
+        }
+        mBuilder.setContentIntent(pendInt)
+                .setColor(0x388E3C)
+                .setLargeIcon(artwork)
+                .setSmallIcon(R.drawable.image_music)
+                .setShowWhen(false)
+//                .setContentTitle("New Message")
+//                .setContentText("You've received new message.")
+//                .setTicker("New Message Alert!")
+                .setStyle(new Notification.MediaStyle()
+                        // Attach our MediaSession token
+                        .setMediaSession(mediaSession.getSessionToken())
+                        // Show our playback controls in the compat view
+                        .setShowActionsInCompactView(0, 1, 2))
+                .setContentText(songs.get(currentPos).getArtist())
+                .setContentTitle(songs.get(currentPos).getTitle())
+                // Add some playback controls
+
+                .setContentIntent(pendInt)
+
+                .addAction(R.drawable.ic_skip_previous_green_800_36dp, "prev", retreivePlaybackAction(3))
+                .addAction(id, "pause", retreivePlaybackAction(1))
+                .addAction(R.drawable.ic_skip_next_green_800_36dp, "next", retreivePlaybackAction(2));
+        Notification not = mBuilder.build();
+        startForeground(NOTIFY_ID, not);
+    }
+
 }

@@ -41,7 +41,7 @@ public class PlaylistGetter extends AsyncTask<Void, Void, Void> {
                     String artist = elements2.text();
                     String linkSong = elements1.attr("href");
                     Log.d("link", linkSong);
-                    Song song = new Song(title, artist, linkSong, i+1);
+                    Song song = new Song(title, artist, linkSong, i);
                     songs.add(song);
                     Log.d("tag", songs.size()+"");
                 }

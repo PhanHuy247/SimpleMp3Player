@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -14,9 +15,11 @@ import java.io.IOException;
  */
 public class SongGetter extends AsyncTask<Void, Void, Void>{
     private String url;
+    private int pos;
 
-    public SongGetter(String url) {
+    public SongGetter(String url, int pos) {
         this.url = url;
+        this.pos = pos;
     }
 
     public String getUrl() {
@@ -25,10 +28,12 @@ public class SongGetter extends AsyncTask<Void, Void, Void>{
 
     @Override
     protected Void doInBackground(Void... params) {
-        url = url.substring (0, url.length()-5) + "_download.html";
         try {
-            Document document = Jsoup.connect(url).get();
-            Elements elements = document.select("div[id=downloadlink]").select("b").select("script");
+            Document doc = Jsoup.connect(url).get();
+            Element e = doc.select ("span.gen").get(2*pos+1).select("a").first();
+//            Log.d("hehehehe", e.attr("href"));
+            Document document = Jsoup.connect(e.attr("href")).get();
+            Elements elements = document.select("div#downloadlink").select("b").select("script");
             String text = elements.get(1).data();
             String temp[] = text.split("a href=\"", 6);
             for (String s:temp){

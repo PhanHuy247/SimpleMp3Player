@@ -125,9 +125,9 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
 //    }
     private void refreshService() {
         if (pService.getMediaPlayer()!=null){
-            pService.getMediaPlayer().stop();
+
             pService.getMediaPlayer().release();
-            pService.setMediaPlayer(null);
+
             Log.d("check1", "refreshService");
         }
     }
