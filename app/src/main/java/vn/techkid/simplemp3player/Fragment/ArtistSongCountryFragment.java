@@ -119,6 +119,7 @@ public class ArtistSongCountryFragment extends Fragment {
                             String artist = artistSubject.text();
                             String category = categorySubject.text();
                             listNews.add(new Song(name,artist,category,URL+link,i));
+                            Log.d("hoanganh", URL+link);
                         }
                     }
                 }

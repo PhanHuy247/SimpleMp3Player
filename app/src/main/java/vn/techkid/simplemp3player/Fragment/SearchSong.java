@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import vn.techkid.simplemp3player.Activity.MainActivity;
 import vn.techkid.simplemp3player.Adapter.AdapterChartSong;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
+import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,7 +38,7 @@ public class SearchSong extends Fragment {
     public ListView lv_songs;
     AdapterChartSong adaper;
     private static ArrayList<Song> songs;
-
+    public static final String KEY = "search";
     public SearchSong() {
         // Required empty public constructor
     }
@@ -45,7 +47,7 @@ public class SearchSong extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        MainActivity.isAlive = true;
+//        MainActivity.isAlive = true;
         // Inflate the layout for this fragment
         getActivity().setTitle(query);
         View view = inflater.inflate(R.layout.fragment_search_song, container, false);
@@ -78,7 +80,13 @@ public class SearchSong extends Fragment {
         lv_songs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent = new Intent(getActivity(),  FloatingControlWindow.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("pos", position);
+                bundle.putString("key",KEY);
+                bundle.putSerializable("list",songs);
+                intent.putExtra("bundle",bundle);
+                getActivity().startService(intent);
             }
         });
     }
@@ -119,7 +127,8 @@ public class SearchSong extends Fragment {
                             String title = titleSubject.text();
                             String link = titleSubject.attr("href");
                             String artist = artistSubject.text();
-                            listNews.add(new Song(title, artist,link,i+1));
+                            listNews.add(new Song(title, artist,"http://chiasenhac.vn/"+link,i));
+                            Log.d("meHuy", link);
                         }
                     }
                 }

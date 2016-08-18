@@ -40,19 +40,25 @@ public class MainActivity extends AppCompatActivity {
     View view;
     SearchSong searchSong;
     DisplayFragment fragmentDisplay = new DisplayFragment();
-
+    FinishSignalReceiver receiver;
     public static boolean isAlive;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         setUpToolbar();
         setupView();
         CloseNavigation();
+        setupFinsishSignalReceiver();
+    }
 
+    private void setupFinsishSignalReceiver() {
+        receiver = new FinishSignalReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("finish");
+        registerReceiver(receiver, filter);
     }
 
     @Override
@@ -113,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
                 searchSong = new SearchSong();
                 searchSong.setQuery(word);
                 searchView.clearFocus();
+                isAlive = true;
+
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frame_container,searchSong)
@@ -124,15 +132,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String arg0) {
+                isAlive = false;
                 return false;
             }
         });
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isAlive = false;
-            }
-        });
+//        searchView.setOnSearchClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                isAlive = false;
+//            }
+//        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -162,8 +171,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(receiver);
         super.onDestroy();
 
+    }
+    private class FinishSignalReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("finish")){
+                finish();
+            }
+        }
     }
 
 }

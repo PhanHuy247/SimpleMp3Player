@@ -33,7 +33,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     public static boolean isShuffle, isLooping, isRepeat;
     PlayingMusicReceiver receiver;
-
+    private boolean isBackPressed;
 
 
     @Override
@@ -42,6 +42,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         initView();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         setBroadcastReceiver();
     }
 
@@ -50,6 +56,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         IntentFilter filter = new IntentFilter();
         filter.addAction("updateSeekBar");
         registerReceiver(receiver, filter);
+        isBackPressed = false;
     }
 
 
@@ -252,6 +259,21 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterReceiver(receiver);
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        isBackPressed = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (!isBackPressed){
+            Intent finsish = new Intent("finish");
+            sendBroadcast(finsish);
+        }
+        super.onDestroy();
     }
 }

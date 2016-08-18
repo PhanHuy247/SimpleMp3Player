@@ -78,6 +78,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private ImageButton prevBtn;
     private TextView textView;
     private Bitmap artwork;
+    private boolean isHot = true;
 
     public static final String ACTION_PLAY = "action_play";
     public static final String ACTION_PAUSE = "action_pause";
@@ -104,9 +105,12 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         imageSong = new ImageButton(this);
         textView = new TextView(this);
         textView.setBackgroundColor(0x80388E3C);
+        textView.setTextSize(14);
+        textView.setTextColor(Color.WHITE);
         ViewGroup.LayoutParams tvParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(tvParams);
-        textView.setGravity(Gravity.CENTER_VERTICAL);
+        textView.setPadding(12, 12, 12, 12);
+        textView.setGravity(Gravity.CENTER);
 //        textView.setMaxWidth(400);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +133,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
                 else {
                     mediaPlayer.start();
                 }
+                setupNotification();
 
 
             }
@@ -235,29 +240,15 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     private void getSongsList() {
         maxSongs = 20;
-        if (FloatingControlWindow.getKey().equals("chartSong")){
-            songs = FloatingControlWindow.arrayList;
+
+        if(FloatingControlWindow.getKey().equals("artist")||FloatingControlWindow.getKey().equals("search")){
+            isHot = false;
         }
-        if(FloatingControlWindow.getKey().equals("PlayBackCountryFragment")){
-            songs = FloatingControlWindow.arrayList;
-        }
-        if(FloatingControlWindow.getKey().equals("artist")){
-            songs = FloatingControlWindow.arrayList;
-        }
-        if(FloatingControlWindow.getKey().equals("categoryKorea")){
-            songs = FloatingControlWindow.arrayList;
-        }
-        if(FloatingControlWindow.getKey().equals("categoryUsuk")){
-            songs = FloatingControlWindow.arrayList;
-        }
-        if(FloatingControlWindow.getKey().equals("categoryVietnam")){
-            songs = FloatingControlWindow.arrayList;
-        }
+        songs = FloatingControlWindow.arrayList;
         currentPos = FloatingControlWindow.getCurrentPos();
         helperClass = new HelperClass(maxSongs);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void setMediaPlayer() {
         mediaPlayer = new MediaPlayer();
         try {
@@ -360,7 +351,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             updateProgressIntent.putExtra("timeRemaining", String.format("%d:%d", minutesRemaining, secondsRemaining));
             updateProgressIntent.setAction("updateSeekBar");
             if (isVisible){
-                textView.setText("\t"+songs.get(currentPos).getTitle()+"\n\t"+songs.get(currentPos).getArtist());
+                textView.setText(songs.get(currentPos).getTitle()+"\n"+songs.get(currentPos).getArtist());
                 if (mediaPlayer.isPlaying()){
                     pauseBtn.setImageResource(R.drawable.ic_pause_blue_grey_800_36dp);
                 }
@@ -421,8 +412,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     }
     public void get320kDownloadLink(int pos) {
-        Log.d("before", songs.get(pos).getAccessLink());
-        SongGetter getter = new SongGetter(songs.get(pos).getAccessLink(), songs.get(pos).getPosition());
+
+        SongGetter getter = new SongGetter(songs.get(pos).getAccessLink(), songs.get(pos).getPosition(), isHot);
         try {
             getter.execute().get();
         } catch (InterruptedException e) {
@@ -537,7 +528,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
                     .setContentText(songs.get(currentPos).getArtist())
                     .setContentTitle(songs.get(currentPos).getTitle())
                     // Add some playback controls
-
+                    .setPriority(Notification.PRIORITY_MAX)
+                    .setTicker("Playing: "+songs.get(currentPos).getTitle()+" - "+ songs.get(currentPos).getArtist())
                     .setContentIntent(pendInt)
 
 //                    .addAction(R.drawable.ic_skip_previous_white_36dp, "prev", retreivePlaybackAction(3))
@@ -557,9 +549,12 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 //                .setLargeIcon(artwork)
                     .setSmallIcon(R.drawable.image_music)
                     .setShowWhen(false)
+//                    .setSubText("just check")
                     .setContentText(songs.get(currentPos).getArtist())
                     .setContentTitle(songs.get(currentPos).getTitle())
                     .setContentIntent(pendInt)
+                    .setTicker("Playing: "+songs.get(currentPos).getTitle()+" - "+ songs.get(currentPos).getArtist())
+                    .setPriority(Notification.PRIORITY_MAX)
                     .addAction(id, "", retreivePlaybackAction(1))
                     .addAction(R.drawable.ic_skip_next_green_800_36dp, "", retreivePlaybackAction(2))
                     .addAction(R.drawable.ic_stop_green_800_36dp, "", retreivePlaybackAction(4));

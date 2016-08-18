@@ -62,6 +62,7 @@ public class AdapterPlayBack extends  RecyclerView.Adapter<AdapterPlayBack.PlayB
         holder.txtNameArtist.setText(listPlayBack.get(position).getArtist());
         holder.category.setText(listPlayBack.get(position).getCategory());
         holder.ranking.setText(listPlayBack.get(position).getPosition()+1+"");
+        Log.d("adapter", listPlayBack.get(position).getPosition()+1+"");
     }
 
     @Override

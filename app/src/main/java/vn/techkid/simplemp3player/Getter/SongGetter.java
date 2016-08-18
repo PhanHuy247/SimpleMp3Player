@@ -16,10 +16,12 @@ import java.io.IOException;
 public class SongGetter extends AsyncTask<Void, Void, Void>{
     private String url;
     private int pos;
+    private boolean isHot;
 
-    public SongGetter(String url, int pos) {
+    public SongGetter(String url, int pos, boolean isHot) {
         this.url = url;
         this.pos = pos;
+        this.isHot = isHot;
     }
 
     public String getUrl() {
@@ -29,10 +31,17 @@ public class SongGetter extends AsyncTask<Void, Void, Void>{
     @Override
     protected Void doInBackground(Void... params) {
         try {
-            Document doc = Jsoup.connect(url).get();
-            Element e = doc.select ("span.gen").get(2*pos+1).select("a").first();
+            Document document = null;
+            if (isHot){
+                Document doc = Jsoup.connect(url).get();
+                Element e = doc.select ("span.gen").get(2*pos+1).select("a").first();
 //            Log.d("hehehehe", e.attr("href"));
-            Document document = Jsoup.connect(e.attr("href")).get();
+               document = Jsoup.connect(e.attr("href")).get();
+            }
+            else {
+                url = url.substring (0, url.length()-5) + "_download.html";
+                document = Jsoup.connect(url).get();
+            }
             Elements elements = document.select("div#downloadlink").select("b").select("script");
             String text = elements.get(1).data();
             String temp[] = text.split("a href=\"", 6);
