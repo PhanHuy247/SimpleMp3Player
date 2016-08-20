@@ -66,7 +66,7 @@ public class ArtistFragment extends Fragment {
             public void onItemClick(View view, int postion) {
                 Log.d("POSITION", String.valueOf(postion));
                 artistSongVietNamFragment = new ArtistSongCountryFragment();
-                artistSongVietNamFragment.url = listNews.get(postion).getLink();
+                artistSongVietNamFragment.setupUrl(listNews.get(postion).getLink());
                 getFragmentManager().beginTransaction().replace(R.id.frame_container,artistSongVietNamFragment )
                         .addToBackStack(null)
                         .commit();

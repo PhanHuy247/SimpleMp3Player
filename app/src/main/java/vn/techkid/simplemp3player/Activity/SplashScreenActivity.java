@@ -61,9 +61,16 @@ public class SplashScreenActivity extends AppCompatActivity {
         taskAlbum3 = new DownloadTask();
 
 
-            taskAlbum3.execute(URLUS);
-            taskAlbum2.execute(URLKOR);
-            taskAlbum1.execute(URLVIET);
+        try {
+            taskAlbum3.execute(URLKOR).get();
+            taskAlbum2.execute(URLUS).get();
+            taskAlbum1.execute(URLVIET).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
 
     }
     private void setupAsyntask() {
@@ -71,9 +78,16 @@ public class SplashScreenActivity extends AppCompatActivity {
         task2 = new DownloadTask();
         task3 = new DownloadTask();
 
-            task2.execute(URLKOREA);
-            task3.execute(URLUSUK);
-            task1.execute(URLVIETNAM);
+        try {
+            task2.execute(URLUSUK).get();
+            task3.execute(URLKOREA).get();
+            task1.execute(URLVIETNAM).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+     ;
 
     }
    public static class DownloadTask extends AsyncTask<String, Void, Void> {

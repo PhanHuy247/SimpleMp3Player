@@ -21,7 +21,7 @@ public class CategoryInKorea extends Fragment implements View.OnClickListener{
     public static String URLRAP_HIPHOP = "http://chiasenhac.vn/mp3/korea/k-rap-hiphop/";
     public static String URLDANCE_REMIX = "http://chiasenhac.vn/mp3/korea/k-dance-remix/";
     Button btnpop_rock,btnrap_hiphop,btndance_remix;
-    CategoryKorea categoryKorea;
+    CategoryListSong categoryListSong;
     static View view;
 
 
@@ -68,9 +68,9 @@ public class CategoryInKorea extends Fragment implements View.OnClickListener{
         }
     }
     public void setupFragment(String url){
-        categoryKorea =  new CategoryKorea();
-        categoryKorea.setUrl(url);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container,categoryKorea)
+        categoryListSong =  new CategoryListSong();
+        categoryListSong.setupUrl(url);
+        getFragmentManager().beginTransaction().replace(R.id.frame_container,categoryListSong)
                 .addToBackStack(null)
                 .commit();
 

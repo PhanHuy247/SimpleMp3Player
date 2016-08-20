@@ -10,20 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Handler;
-
 import vn.techkid.simplemp3player.Adapter.AdapterAlbum;
+
 import vn.techkid.simplemp3player.Model.Album;
 import vn.techkid.simplemp3player.R;
 
@@ -64,6 +53,12 @@ public class AlbumCountry extends Fragment {
                 @Override
                 public void onItemClick(View view, int postion) {
                     Log.d("POSITION", String.valueOf(postion));
+                    AlbumCountrySongFragment songFragment = new AlbumCountrySongFragment();
+                    Log.d("thangtrang", listAlbum.get(postion).getLink());
+                    songFragment.setupUrl(listAlbum.get(postion).getLink());
+                    getFragmentManager().beginTransaction().replace(R.id.frame_container,songFragment )
+                            .addToBackStack(null)
+                            .commit();
 
                 }
             });

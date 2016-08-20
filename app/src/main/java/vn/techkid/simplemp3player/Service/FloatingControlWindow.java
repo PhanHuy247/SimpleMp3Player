@@ -98,8 +98,11 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
     private void getSongListInfo(Intent intent) {
         Bundle bundle = intent.getBundleExtra("bundle");
         key = bundle.getString("key");
+        Log.d("floating", key);
         currentPos = bundle.getInt("pos", 0);
+        Log.d("floating", currentPos+"");
         arrayList = (ArrayList<Song>) bundle.getSerializable("list");
+        Log.d("floating", arrayList.size()+"");
     }
 
     @Override

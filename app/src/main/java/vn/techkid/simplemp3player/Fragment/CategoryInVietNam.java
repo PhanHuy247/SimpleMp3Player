@@ -19,7 +19,7 @@ public class CategoryInVietNam extends Fragment implements View.OnClickListener{
     public static String URLDANCE_REMIX = "http://chiasenhac.vn/mp3/vietnam/v-dance-remix/";
     public static String URLTRADITIONAL = "http://chiasenhac.vn/mp3/vietnam/v-truyen-thong/";
     Button btnpop_rock,btnrap_hiphop,btndance_remix,btntraditional;
-    CategoryVietNam fragment;
+    CategoryListSong categoryListSong;
     static View view;
 
     public CategoryInVietNam(){
@@ -68,9 +68,9 @@ public class CategoryInVietNam extends Fragment implements View.OnClickListener{
         }
     }
     private void setupFragment(String url){
-        fragment = new CategoryVietNam();
-        fragment.getURL(url);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container,fragment )
+        categoryListSong = new CategoryListSong();
+        categoryListSong.setupUrl(url);
+        getFragmentManager().beginTransaction().replace(R.id.frame_container,categoryListSong)
                 .addToBackStack(null)
                 .commit();
     }

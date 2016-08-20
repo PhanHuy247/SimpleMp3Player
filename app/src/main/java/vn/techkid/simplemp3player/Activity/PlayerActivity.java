@@ -26,7 +26,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     public TextView tv_songName, tv_artistName;
     private TextView tv_eslapedTime, tv_timeLeft;
     private SeekBar sb_timeProgress;
-    private ImageButton ibt_shuffle, ibt_previous, ibt_play, ibt_next, ibt_repeat, ibt_download;
+    private ImageButton ibt_shuffle, ibt_previous, ibt_play, ibt_next, ibt_repeat;
     private String eslapedTime, remainingTime;
     private int progressTime, fullTime;
 
@@ -82,7 +82,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 ibt_repeat.setImageResource(R.drawable.ic_repeat_red_200_18dp);
             }
         }
-        ibt_download = (ImageButton) findViewById(R.id.button_download);
+
         setOnButtonClick();
 
 
@@ -94,7 +94,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         ibt_next.setOnClickListener(this);
         ibt_repeat.setOnClickListener(this);
         ibt_shuffle.setOnClickListener(this);
-        ibt_download.setOnClickListener(this);
+
         sb_timeProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -170,17 +170,19 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void previousAction() {
-        FloatingControlWindow.pService.getMediaPlayer().release();
-        if (isShuffle) {
-//            int i = FloatingControlWindow.pService.helperClass.getRandomPos();
-//            FloatingControlWindow.pService.setCurrentPos(i);
-        } else {
-            int i = FloatingControlWindow.pService.getCurrentPos();
-            FloatingControlWindow.pService.setCurrentPos((i - 1) % 20);
+        if (PlayingMusicService.maxSongs==1){
+            FloatingControlWindow.pService.getMediaPlayer().seekTo(0);
         }
-        int currentPos = FloatingControlWindow.pService.getCurrentPos();
-        FloatingControlWindow.pService.get320kDownloadLink(currentPos);
-        FloatingControlWindow.pService.setMediaPlayer();
+        else {
+            FloatingControlWindow.pService.getMediaPlayer().release();
+            if (!isShuffle) {
+                PlayingMusicService.currentPos = (PlayingMusicService.currentPos-1)%PlayingMusicService.maxSongs;
+            }
+
+            FloatingControlWindow.pService.get320kDownloadLink(PlayingMusicService.currentPos);
+            FloatingControlWindow.pService.setMediaPlayer();
+        }
+
     }
 
     private void playAction() {
@@ -225,35 +227,42 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void nextAction() {
-        FloatingControlWindow.pService.getMediaPlayer().release();
-        if (!isLooping) {
-            FloatingControlWindow.pService.helperClass
-                    .integers.remove((Integer) FloatingControlWindow.pService.getCurrentPos());
+        if (PlayingMusicService.maxSongs==1){
+            FloatingControlWindow.pService.getMediaPlayer().seekTo(0);
+        }
+        else {
+            FloatingControlWindow.pService.getMediaPlayer().release();
+            if (!isLooping) {
+                FloatingControlWindow.pService.helperClass
+                        .integers.remove((Integer) PlayingMusicService.currentPos);
 
-            if (FloatingControlWindow.pService.helperClass.integers.size() == 0) {
-                for (int i = 0; i < PlayingMusicService.maxSongs; i++) {
-                    FloatingControlWindow.pService.helperClass
-                            .integers.add(i);
+                if (FloatingControlWindow.pService.helperClass.integers.size() == 0) {
+                    for (int i = 0; i < PlayingMusicService.maxSongs; i++) {
+                        FloatingControlWindow.pService.helperClass
+                                .integers.add(i);
+                    }
+                    if (!PlayerActivity.isRepeat) {
+                        PlayingMusicService.isWait = true;
+
+                    }
                 }
-                if (!PlayerActivity.isRepeat) {
-                    PlayingMusicService.isWait = true;
+                if (isShuffle) {
+                    int i = FloatingControlWindow.pService.helperClass.getRandomPos();
+                    PlayingMusicService.currentPos = i;
 
                 }
-            }
-            if (isShuffle) {
-                int i = FloatingControlWindow.pService.helperClass.getRandomPos();
-                FloatingControlWindow.pService.setCurrentPos(i);
+                else {
+                    PlayingMusicService.currentPos = (PlayingMusicService.currentPos+1)%PlayingMusicService.maxSongs;
+                }
 
-            } else {
-                int i = FloatingControlWindow.pService.getCurrentPos();
-                FloatingControlWindow.pService.setCurrentPos((i + 1) % 20);
 
             }
+            int currentPos = PlayingMusicService.currentPos;
+            FloatingControlWindow.pService.get320kDownloadLink(currentPos);
+            FloatingControlWindow.pService.setMediaPlayer();
 
         }
-        int currentPos = FloatingControlWindow.pService.getCurrentPos();
-        FloatingControlWindow.pService.get320kDownloadLink(currentPos);
-        FloatingControlWindow.pService.setMediaPlayer();
+
     }
 
     @Override

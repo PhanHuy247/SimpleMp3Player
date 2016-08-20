@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.jsoup.Jsoup;
@@ -32,50 +33,24 @@ import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PlayBackCountryFragment extends Fragment {
+public class PlayBackCountryFragment extends ListSongsFragment {
 
-    public  String KEY = "PlayBackCountryFragment";
-    public  ArrayList<Song> listPlayBack = new ArrayList<>();
-    RecyclerView recyclerView;
-    AdapterPlayBack adapter;
 
     public PlayBackCountryFragment() {
-        // Required empty public constructor
+        intentKey = "playback";
+        title = "Playback";
+        isHot = true;
     }
 
     public void setListPlayBack(ArrayList<Song> listPlayBack) {
-        this.listPlayBack = listPlayBack;
+        this.songs = listPlayBack;
     }
+
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        getActivity().setTitle("Play Back");
-        View view=  inflater.inflate(R.layout.fragment_play_back_country, container, false);
-        setupView(view);
-      //  createrDataforList();
-        adapter = new AdapterPlayBack(listPlayBack,getActivity());
-        LinearLayoutManager linearManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
-        recyclerView.setLayoutManager(linearManager);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new AdapterPlayBack.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), FloatingControlWindow.class);
-                Bundle bundle  = new Bundle();
-                bundle.putInt("pos", position);
-                bundle.putString("key", KEY);
-                bundle.putSerializable("list",listPlayBack);
-                intent.putExtra("bundle",bundle);
-                getActivity().startService(intent);
-            }
-        });
-        return view;
+    public void setupAsynTask() {
+
     }
 
-    private void setupView(View view) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.listPlayBack);
-    }
 
 }

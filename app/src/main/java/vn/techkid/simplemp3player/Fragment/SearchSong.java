@@ -31,41 +31,26 @@ import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchSong extends Fragment {
+public class SearchSong extends ListSongsFragment {
     public static final String URL = "http://search.chiasenhac.vn/search.php?s=";
     String query;
     DownloadTask task;
-    public ListView lv_songs;
-    AdapterChartSong adaper;
-    private static ArrayList<Song> songs;
-    public static final String KEY = "search";
     public SearchSong() {
-        // Required empty public constructor
+        intentKey = "search";
+        isHot = false;
+
+    }
+
+
+    public void setQuery(String query) {
+        this.query = query;
+        title = query;
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-//        MainActivity.isAlive = true;
-        // Inflate the layout for this fragment
-        getActivity().setTitle(query);
-        View view = inflater.inflate(R.layout.fragment_search_song, container, false);
-        setupView(view);
-        return view;
-    }
-
-    private void setupView(View view) {
-        handleIntent();
-        initView(view);
-    }
-
-    public void setQuery(String query) {
-        this.query = query;
-    }
-
-    private void initView(View view) {
-        lv_songs = (ListView) view.findViewById(R.id.listchartvietnamsearch);
+    public void setupAsynTask() {
+        query = normalizedString(query);
         task = new DownloadTask();
         try {
             task.execute(URL+query).get();
@@ -74,27 +59,6 @@ public class SearchSong extends Fragment {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        songs = task.listNews;
-        adaper = new AdapterChartSong(songs);
-        lv_songs.setAdapter(adaper);
-        lv_songs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(),  FloatingControlWindow.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("pos", position);
-                bundle.putString("key",KEY);
-                bundle.putSerializable("list",songs);
-                intent.putExtra("bundle",bundle);
-                getActivity().startService(intent);
-            }
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
     }
 
     private String normalizedString(String str){
@@ -104,10 +68,7 @@ public class SearchSong extends Fragment {
         return str;
     }
 
-    private void handleIntent() {
-        query = normalizedString(query);
-    }
-    static class DownloadTask extends AsyncTask<String, Void, Void> {
+    private class DownloadTask extends AsyncTask<String, Void, Void> {
         ArrayList<Song> listNews;
         public DownloadTask(){
 

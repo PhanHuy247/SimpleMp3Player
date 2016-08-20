@@ -2,10 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="1dp">
+    android:padding="1dp"
+    android:background="@color/colorWhite"
+    >
     <LinearLayout
         android:layout_width="48dp"
         android:layout_height="wrap_content"
+
         android:gravity="center">
         <TextView
             android:id="@+id/txtRank"
@@ -39,6 +42,15 @@
             android:paddingLeft="6dp"
             android:textColor="@color/colorPrimary"
             android:id="@+id/tv_artist"/>
+        <ImageButton
+            android:id="@+id/imgbuttonsongchart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_file_download_green_700_24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent"
+            />
 
     </RelativeLayout>
 

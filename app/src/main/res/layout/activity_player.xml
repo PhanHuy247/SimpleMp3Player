@@ -3,14 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/activity_horizontal_margin">
-    <ImageButton
-        android:layout_width="@dimen/imageButtonDimens"
-        android:layout_height="@dimen/imageButtonDimens"
-        android:id="@+id/button_download"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_file_download_red_300_18dp"/>
     <TextView
         android:id="@+id/text_songName"
         android:layout_width="wrap_content"

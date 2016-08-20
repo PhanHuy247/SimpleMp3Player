@@ -43,6 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 import vn.techkid.simplemp3player.Activity.MainActivity;
 import vn.techkid.simplemp3player.Activity.PlayerActivity;
+import vn.techkid.simplemp3player.Fragment.AlbumCountrySongFragment;
 import vn.techkid.simplemp3player.Fragment.ChartSong;
 import vn.techkid.simplemp3player.Fragment.PlayBackCountryFragment;
 import vn.techkid.simplemp3player.Getter.SongGetter;
@@ -64,10 +65,10 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private int fullTime, eslapedTime;
     private Handler durationHandler = new Handler();
     public static final int NOTIFY_ID = 1912;
-    private int currentPos;
+    public static int currentPos;
     public static int maxSongs;
     private int count;
-    ArrayList<Song> songs = new ArrayList<>();
+    public static ArrayList<Song> songs = new ArrayList<>();
     public HelperClass helperClass;
     public static boolean isWait;
 //    private MusicController musicController;
@@ -145,7 +146,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextAction();
+                nextAction(true);
             }
         });
 
@@ -156,22 +157,25 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         prevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediaPlayer.release();
-                if (PlayerActivity.isShuffle) {
-//            int i = FloatingControlWindow.pService.helperClass.getRandomPos();
-//            FloatingControlWindow.pService.setCurrentPos(i);
-                } else {
-                    currentPos = (currentPos - 1) % 20;
+                if (maxSongs == 1){
+                    mediaPlayer.seekTo(0);
                 }
-                get320kDownloadLink(currentPos);
-                setMediaPlayer();
+                else{
+                    mediaPlayer.release();
+                    if (!PlayerActivity.isShuffle) {
+                        currentPos = (currentPos - 1) % maxSongs;
+                    }
+                    get320kDownloadLink(currentPos);
+                    setMediaPlayer();
+                }
+
             }
         });
 
 
 
         ViewGroup.LayoutParams btnParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        pauseBtn.setLayoutParams(btnParams);
+        prevBtn.setLayoutParams(btnParams);
         nextBtn.setLayoutParams(btnParams);
         pauseBtn.setLayoutParams(btnParams);
 
@@ -230,22 +234,35 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     }
 
-    public int getCurrentPos() {
-        return currentPos;
-    }
-
-    public void setCurrentPos(int currentPos) {
-        this.currentPos = currentPos;
-    }
-
     private void getSongsList() {
-        maxSongs = 20;
-
-        if(FloatingControlWindow.getKey().equals("artist")||FloatingControlWindow.getKey().equals("search")){
-            isHot = false;
-        }
-        songs = FloatingControlWindow.arrayList;
         currentPos = FloatingControlWindow.getCurrentPos();
+        Log.d("currentPos", ""+currentPos);
+        Log.d("compare", FloatingControlWindow.arrayList.size()+"");
+
+        songs = FloatingControlWindow.arrayList;
+        Log.d("compare", songs.size()+"");
+        maxSongs = songs.size();
+        if(FloatingControlWindow.getKey().equals("artist")){
+            isHot = false;
+
+        }
+        else {
+            if (FloatingControlWindow.getKey().equals("search")) {
+                isHot = false;
+                maxSongs = 1;
+
+
+            } else {
+                if (FloatingControlWindow.getKey().equals("album")) {
+                    isHot = false;
+
+                }
+                else {
+                    isHot = true;
+                }
+            }
+        }
+
         helperClass = new HelperClass(maxSongs);
     }
 
@@ -376,33 +393,48 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             durationHandler.postDelayed(this, 100);
         }
     };
-    public  void nextAction(){
-        mediaPlayer.release();
-        if (!PlayerActivity.isLooping){
-            helperClass.integers.remove((Integer)currentPos);
+    public  void nextAction(boolean fromUser){
+        if (maxSongs == 1){
+            mediaPlayer.seekTo(0);
 
-            Log.d("khuong", "size: "+helperClass.integers.size());
-            if (helperClass.integers.size()==0){
-                for (int i = 0; i < maxSongs; i++) {
-                    helperClass.integers.add(i);
-                }
-                if (!PlayerActivity.isRepeat){
-                    isWait = true;
-                    Log.d("khuong", "isWait: "+isWait);
+            if (!fromUser){
+                mediaPlayer.pause();
+                if (PlayerActivity.isRepeat||PlayerActivity.isLooping){
+                    mediaPlayer.start();
                 }
             }
-            if (PlayerActivity.isShuffle) {
-                currentPos = helperClass.getRandomPos();
-                Log.d("khuong1", currentPos+"");
+
+            setupNotification();
+        }
+        else {
+            mediaPlayer.release();
+            if (!PlayerActivity.isLooping){
+                helperClass.integers.remove((Integer)currentPos);
+
+                Log.d("khuong", "size: "+helperClass.integers.size());
+                if (helperClass.integers.size()==0){
+                    for (int i = 0; i < maxSongs; i++) {
+                        helperClass.integers.add(i);
+                    }
+                    if (!PlayerActivity.isRepeat){
+                        isWait = true;
+                        Log.d("khuong", "isWait: "+isWait);
+                    }
+                }
+                if (PlayerActivity.isShuffle) {
+                    currentPos = helperClass.getRandomPos();
+                    Log.d("khuong1", currentPos+"");
+                }
+                else {
+                    currentPos = (currentPos+1)%maxSongs;
+                    Log.d("khuong2", currentPos+"");
+                }
             }
-            else {
-                currentPos = (currentPos+1)%20;
-                Log.d("khuong2", currentPos+"");
-            }
+
+            get320kDownloadLink(currentPos);
+            setMediaPlayer();
         }
 
-        get320kDownloadLink(currentPos);
-        setMediaPlayer();
     }
 
     @Override
@@ -422,14 +454,14 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             e.printStackTrace();
         }
         url = getter.getUrl();
-        Log.d("final", url);
+//        Log.d("final", url);
 
 
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        nextAction();
+        nextAction(false);
     }
 
     @Override
@@ -469,7 +501,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(ACTION_NEXT)){
-                nextAction();
+                nextAction(true);
 
             }
             else if (intent.getAction().equals(ACTION_PAUSE)){
@@ -482,15 +514,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
                 }
                 setupNotification();
 
-            }
-            else if (intent.getAction().equals(ACTION_PREVIOUS)){
-                mediaPlayer.release();
-                Log.d("bombaya", currentPos+"");
-                currentPos = (currentPos-1)%20;
-                Log.d("bombaya", currentPos+"");
-
-                get320kDownloadLink(currentPos);
-                setMediaPlayer();
             }
             else if (intent.getAction().equals(ACTION_STOP)){
                 mediaPlayer.pause();

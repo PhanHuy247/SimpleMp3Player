@@ -53,8 +53,8 @@ public class PlayBackFragment extends Fragment {
     private ViewPagerAdapter setUpViewPage() {
 
         adapter.addFrag(fragment1,"VietNam");
-        adapter.addFrag(fragment2," Korea ");
-        adapter.addFrag(fragment3," US-UK ");
+        adapter.addFrag(fragment2," US-UK ");
+        adapter.addFrag(fragment3," Korea ");
 
         return adapter;
     }
