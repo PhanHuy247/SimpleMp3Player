@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "vn.techkid.simplemp3player"
@@ -28,4 +29,5 @@ dependencies {
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:cardview-v7:23.4.0'
+    compile 'org.apache.httpcomponents:httpclient:4.5'
 }

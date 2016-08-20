@@ -3,12 +3,19 @@ package vn.techkid.simplemp3player.Getter;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import vn.techkid.simplemp3player.Model.Artist;
@@ -40,17 +47,29 @@ public class SongGetter extends AsyncTask<Void, Void, Void>{
             if (isHot){
                 Document doc = Jsoup.connect(url).get();
                 Element e = doc.select ("span.gen").get(2*pos+1).select("a").first();
-                document = Jsoup.connect(e.attr("href")).get();
+                url = e.attr("href");
                 Log.d("khuongtunha", e.attr("href"));
             }
             else {
                 url = url.substring (0, url.length()-5) + "_download.html";
-                document = Jsoup.connect(url).get();
                 Log.d("khuongtunha", url);
             }
-            Log.d("sizeee", document.select("div#downloadlink").size()+"");
-            Log.d("sizeee", document.select("div#downloadlink").select("b").size()+"");
-            Log.d("sizeee", document.select("div#downloadlink").select("b").select("script").size()+"");
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = client.execute(request);
+
+            String html = "";
+            InputStream in = response.getEntity().getContent();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder str = new StringBuilder();
+            String line = null;
+            while((line = reader.readLine()) != null)
+            {
+                str.append(line);
+            }
+            in.close();
+            html = str.toString();
+            document = Jsoup.parse(html);
             Elements elements = document.select("div#downloadlink").select("b").select("script");
             String text = elements.get(1).data();
             String temp[] = text.split("a href=\"", 6);

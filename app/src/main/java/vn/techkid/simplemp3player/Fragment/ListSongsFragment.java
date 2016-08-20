@@ -37,7 +37,7 @@ public abstract class ListSongsFragment extends Fragment {
                              Bundle savedInstanceState) {
         getActivity().setTitle(title);
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_chart_song2, container, false);
+        View view = inflater.inflate(R.layout.listview_chartsong, container, false);
         initView(view);
         return view;
     }

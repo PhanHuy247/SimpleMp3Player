@@ -59,6 +59,7 @@ public class SearchSong extends ListSongsFragment {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        songs = task.listNews;
     }
 
     private String normalizedString(String str){
