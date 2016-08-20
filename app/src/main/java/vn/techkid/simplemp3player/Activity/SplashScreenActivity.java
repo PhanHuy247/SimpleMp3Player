@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import vn.techkid.simplemp3player.Fragment.CheckConnection;
 import vn.techkid.simplemp3player.Model.Album;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
@@ -35,69 +36,78 @@ public class SplashScreenActivity extends AppCompatActivity {
     // Splash screen timer
     ImageView imageView;
     private static int SPLASH_TIME_OUT = 2000;
-    public static DownloadTask task1,task2,task3;
-    public static DownloadTask taskAlbum1,taskAlbum2,taskAlbum3;
+    public static DownloadTask task1 = new DownloadTask();
+    public static DownloadTask task2 = new DownloadTask();
+    public static DownloadTask task3 = new DownloadTask();
+    public static DownloadTask taskAlbum1 = new DownloadTask();
+    public static DownloadTask taskAlbum2 = new DownloadTask();
+    public static DownloadTask taskAlbum3 = new DownloadTask();
+    private CheckConnection checkConnection;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         imageView = (ImageView) findViewById(R.id.imgsplash);
+        checkConnection = new CheckConnection(this);
 
-        setupAsyntaskAlbum();
-        setupAsyntask();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("splash2","phanhuy95");
+        if(checkConnection.checkMobileInternetConn()){
+            setupAsyntaskAlbum();
+            setupAsyntask();
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent intent = new Intent(SplashScreenActivity.this,MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         },SPLASH_TIME_OUT);
-
     }
 
-    private void setupAsyntaskAlbum() {
-        taskAlbum1 = new DownloadTask();
-        taskAlbum2 = new DownloadTask();
-        taskAlbum3 = new DownloadTask();
-
-
+    public static void setupAsyntaskAlbum() {
         try {
-            taskAlbum3.execute(URLKOR).get();
-            taskAlbum2.execute(URLUS).get();
+            taskAlbum3.execute(URLUS).get();
+            taskAlbum2.execute(URLKOR).get();
             taskAlbum1.execute(URLVIET).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
-
     }
-    private void setupAsyntask() {
-        task1 = new DownloadTask();
-        task2 = new DownloadTask();
-        task3 = new DownloadTask();
-
+    public static void setupAsyntask() {
+        Log.d("splash2","khongancut");
         try {
-            task2.execute(URLUSUK).get();
-            task3.execute(URLKOREA).get();
-            task1.execute(URLVIETNAM).get();
+            SplashScreenActivity.task2.execute(URLKOREA).get();
+            SplashScreenActivity.task3.execute(URLUSUK).get();
+            SplashScreenActivity.task1.execute(URLVIETNAM).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-     ;
-
     }
    public static class DownloadTask extends AsyncTask<String, Void, Void> {
-        public ArrayList<Song> listNews;
-       public ArrayList<Album> listAlbum;
+       public ArrayList<Song> listNews = null;
+       public ArrayList<Album> listAlbum = null;
 
-        @Override
+       @Override
+       protected void onPreExecute() {
+           super.onPreExecute();
+
+       }
+
+       @Override
         public Void doInBackground(String... strings) {
-            listNews = new ArrayList<>();
-            listAlbum = new ArrayList<>();
+           listNews = new ArrayList<Song>();
+           listAlbum = new ArrayList<>();
             Document document = null;
             int length = 20;
             try {

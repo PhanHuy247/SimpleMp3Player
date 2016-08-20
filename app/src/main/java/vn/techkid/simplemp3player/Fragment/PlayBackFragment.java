@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.techkid.simplemp3player.Activity.SplashScreenActivity;
+import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 
 /**
@@ -31,9 +32,7 @@ public class PlayBackFragment extends Fragment {
     PlayBackCountryFragment fragment1;;
     PlayBackCountryFragment fragment2;
     PlayBackCountryFragment fragment3;
-    static View view;
-
-
+    View view;
     public PlayBackFragment() {
         // Required empty public constructor
     }
@@ -44,10 +43,8 @@ public class PlayBackFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         getActivity().setTitle("PlayBack");
-        if(view == null){
             view =  inflater.inflate(R.layout.fragment_play_back, container, false);
             setupView(view);
-        }
         return view;
     }
     private ViewPagerAdapter setUpViewPage() {
@@ -60,20 +57,36 @@ public class PlayBackFragment extends Fragment {
     }
 
     private void setupView(View view) {
+        viewPager = (ViewPager) view.findViewById(R.id.viewpagerplayback);
+        tabLayout = (TabLayout) view.findViewById(R.id.tabsPlayback);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        CheckConnection checkConnection = new CheckConnection(getContext());
         fragment1  =  new PlayBackCountryFragment();
         fragment2  =  new PlayBackCountryFragment();
         fragment3  =  new PlayBackCountryFragment();
 
-        fragment1.setListPlayBack(SplashScreenActivity.task1.listNews);
-        fragment2.setListPlayBack(SplashScreenActivity.task2.listNews);
-        fragment3.setListPlayBack(SplashScreenActivity.task3.listNews);
-
-        adapter = new ViewPagerAdapter(getFragmentManager());
-        viewPager = (ViewPager) view.findViewById(R.id.viewpagerplayback);
+        if(checkConnection.checkMobileInternetConn()){
+            setUpList(SplashScreenActivity.task1.listNews);
+            setUpList(SplashScreenActivity.task2.listNews);
+            setUpList(SplashScreenActivity.task3.listNews);
+            fragment1.setListPlayBack(SplashScreenActivity.task1.listNews);
+            fragment2.setListPlayBack(SplashScreenActivity.task2.listNews);
+            fragment3.setListPlayBack(SplashScreenActivity.task3.listNews);
+        }
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(setUpViewPage());
-        tabLayout = (TabLayout) view.findViewById(R.id.tabsPlayback);
         tabLayout.setupWithViewPager(viewPager);
+    }
 
+    private void setUpList(ArrayList<Song> sizeList){
+        if(sizeList == null){
+            SplashScreenActivity.setupAsyntask();
+        }
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

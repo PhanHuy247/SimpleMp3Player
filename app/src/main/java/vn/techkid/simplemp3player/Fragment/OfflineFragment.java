@@ -63,43 +63,7 @@ public class OfflineFragment extends Fragment {
 
     private void chooseTabLayout(TabLayout tabLayout) {
         TabLayout.Tab tab = tabLayout.getTabAt(position);
-        setUpChangeViewPage(viewPager);
         tab.select();
-    }
-
-    private void setUpChangeViewPage(ViewPager viewPager) {
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-            @Override
-            public void onPageSelected(int position) {
-                if(position == 0)
-                    changeColorTabLayout(R.color.colorPlayList);
-                if(position == 1){
-                    changeColorTabLayout(R.color.colorSong);
-                }
-                if(position == 2)
-                    changeColorTabLayout(R.color.colorAlbum);
-                if(position == 3)
-                    changeColorTabLayout(R.color.colorArTist);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-    }
-
-    private void changeColorTabLayout(int color) {
-        tabLayout.setBackgroundColor(getResources().getColor(color));
-        Window window = getActivity().getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.setStatusBarColor(this.getResources().getColor(color));
-        }
-
     }
 
     private void setupViewPager(ViewPager viewPager) {

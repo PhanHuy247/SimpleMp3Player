@@ -74,6 +74,37 @@ public class AdapterChartSong extends BaseAdapter {
             @Override
 
             public void onClick(View v) {
+                SongGetter getter = new SongGetter(getItem(position).getAccessLink(),position,true);
+                try {
+                    getter.execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(parent.getContext());
+                builder.setTitle("Choose Quality Link Dowload :");
+                ArrayList<String> arrayList = new ArrayList<String>();
+                Log.d("adapter",getter.listUrl.get(0).length()+"");
+                for(int i = 0; i < getter.listUrl.size(); i++){
+                    int j = 18;
+                    if(getter.listUrl.get(i).length() > 140) j = 21;
+                    arrayList.add(getter.listUrl.get(i).substring(getter.listUrl.get(i).length()- j,getter.listUrl.get(i).length()));
+                }
+                final CharSequence[] LinkUrl = arrayList.toArray(new String[getter.listUrl.size()]);
+                builder.setItems(LinkUrl, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+        holder.imgButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+
+            public void onClick(View v) {
                 SongGetter getter = new SongGetter(getItem(position).getAccessLink(),position,isHot);
                 try {
                     getter.execute().get();
@@ -112,4 +143,3 @@ public class AdapterChartSong extends BaseAdapter {
     }
 
 }
-

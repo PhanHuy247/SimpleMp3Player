@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,7 +35,8 @@ public class ArtistFragment extends Fragment {
     AdapterChartArtist listCardAdapter;
     private int posFirst,posLast;
     ArtistSongCountryFragment artistSongVietNamFragment;
-
+    TextView txtcheck;
+    CheckConnection checkConnection;
     DownloadTask task;
 
     public ArtistFragment() {
@@ -48,9 +50,15 @@ public class ArtistFragment extends Fragment {
         getActivity().setTitle("Artist");
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
         listNews  = new ArrayList<>();
+        checkConnection = new CheckConnection(getActivity());
         setupPosForChart(posFirst,posLast);
-        setupAsyntask();
-        createDataForListNews();
+        if(checkConnection.checkMobileInternetConn()){
+            setupAsyntask();
+            createDataForListNews();
+        }else{
+            if(listNews.size() == 0)
+                txtcheck.setVisibility(View.VISIBLE);
+        }
         setupView(view);
 
 
@@ -98,6 +106,7 @@ public class ArtistFragment extends Fragment {
 
     private void setupView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.listCard);
+        txtcheck = (TextView) view.findViewById(R.id.txtCheckArtist);
     }
     static class DownloadTask extends AsyncTask<String, Void, Void> {
         ArrayList<Artist> listNews;

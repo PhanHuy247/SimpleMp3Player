@@ -478,12 +478,17 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     @Override
     public void onDestroy() {
         mediaPlayer.release();
-        mediaPlayer = null;
+        stopForeground(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mediaSession.release();
+        }
         super.onDestroy();
     }
     public class HelperClass {
         public ArrayList<Integer> integers = new ArrayList<>();
         private int n;
+
+
         public HelperClass(int n){
             this.n = n;
             for (int i = 0; i < n; i++) {
@@ -496,8 +501,11 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             return integers.remove(rand);
         }
 
+
+
     }
     private class NotiReceiver extends BroadcastReceiver{
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(ACTION_NEXT)){
@@ -516,9 +524,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
             }
             else if (intent.getAction().equals(ACTION_STOP)){
-                mediaPlayer.pause();
-                stopForeground(true);
-
+                stopSelf();
             }
 
         }

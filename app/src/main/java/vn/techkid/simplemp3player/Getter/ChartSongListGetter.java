@@ -28,6 +28,7 @@ public class ChartSongListGetter extends AsyncTask<Void, Void, Void> {
         songs = new ArrayList<>();
         try {
             Document document = Jsoup.connect(url).get();
+            Log.d("chartsong",document.body()+"");
             Elements elements = document.select("div[class=text2 text2x]");
             if(elements.size() == 0)
                 elements = document.select("div[class=text2]");
@@ -43,7 +44,7 @@ public class ChartSongListGetter extends AsyncTask<Void, Void, Void> {
                     Log.d("link", linkSong);
                     Song song = new Song(title, artist, linkSong, i);
                     songs.add(song);
-                    Log.d("tag", songs.size()+"");
+
                 }
             }
 

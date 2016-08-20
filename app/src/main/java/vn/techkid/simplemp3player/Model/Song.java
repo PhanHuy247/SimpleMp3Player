@@ -14,8 +14,6 @@ public class Song implements Serializable {
     private String imageSrc;
     private String album;
     private String accessLink;
-    private String downloadLink;
-    private String detailDownloadLink;
     private int position;
     private String  category;
 
@@ -77,24 +75,6 @@ public class Song implements Serializable {
     public void setAccessLink(String accessLink) {
         this.accessLink = accessLink;
     }
-
-    public String getDownloadLink() {
-        return downloadLink;
-    }
-
-    public void setDownloadLink(String downloadLink) {
-        this.downloadLink = downloadLink;
-    }
-
-    public String getDetailDownloadLink() {
-        return detailDownloadLink;
-    }
-
-    public void setDetailDownloadLink(String detailDownloadLink) {
-        this.detailDownloadLink = detailDownloadLink;
-    }
-
-
 
     public String getAlbum() {
         return album;

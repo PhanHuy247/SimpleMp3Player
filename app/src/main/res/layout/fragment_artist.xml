@@ -3,6 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragment.ArtistFragment">
+    <TextView
+        android:id="@+id/txtCheckArtist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Check Your Internet"
+        android:visibility="gone"
+        android:textSize="24dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/listCard"

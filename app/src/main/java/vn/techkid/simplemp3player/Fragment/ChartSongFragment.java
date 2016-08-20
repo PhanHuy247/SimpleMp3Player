@@ -63,12 +63,12 @@ public class ChartSongFragment extends Fragment {
         setOnclick(imgKorea,URLKOREA);
     }
 
-    private void setOnclick(ImageButton imgVietnam, final String urlvietnam) {
+    private void setOnclick(ImageButton imgVietnam, final String url) {
         imgVietnam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chartSong = new ChartSong();
-                chartSong.setupUrl(urlvietnam);
+                chartSong.setupUrl(url);
                 getFragmentManager().beginTransaction().replace(R.id.frame_container,chartSong)
                         .addToBackStack(null)
                         .commit();
