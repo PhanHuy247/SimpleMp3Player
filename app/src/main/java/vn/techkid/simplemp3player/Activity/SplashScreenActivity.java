@@ -75,6 +75,7 @@ public class SplashScreenActivity extends AppCompatActivity{
                 finish();
             }
         },SPLASH_TIME_OUT);
+
     }
 
     public static void setupAsyntaskAlbum() {
