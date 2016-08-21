@@ -133,6 +133,11 @@ public class NaviFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
                 break;
+            case 6:
+                getFragmentManager().beginTransaction().replace(R.id.frame_container, new AboutFragment())
+                        .addToBackStack(null)
+                        .commit();
+                break;
         }
     }
 }

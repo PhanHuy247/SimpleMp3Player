@@ -4,7 +4,6 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
     useLibrary 'org.apache.http.legacy'
-
     defaultConfig {
         applicationId "vn.techkid.simplemp3player"
         minSdkVersion 19

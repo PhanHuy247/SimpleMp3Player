@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -23,10 +24,12 @@ import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 public abstract class ListSongsFragment extends Fragment {
     public String title;
     public ListView lv_songs;
-    public  ArrayList<Song> songs;
+    public  ArrayList<Song> songs = new ArrayList<>();
     public String intentKey;
     public String URL;
     public boolean isHot;
+    CheckConnection checkConnection;
+    TextView txtCheckConnection;
     public ListSongsFragment() {
         // Required empty public constructor
     }
@@ -46,8 +49,9 @@ public abstract class ListSongsFragment extends Fragment {
     }
     private void initView(View view) {
         lv_songs = (ListView) view.findViewById(R.id.listchartvietnam);
+        txtCheckConnection = (TextView) view.findViewById(R.id.txtconnection);
         setupAsynTask();
-
+        setupConnec();
         AdapterChartSong adaper = new AdapterChartSong(songs,getActivity(), isHot);
         lv_songs.setAdapter(adaper);
         lv_songs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -67,7 +71,19 @@ public abstract class ListSongsFragment extends Fragment {
 
     }
 
-    public abstract void setupAsynTask();
+    private void setupConnec() {
+        checkConnection = new CheckConnection(getActivity());
+        if(songs.size() == 0) txtCheckConnection.setVisibility(View.GONE);
+        if(!checkConnection.checkMobileInternetConn())
+            txtCheckConnection.setVisibility(View.VISIBLE);
+        else{
+            if(songs.size() == 0 ) txtCheckConnection.setVisibility(View.GONE);
+        }
+    }
+
+    public void setupAsynTask(){
+
+    }
 
 
 
