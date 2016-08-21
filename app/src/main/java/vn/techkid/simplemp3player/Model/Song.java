@@ -1,5 +1,7 @@
 package vn.techkid.simplemp3player.Model;
 
+import android.content.ContentUris;
+import android.net.Uri;
 import android.widget.ImageView;
 
 import java.io.Serializable;
@@ -8,6 +10,7 @@ import java.io.Serializable;
  * Created by Laptop88 on 7/27/2016.
  */
 public class Song implements Serializable {
+    private int id;
     private String title;
     private String path;
     private String artist;
@@ -22,6 +25,13 @@ public class Song implements Serializable {
 
     public Song(){
 
+    }
+
+    public Song(int id, String title, String artist, String album) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
     }
 
     public Song(int position, String title, String accessLink) {
@@ -53,7 +63,17 @@ public class Song implements Serializable {
         this.category = category;
     }
 
+    public Uri getURI() {
+        return ContentUris.withAppendedId(
+                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
+    }
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getCategory() {
         return category;

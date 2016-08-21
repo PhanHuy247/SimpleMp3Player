@@ -91,6 +91,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     PendingIntent pendInt;
     MediaSession mediaSession;
     NotiReceiver receiver;
+    public static String key;
 
 
     @Override
@@ -165,7 +166,10 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
                     if (!PlayerActivity.isShuffle) {
                         currentPos = (currentPos - 1) % maxSongs;
                     }
-                    get320kDownloadLink(currentPos);
+                    if (!key.equals("offline")){
+                        get320kDownloadLink(currentPos);
+                    }
+
                     setMediaPlayer();
                 }
 
@@ -217,7 +221,10 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     public int onStartCommand(Intent intent, int flags, int startId) {
         setBroadcastReceiver();
         getSongsList();
-        get320kDownloadLink(currentPos);
+        if (!key.equals("offline")) {
+            get320kDownloadLink(currentPos);
+        }
+
         setMediaPlayer();
 //        setBroadcastReceiver();
         return START_NOT_STICKY;
@@ -236,29 +243,33 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
     private void getSongsList() {
         currentPos = FloatingControlWindow.getCurrentPos();
-        Log.d("currentPos", ""+currentPos);
-        Log.d("compare", FloatingControlWindow.arrayList.size()+"");
-
         songs = FloatingControlWindow.arrayList;
         Log.d("compare", songs.size()+"");
         maxSongs = songs.size();
-        if(FloatingControlWindow.getKey().equals("artist")){
+        key = FloatingControlWindow.getKey();
+        if(key.equals("artist")){
             isHot = false;
 
         }
         else {
-            if (FloatingControlWindow.getKey().equals("search")) {
+            if (key.equals("search")) {
                 isHot = false;
                 maxSongs = 1;
 
 
             } else {
-                if (FloatingControlWindow.getKey().equals("album")) {
+                if (key.equals("album")) {
                     isHot = false;
 
                 }
                 else {
-                    isHot = true;
+                    if (key.equals("offline")){
+
+                    }
+                    else {
+                        isHot = true;
+                    }
+
                 }
             }
         }
@@ -270,7 +281,12 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setDataSource(url);
+            if (key.equals("offline")){
+                mediaPlayer.setDataSource(getApplicationContext(), songs.get(currentPos).getURI());
+            }
+            else {
+                mediaPlayer.setDataSource(url);
+            }
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnCompletionListener(this);
@@ -397,13 +413,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
         if (maxSongs == 1){
             mediaPlayer.seekTo(0);
 
-            if (!fromUser){
-                mediaPlayer.pause();
-                if (PlayerActivity.isRepeat||PlayerActivity.isLooping){
-                    mediaPlayer.start();
-                }
-            }
-
             setupNotification();
         }
         else {
@@ -430,8 +439,9 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
                     Log.d("khuong2", currentPos+"");
                 }
             }
-
-            get320kDownloadLink(currentPos);
+            if (!key.equals("offline")) {
+                get320kDownloadLink(currentPos);
+            }
             setMediaPlayer();
         }
 

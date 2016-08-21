@@ -178,8 +178,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             if (!isShuffle) {
                 PlayingMusicService.currentPos = (PlayingMusicService.currentPos-1)%PlayingMusicService.maxSongs;
             }
+            if (!PlayingMusicService.key.equals("offline")){
+                FloatingControlWindow.pService.get320kDownloadLink(PlayingMusicService.currentPos);
+            }
 
-            FloatingControlWindow.pService.get320kDownloadLink(PlayingMusicService.currentPos);
             FloatingControlWindow.pService.setMediaPlayer();
         }
 
@@ -258,7 +260,9 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
             }
             int currentPos = PlayingMusicService.currentPos;
-            FloatingControlWindow.pService.get320kDownloadLink(currentPos);
+            if (!PlayingMusicService.key.equals("offline")){
+                FloatingControlWindow.pService.get320kDownloadLink(currentPos);
+            }
             FloatingControlWindow.pService.setMediaPlayer();
 
         }

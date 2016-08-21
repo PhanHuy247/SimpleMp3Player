@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import vn.techkid.simplemp3player.HelperClass.MusicRetriever;
+import vn.techkid.simplemp3player.HelperClass.PrepareMusicRetrieverTask;
 import vn.techkid.simplemp3player.Model.Album;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
@@ -37,11 +39,14 @@ public class SplashScreenActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 2000;
     public static DownloadTask task1,task2,task3;
     public static DownloadTask taskAlbum1,taskAlbum2,taskAlbum3;
+    MusicRetriever mRetriever;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         imageView = (ImageView) findViewById(R.id.imgsplash);
+//        mRetriever = new MusicRetriever(getContentResolver());
+//        (new PrepareMusicRetrieverTask(mRetriever,this)).execute();
 
         setupAsyntaskAlbum();
         setupAsyntask();

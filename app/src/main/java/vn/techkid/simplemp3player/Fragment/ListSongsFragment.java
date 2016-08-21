@@ -67,9 +67,7 @@ public abstract class ListSongsFragment extends Fragment {
 
     }
 
-    public void setupAsynTask(){
-
-    }
+    public abstract void setupAsynTask();
 
 
 

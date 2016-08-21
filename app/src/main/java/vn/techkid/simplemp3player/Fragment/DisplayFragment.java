@@ -13,18 +13,23 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import vn.techkid.simplemp3player.Adapter.AdapterNavigation;
+import vn.techkid.simplemp3player.HelperClass.MusicRetriever;
+import vn.techkid.simplemp3player.HelperClass.PrepareMusicRetrieverTask;
 import vn.techkid.simplemp3player.Model.Navigation;
+import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DisplayFragment extends Fragment {
+public class DisplayFragment extends Fragment implements PrepareMusicRetrieverTask.MusicRetrieverPreparedListener {
     ListView listview;
     AdapterNavigation adapter;
     ArrayList<Navigation> listDisPlay = new ArrayList<>();
     FragmentManager fragmentManager;
     OfflineFragment offlineFragment;
+    MusicRetriever mRetriever;
+    public static ArrayList<Song> songs = new ArrayList<>();
     public DisplayFragment() {
         // Required empty public constructor
     }
@@ -34,6 +39,8 @@ public class DisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        mRetriever = new MusicRetriever(getActivity().getContentResolver());
+        (new PrepareMusicRetrieverTask(mRetriever,this)).execute();
         getActivity().setTitle("Offline");
         View view =  inflater.inflate(R.layout.fragment_display, container, false);
         setUpView(view);
@@ -54,6 +61,13 @@ public class DisplayFragment extends Fragment {
         adapter = new AdapterNavigation(getActivity(),listDisPlay);
         listview.setAdapter(adapter);
 
+
+    }
+
+
+    @Override
+    public void onMusicRetrieverPrepared() {
+        songs = mRetriever.songs;
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -64,7 +78,6 @@ public class DisplayFragment extends Fragment {
                         .commit();
             }
         });
+
     }
-
-
 }
