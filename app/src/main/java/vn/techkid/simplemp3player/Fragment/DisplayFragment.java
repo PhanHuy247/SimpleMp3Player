@@ -54,9 +54,10 @@ public class DisplayFragment extends Fragment implements PrepareMusicRetrieverTa
         listview = (ListView) view.findViewById(R.id.lvTabLayout);
         if(listDisPlay.size() == 0){
             listDisPlay.add(new Navigation("PlayList",R.drawable.ic_library_music_black_24dp,true,"0"));
-            listDisPlay.add(new Navigation("Song",R.drawable.ic_audiotrack_black_24dp,true,"0"));
+            listDisPlay.add(new Navigation("Song",R.drawable.ic_audiotrack_black_24dp,true,"68"));
             listDisPlay.add(new Navigation("Album",R.drawable.ic_album_black_24dp,true,"0"));
             listDisPlay.add(new Navigation("Artist",R.drawable.ic_person_black_24dp,true,"0"));
+            listDisPlay.add(new Navigation("Folder",R.drawable.ic_content_paste_black_24dp,true,"0"));
         }
         adapter = new AdapterNavigation(getActivity(),listDisPlay);
         listview.setAdapter(adapter);
