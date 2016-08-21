@@ -1,58 +1,28 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.ChartSongFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:id="@+id/txtBaiHat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24dp"
-            android:text="Bài Hát"
-            android:layout_marginTop="4dp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:layout_centerHorizontal="true"/>
-        <LinearLayout
-            android:id="@+id/linear"
+    >
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabsCharSong"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/txtBaiHat"
-            android:orientation="vertical"
-            android:weightSum="3"
-            android:padding="6dp"
-            >
-            <ImageButton
-                android:background="@color/colorWhite"
-                android:id="@+id/imgVietNam"
-                android:layout_marginTop="12dp"
-                android:layout_height="0dp"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:padding="6dp"
-                android:scaleType="fitXY"
-               />
-            <ImageButton
-                android:background="@color/colorWhite"
-                android:id="@+id/imgEurope"
-                android:layout_marginTop="12dp"
-                android:layout_height="0dp"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:padding="6dp"
-                android:scaleType="fitXY"/>
-            <ImageButton
-                    android:background="@color/colorWhite"
-                    android:id="@+id/imgKorea"
-                    android:layout_weight="1"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_width="match_parent"
-                    android:padding="6dp"
-                android:scaleType="fitXY"
-                    />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:divider="@color/colorWhite"
+            android:dividerHeight="1dp"
+            app:tabMode="fixed"
+            app:tabGravity="fill"/>
+    </android.support.design.widget.AppBarLayout>
 
-</RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpagercharsong"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+</android.support.design.widget.CoordinatorLayout>
+

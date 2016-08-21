@@ -4,8 +4,16 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.AlbumCountry"
+    android:background="#804CAF50"
    >
-
+    <TextView
+        android:id="@+id/txtcheckalbum"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Check Your Internet"
+        android:gravity="center"
+        android:textSize="24dp"
+        android:visibility="gone"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/listAlbum"
         android:layout_width="match_parent"

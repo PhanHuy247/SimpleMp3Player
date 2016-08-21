@@ -16,6 +16,8 @@
         android:id="@+id/listchartvietnam"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="#388E3C"
+        android:dividerHeight="2px"
         ></ListView>
 
 </FrameLayout>

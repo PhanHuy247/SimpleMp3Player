@@ -19,16 +19,16 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import vn.techkid.simplemp3player.Adapter.AdapterChartArtist;
 import vn.techkid.simplemp3player.Model.Artist;
+import vn.techkid.simplemp3player.Interface.OnTaskCompleted;
 import vn.techkid.simplemp3player.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ArtistFragment extends Fragment {
+public class ArtistFragment extends Fragment implements OnTaskCompleted {
     private static final String URL = "http://chiasenhac.vn/";
     ArrayList<Artist> listNews;
     RecyclerView recyclerView;
@@ -50,38 +50,23 @@ public class ArtistFragment extends Fragment {
         getActivity().setTitle("Artist");
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
         listNews  = new ArrayList<>();
-        checkConnection = new CheckConnection(getActivity());
+        setupView(view);
         setupPosForChart(posFirst,posLast);
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkConnection = new CheckConnection(getContext());
         if(checkConnection.checkMobileInternetConn()){
             setupAsyntask();
-            createDataForListNews();
+            txtcheck.setVisibility(View.GONE);
         }else{
             if(listNews.size() == 0)
                 txtcheck.setVisibility(View.VISIBLE);
         }
-        setupView(view);
-
-
-        listCardAdapter = new AdapterChartArtist(listNews,getActivity());
-        LinearLayoutManager linearManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
-        recyclerView.setLayoutManager(linearManager);
-        recyclerView.setAdapter(listCardAdapter);
-        for (int i = 0; i < listNews.size(); i++){
-            Log.d("FAK", listNews.get(i).getCharNumber());
-        }
-        listCardAdapter.setOnItemClickListener(new AdapterChartArtist.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int postion) {
-                Log.d("POSITION", String.valueOf(postion));
-                artistSongVietNamFragment = new ArtistSongCountryFragment();
-                artistSongVietNamFragment.setupUrl(listNews.get(postion).getLink());
-                getFragmentManager().beginTransaction().replace(R.id.frame_container,artistSongVietNamFragment )
-                        .addToBackStack(null)
-                        .commit();
-
-            }
-        });
-        return view;
     }
 
     public void setupPosForChart(int posFirst, int posLast) {
@@ -90,30 +75,44 @@ public class ArtistFragment extends Fragment {
     }
 
     private void setupAsyntask() {
-        task = new DownloadTask(posFirst,posLast);
-        try {
-            task.execute(URL).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void createDataForListNews() {
-         listNews = task.listNews ;
+        task = new DownloadTask(posFirst,posLast,this);
+        task.execute(URL);
     }
 
     private void setupView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.listCard);
         txtcheck = (TextView) view.findViewById(R.id.txtCheckArtist);
     }
+
+    @Override
+    public void onTaskCompleted() {
+        listNews = task.listNews ;
+        listCardAdapter = new AdapterChartArtist(listNews,getActivity());
+        LinearLayoutManager linearManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        recyclerView.setLayoutManager(linearManager);
+        recyclerView.setAdapter(listCardAdapter);
+        listCardAdapter.setOnItemClickListener(new AdapterChartArtist.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int postion) {
+                Log.d("POSITION", String.valueOf(postion));
+                artistSongVietNamFragment = new ArtistSongCountryFragment();
+                artistSongVietNamFragment.setupUrl(listNews.get(postion).getLink());
+                getParentFragment().getFragmentManager().beginTransaction().replace(R.id.frame_container,artistSongVietNamFragment )
+                        .addToBackStack(null)
+                        .commit();
+
+            }
+        });
+    }
+
     static class DownloadTask extends AsyncTask<String, Void, Void> {
+        private OnTaskCompleted listener;
         ArrayList<Artist> listNews;
         int posFirst,posLast;
-        public DownloadTask(int posFirst,int posLast){
+        public DownloadTask(int posFirst,int posLast,OnTaskCompleted listener){
             this.posFirst = posFirst;
             this.posLast = posLast;
+            this.listener = listener;
         }
         @Override
         protected Void doInBackground(String... strings) {
@@ -142,6 +141,11 @@ public class ArtistFragment extends Fragment {
 
             return null;
         }
-    }
 
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            listener.onTaskCompleted();
+        }
+    }
 }

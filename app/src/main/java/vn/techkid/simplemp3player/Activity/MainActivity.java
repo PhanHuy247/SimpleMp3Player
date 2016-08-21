@@ -29,6 +29,8 @@ import vn.techkid.simplemp3player.Fragment.SearchSong;
 import vn.techkid.simplemp3player.R;
 import vn.techkid.simplemp3player.Service.FloatingControlWindow;
 import vn.techkid.simplemp3player.Service.PlayingMusicService;
+import vn.techkid.simplemp3player.Singleton.countSplash;
+
 import android.support.v7.widget.SearchView;
 
 import android.widget.EditText;
@@ -106,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -166,7 +170,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         isAlive = false;
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override

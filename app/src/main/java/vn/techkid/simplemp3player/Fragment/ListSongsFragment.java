@@ -50,8 +50,20 @@ public abstract class ListSongsFragment extends Fragment {
     private void initView(View view) {
         lv_songs = (ListView) view.findViewById(R.id.listchartvietnam);
         txtCheckConnection = (TextView) view.findViewById(R.id.txtconnection);
-        setupAsynTask();
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         setupConnec();
+        setupAsynTask();
+        setupAdapter();
+
+    }
+
+    public void setupAdapter() {
         AdapterChartSong adaper = new AdapterChartSong(songs,getActivity(), isHot);
         lv_songs.setAdapter(adaper);
         lv_songs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -67,7 +79,6 @@ public abstract class ListSongsFragment extends Fragment {
 
             }
         });
-
 
     }
 

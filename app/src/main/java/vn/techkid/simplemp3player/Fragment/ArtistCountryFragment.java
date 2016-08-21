@@ -27,7 +27,7 @@ public class ArtistCountryFragment extends Fragment {
     ArtistFragment artistFragment1;
     ArtistFragment artistFragment2;
     ArtistFragment artistFragment3;
-    static View view;
+    View view;
     public ArtistCountryFragment() {
         // Required empty public constructor
     }
@@ -38,10 +38,8 @@ public class ArtistCountryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         getActivity().setTitle("Artist");
-        if(view == null){
             view = inflater.inflate(R.layout.fragment_artist_country, container, false);
             setupView(view);
-        }
         return view;
     }
     private ViewPagerAdapter setUpViewPage() {
@@ -58,7 +56,7 @@ public class ArtistCountryFragment extends Fragment {
         artistFragment1 = new ArtistFragment();
         artistFragment2 = new ArtistFragment();
         artistFragment3 = new ArtistFragment();
-        adapter = new ViewPagerAdapter(getFragmentManager());
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
         viewPager = (ViewPager) view.findViewById(R.id.viewpagerartist);
         viewPager.setAdapter(setUpViewPage());
         tabLayout = (TabLayout) view.findViewById(R.id.tabsartist);

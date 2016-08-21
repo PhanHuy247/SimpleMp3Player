@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import vn.techkid.simplemp3player.Interface.OnTaskCompleted;
 import vn.techkid.simplemp3player.Model.Song;
 
 /**
@@ -18,8 +19,9 @@ import vn.techkid.simplemp3player.Model.Song;
 public class ChartSongListGetter extends AsyncTask<Void, Void, Void> {
     private String url;
     public ArrayList<Song> songs;
-
-    public ChartSongListGetter(String url) {
+    OnTaskCompleted onTaskCompleted;
+    public ChartSongListGetter(String url,OnTaskCompleted onTaskCompleted) {
+        this.onTaskCompleted = onTaskCompleted;
         this.url = url;
     }
 
@@ -55,5 +57,9 @@ public class ChartSongListGetter extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
-
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        onTaskCompleted.onTaskCompleted();
+    }
 }

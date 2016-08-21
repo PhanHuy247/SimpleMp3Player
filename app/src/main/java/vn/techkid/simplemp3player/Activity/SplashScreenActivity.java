@@ -21,11 +21,13 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import vn.techkid.simplemp3player.Fragment.CheckConnection;
+import vn.techkid.simplemp3player.Interface.OnTaskCompleted;
 import vn.techkid.simplemp3player.Model.Album;
 import vn.techkid.simplemp3player.Model.Song;
 import vn.techkid.simplemp3player.R;
+import vn.techkid.simplemp3player.Singleton.countSplash;
 
-public class SplashScreenActivity extends AppCompatActivity {
+public class SplashScreenActivity extends AppCompatActivity{
     public static String URLVIET = "http://chiasenhac.vn/mp3/vietnam/album.html";
     public static String URLUS = "http://chiasenhac.vn/mp3/us-uk/album.html";
     public static String URLKOR = "http://chiasenhac.vn/mp3/korea/album.html";
@@ -50,6 +52,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         imageView = (ImageView) findViewById(R.id.imgsplash);
         checkConnection = new CheckConnection(this);
+        if(countSplash.getInstance().getCount() != 1) countSplash.getInstance().setCount(0);
 
     }
 
@@ -57,9 +60,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d("splash2","phanhuy95");
-        if(checkConnection.checkMobileInternetConn()){
+        if(checkConnection.checkMobileInternetConn() && countSplash.getInstance().getCount() == 0){
+            Log.d("splash",countSplash.getInstance().getCount()+"");
+            countSplash.getInstance().setCount(1);
             setupAsyntaskAlbum();
             setupAsyntask();
+
         }
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -73,9 +79,9 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     public static void setupAsyntaskAlbum() {
         try {
-            taskAlbum3.execute(URLUS).get();
-            taskAlbum2.execute(URLKOR).get();
-            taskAlbum1.execute(URLVIET).get();
+            SplashScreenActivity.taskAlbum3.execute(URLUS).get();
+            SplashScreenActivity.taskAlbum2.execute(URLKOR).get();
+            SplashScreenActivity.taskAlbum1.execute(URLVIET).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -94,11 +100,15 @@ public class SplashScreenActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-   public static class DownloadTask extends AsyncTask<String, Void, Void> {
+
+    public static class DownloadTask extends AsyncTask<String, Void, Void> {
        public ArrayList<Song> listNews = null;
        public ArrayList<Album> listAlbum = null;
 
-       @Override
+        public DownloadTask() {
+        }
+
+        @Override
        protected void onPreExecute() {
            super.onPreExecute();
 
