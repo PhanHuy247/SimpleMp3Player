@@ -103,7 +103,7 @@ public class AdapterChartSong extends BaseAdapter {
                     builder.setItems(LinkUrl, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int item) {
                             String url = getter.listUrl.get(item);
-                            Toast.makeText(mContext, getter.listUrl.get(item), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext, getter.listUrl.get(item), Toast.LENGTH_SHORT).show();
                             String songDetail = getItem(position).getTitle() + " - " + getItem(position).getArtist();
                             new DownloadTask(mContext, songDetail, getItem(position).getTitle()+" "+arrayList.get(item)).execute(url);
                         }

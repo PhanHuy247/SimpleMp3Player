@@ -98,6 +98,9 @@ public class FloatingControlWindow extends Service implements View.OnClickListen
     private void getSongListInfo(Intent intent) {
         Bundle bundle = intent.getBundleExtra("bundle");
         key = bundle.getString("key");
+        if (key.equals("offline")){
+            PlayerActivity.isShuffle = true;
+        }
         Log.d("floating", key);
         currentPos = bundle.getInt("pos", 0);
         Log.d("floating", currentPos+"");

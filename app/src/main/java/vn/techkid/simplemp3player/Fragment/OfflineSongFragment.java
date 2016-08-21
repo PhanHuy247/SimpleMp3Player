@@ -54,6 +54,7 @@ public class OfflineSongFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putInt("pos", position);
                 bundle.putString("key", intentKey);
+                bundle.putBoolean("shuffle", true);
                 bundle.putSerializable("list",songList);
                 intent.putExtra("bundle",bundle);
                 getActivity().startService(intent);
@@ -69,6 +70,7 @@ public class OfflineSongFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putInt("pos", position);
                 bundle.putString("key", intentKey);
+                bundle.putBoolean("shuffle", false);
                 bundle.putSerializable("list",songList);
                 intent.putExtra("bundle",bundle);
                 getActivity().startService(intent);

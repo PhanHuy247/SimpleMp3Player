@@ -244,7 +244,6 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     private void getSongsList() {
         currentPos = FloatingControlWindow.getCurrentPos();
         songs = FloatingControlWindow.arrayList;
-        Log.d("compare", songs.size()+"");
         maxSongs = songs.size();
         key = FloatingControlWindow.getKey();
         if(key.equals("artist")){
@@ -263,13 +262,7 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
                 }
                 else {
-                    if (key.equals("offline")){
-
-                    }
-                    else {
-                        isHot = true;
-                    }
-
+                    isHot = true;
                 }
             }
         }
@@ -488,17 +481,12 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
     @Override
     public void onDestroy() {
         mediaPlayer.release();
-        stopForeground(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mediaSession.release();
-        }
+        mediaPlayer = null;
         super.onDestroy();
     }
     public class HelperClass {
         public ArrayList<Integer> integers = new ArrayList<>();
         private int n;
-
-
         public HelperClass(int n){
             this.n = n;
             for (int i = 0; i < n; i++) {
@@ -511,11 +499,8 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
             return integers.remove(rand);
         }
 
-
-
     }
     private class NotiReceiver extends BroadcastReceiver{
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(ACTION_NEXT)){
@@ -534,7 +519,9 @@ public class PlayingMusicService extends Service implements MediaPlayer.OnPrepar
 
             }
             else if (intent.getAction().equals(ACTION_STOP)){
-                stopSelf();
+                mediaPlayer.pause();
+                stopForeground(true);
+
             }
 
         }

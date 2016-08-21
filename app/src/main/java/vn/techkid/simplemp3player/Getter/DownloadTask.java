@@ -106,7 +106,8 @@ public class DownloadTask extends AsyncTask<String, String, String> {
         mBuilder.setTicker("Finished: Downloading: "+ songDetail)
                 .setContentTitle("Finished")
                 .setContentText(songDetail)
-                .setSmallIcon(R.drawable.image_music);
+                .setSmallIcon(R.drawable.image_music)
+                .setAutoCancel(true);
         Notification downloadNoti = mBuilder.build();
         NotificationManager manager =  (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(110, downloadNoti);
